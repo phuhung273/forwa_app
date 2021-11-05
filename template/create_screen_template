@@ -1,0 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class ${ScreenName} extends StatelessWidget {
+
+  final ${ScreenName}Controller _controller = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    return ;
+  }
+}

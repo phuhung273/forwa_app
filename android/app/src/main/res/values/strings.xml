@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Forwa</string>
+    <string name="facebook_app_id">4967070663327098</string>
+    <string name="facebook_client_token">4967070663327098|4d0cf6f2ea117040fc281502e1feafe6</string>
+    <string name="fb_login_protocol_scheme">fb4967070663327098</string>
+</resources>

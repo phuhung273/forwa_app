@@ -1,0 +1,14 @@
+
+import 'package:get/get.dart';
+
+class ${ScreenName}Binding extends Bindings{
+  @override
+  void dependencies() {
+    Get.lazyPut(() => ${ScreenName}Controller());
+  }
+}
+
+class ${ScreenName}Controller extends GetxController{
+
+
+}
