@@ -21,37 +21,44 @@ class EditProfileAddressScreen extends GetView<EditProfileAddressController> {
         ),
         body: KeyboardFriendlyBody(
           padding: const EdgeInsets.all(defaultPadding),
-          child: Column(
-            children: [
-              InputField(
-                hintText: 'Đường',
-                controller: controller.streetController,
-              ),
-              InputField(
-                hintText: 'Phường/Xã',
-                controller: controller.wardController,
-              ),
-              InputField(
-                hintText: 'Quận/Huyện',
-                controller: controller.districtController,
-              ),
-              InputField(
-                hintText: 'Thành phố/Tỉnh',
-                controller: controller.cityController,
-              ),
-              InputField(
-                hintText: 'Điện thoại',
-                icon: Icons.smartphone,
-                controller: controller.phoneController,
-              ),
-              AppLevelActionContainer(
-                  child: ElevatedButton.icon(
-                    onPressed: controller.save,
-                    icon: const Icon(Icons.save),
-                    label: const Text('Lưu địa chỉ'),
-                  )
-              ),
-            ],
+          child: AutofillGroup(
+            child: Column(
+              children: [
+                InputField(
+                  hintText: 'Đường',
+                  autofillHints: const [AutofillHints.streetAddressLevel1],
+                  controller: controller.streetController,
+                ),
+                InputField(
+                  hintText: 'Phường/Xã',
+                  autofillHints: const [AutofillHints.streetAddressLevel2],
+                  controller: controller.wardController,
+                ),
+                InputField(
+                  hintText: 'Quận/Huyện',
+                  autofillHints: const [AutofillHints.streetAddressLevel3],
+                  controller: controller.districtController,
+                ),
+                InputField(
+                  hintText: 'Thành phố/Tỉnh',
+                  autofillHints: const [AutofillHints.addressCity],
+                  controller: controller.cityController,
+                ),
+                InputField(
+                  hintText: 'Điện thoại',
+                  icon: Icons.smartphone,
+                  autofillHints: const [AutofillHints.telephoneNumber],
+                  controller: controller.phoneController,
+                ),
+                AppLevelActionContainer(
+                    child: ElevatedButton.icon(
+                      onPressed: controller.save,
+                      icon: const Icon(Icons.save),
+                      label: const Text('Lưu địa chỉ'),
+                    )
+                ),
+              ],
+            ),
           ),
         ),
       ),

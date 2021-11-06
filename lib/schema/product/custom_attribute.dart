@@ -10,6 +10,8 @@ enum CustomAttributeCode{
   PICKUP_TIME,
   DESCRIPTION,
   CATEGORY_IDS,
+  LATITUDE,
+  LONGITUDE,
 }
 
 @JsonSerializable()

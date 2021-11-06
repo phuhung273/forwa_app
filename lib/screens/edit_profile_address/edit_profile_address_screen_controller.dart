@@ -1,9 +1,12 @@
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/address_repo.dart';
 import 'package:forwa_app/schema/address/create_address_request.dart';
 import 'package:forwa_app/schema/address/customer_address.dart';
+import 'package:forwa_app/schema/product/custom_attribute.dart';
 import 'package:forwa_app/screens/base_controller.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 
 class EditProfileAddressBinding extends Bindings {
@@ -50,6 +53,20 @@ class EditProfileAddressController extends BaseController {
       return;
     }
 
+    List<Location> locations = await locationFromAddress(streetController.text + wardController.text + districtController.text + cityController.text);
+    for(final location in locations){
+      print('${location.latitude} - ${location.longitude}');
+    }
+    final location = locations.first;
+    final latAttribute = CustomAttribute(
+      attributeCode: CustomAttribute.getCode(CustomAttributeCode.LATITUDE),
+      value: location.latitude.toString(),
+    );
+    final longAttribute = CustomAttribute(
+      attributeCode: CustomAttribute.getCode(CustomAttributeCode.LONGITUDE),
+      value: location.longitude.toString(),
+    );
+
     final address = CustomerAddress(
       customerId: customerId!,
       region: 'abcxyz',
@@ -63,6 +80,7 @@ class EditProfileAddressController extends BaseController {
       telephone: phoneController.text,
       defaultBilling: true,
       defaultShipping: true,
+      customAttributes: [latAttribute, longAttribute],
     );
 
     showLoadingDialog();

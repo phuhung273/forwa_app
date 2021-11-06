@@ -1,5 +1,7 @@
 import 'package:forwa_app/datasource/remote/product_service.dart';
+import 'package:forwa_app/schema/custom_attribute_data.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:latlong2/latlong.dart';
 
 import 'custom_attribute.dart';
 import 'extension_attributes.dart';
@@ -8,7 +10,7 @@ import 'media_gallery_entry.dart';
 part 'product.g.dart';
 
 @JsonSerializable()
-class Product {
+class Product extends CustomAttributeData{
 
   @JsonKey(name: 'id')
   int? id;
@@ -34,24 +36,21 @@ class Product {
   @JsonKey(name: 'extension_attributes')
   ExtensionAttributes? extensionAttributes;
 
-  @JsonKey(name: 'custom_attributes')
-  List<CustomAttribute>? customAttributes;
-
   @JsonKey(name: 'media_gallery_entries')
   List<MediaGalleryEntry>? medias;
 
   Product({
-    this.id,
-    required this.name,
-    this.sku,
-    this.attributeSetId = 4,
-    this.price = 0,
-    this.typeId = 'simple',
-    this.createdAt,
-    this.extensionAttributes,
-    this.customAttributes,
-    this.medias,
-  });
+      this.id,
+      required this.name,
+      this.sku,
+      this.attributeSetId = 4,
+      this.price = 0,
+      this.typeId = 'simple',
+      this.createdAt,
+      this.extensionAttributes,
+      List<CustomAttribute>? customAttributes,
+      this.medias,
+  }) : super(customAttributes: customAttributes);
 
   factory Product.fromJson(Map<String, dynamic> json) =>
       _$ProductFromJson(json);
@@ -91,6 +90,21 @@ class Product {
   String? get description => _getCustomAttributeByCode(CustomAttributeCode.DESCRIPTION);
 
   String? get pickupTime => _getCustomAttributeByCode(CustomAttributeCode.PICKUP_TIME);
+
+  double? get latitude {
+    if(extensionAttributes == null) return null;
+    return double.parse(extensionAttributes!.latitude!);
+  }
+
+  double? get longitude {
+    if(extensionAttributes == null) return null;
+    return double.parse(extensionAttributes!.longitude!);
+  }
+
+  LatLng? get location {
+    if(latitude == null && longitude == null) return null;
+    return LatLng(latitude!, longitude!);
+  }
 
   String? _getCustomAttributeByCode(CustomAttributeCode code){
     if(customAttributes == null) return null;

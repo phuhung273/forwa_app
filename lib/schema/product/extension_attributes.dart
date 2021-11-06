@@ -25,6 +25,12 @@ class ExtensionAttributes {
   @JsonKey(name: 'is_disabled')
   bool? isDisabled;
 
+  @JsonKey(name: 'latitude')
+  String? latitude;
+
+  @JsonKey(name: 'longitude')
+  String? longitude;
+
   ExtensionAttributes({
     this.websiteIds,
     this.stockItem,
@@ -32,6 +38,8 @@ class ExtensionAttributes {
     this.quantity,
     this.sellerName,
     this.isDisabled,
+    this.latitude,
+    this.longitude,
   });
 
   factory ExtensionAttributes.fromJson(Map<String, dynamic> json) =>

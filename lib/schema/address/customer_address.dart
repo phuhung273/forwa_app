@@ -1,9 +1,11 @@
+import 'package:forwa_app/schema/custom_attribute_data.dart';
+import 'package:forwa_app/schema/product/custom_attribute.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'customer_address.g.dart';
 
 @JsonSerializable()
-class CustomerAddress {
+class CustomerAddress extends CustomAttributeData {
 
   @JsonKey(name: 'customer_id')
   int customerId;
@@ -54,7 +56,8 @@ class CustomerAddress {
     required this.telephone,
     required this.defaultBilling,
     required this.defaultShipping,
-  });
+    List<CustomAttribute>? customAttributes,
+  }) : super(customAttributes: customAttributes);
 
   factory CustomerAddress.fromJson(Map<String, dynamic> json) =>
       _$CustomerAddressFromJson(json);

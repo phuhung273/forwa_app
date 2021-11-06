@@ -5,6 +5,7 @@ import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/screens/base_controller.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:latlong2/latlong.dart';
 
 class ProductScreenBinding extends Bindings {
   @override
@@ -38,6 +39,8 @@ class ProductScreenController extends BaseController {
 
   final String sku = Get.arguments;
 
+  LatLng? location;
+
   @override
   Future onReady() async {
     super.onReady();
@@ -61,6 +64,7 @@ class ProductScreenController extends BaseController {
     pickupTime.value = product.pickupTime!;
     createdAt.value = DateFormat.yMMMd().format(product.createdAt!);
     isDisabled.value = product.isDisabled;
+    location = product.location;
 
     final websiteId = _localStorage.getStoreWebsiteId();
     _sameWebsiteId = websiteId == product.websiteId;

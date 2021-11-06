@@ -114,9 +114,10 @@ class ProductRender extends GetView<ProductScreenController> {
                 style: theme.textTheme.headline6,
               )
           ),
-          const AppContainer(
-              child: PickupLocation()
-          ),
+          if(controller.location != null)
+            AppContainer(
+              child: PickupLocation(location: controller.location!)
+            ),
           const SectionDivider(),
           Center(
             child: AppLevelActionContainer(
@@ -207,8 +208,12 @@ class DotIndicator extends GetView<ProductScreenController> {
   }
 }
 
-class PickupLocation extends GetView<ProductScreenController> {
-  const PickupLocation({Key? key}) : super(key: key);
+class PickupLocation extends StatelessWidget {
+  final LatLng location;
+  const PickupLocation({
+    Key? key,
+    required this.location,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -216,21 +221,19 @@ class PickupLocation extends GetView<ProductScreenController> {
         maxHeight: MediaQuery.of(context).size.height,
         maxWidth: MediaQuery.of(context).size.width);
 
-    final coordinate = LatLng(51.5, -0.09);
-
     return Center(
       child: SizedBox(
         height: constraints.maxHeight * 0.3,
         width: constraints.maxWidth * 0.7,
         child: FlutterMap(
           options: MapOptions(
-            center: coordinate,
+            center: location,
             zoom: 17.0,
             maxZoom: 20.0,
           ),
           layers: [
             TileLayerOptions(
-              urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
               subdomains: ['a', 'b', 'c'],
             ),
             MarkerLayerOptions(
@@ -238,7 +241,7 @@ class PickupLocation extends GetView<ProductScreenController> {
                 Marker(
                   width: 80.0,
                   height: 80.0,
-                  point: coordinate,
+                  point: location,
                   builder: (ctx) => const Icon(
                     Icons.location_on,
                     color: Colors.red,

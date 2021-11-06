@@ -12,11 +12,9 @@ import 'package:get/get.dart';
 
 import 'login_screen_controller.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends GetView<LoginScreenController> {
 
-  final LoginScreenController _controller = Get.find();
-
-  LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,23 +26,24 @@ class LoginScreen extends StatelessWidget {
         body: KeyboardFriendlyBody(
           child: Padding(
             padding: const EdgeInsets.all(defaultPadding),
-            child: Obx(
-              () => Column(
+            child: AutofillGroup(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(_controller.result.value, style: theme.textTheme.subtitle1),
+                  Obx(() => Text(controller.result.value, style: theme.textTheme.subtitle1)),
                   const SizedBox(height: defaultSpacing * 5),
                   InputField(
                     hintText: 'Email',
                     icon: Icons.person,
-                    controller: _controller.usernameController,
+                    autofillHints: const [AutofillHints.email],
+                    controller: controller.usernameController,
                   ),
                   PasswordField(
-                    controller: _controller.passwordController,
+                    controller: controller.passwordController,
                   ),
                   AppLevelActionContainer(
                     child: ElevatedButton(
-                      onPressed: _controller.login,
+                      onPressed: controller.login,
                       child: Text(
                         'Đăng Nhập',
                         style: theme.textTheme.button!.copyWith(
@@ -106,7 +105,7 @@ class LoginScreen extends StatelessWidget {
                             FontAwesomeIcons.google,
                             color: Color(0xffDF4A32),
                           ),
-                          onTap: _controller.googleLogin,
+                          onTap: controller.googleLogin,
                         ),
                         SocialButton(
                           text: 'Facebook',
@@ -114,7 +113,7 @@ class LoginScreen extends StatelessWidget {
                             FontAwesomeIcons.facebook,
                             color: Color(0xff39579A),
                           ),
-                          onTap: _controller.facebookLogin,
+                          onTap: controller.facebookLogin,
                         ),
                       ],
                     )

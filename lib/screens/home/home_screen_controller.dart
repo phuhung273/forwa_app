@@ -1,6 +1,7 @@
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:get/get.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../base_controller.dart';
 

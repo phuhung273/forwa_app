@@ -7,12 +7,14 @@ class InputField extends StatelessWidget {
   final IconData? icon;
   final int maxLines;
   final TextEditingController controller;
+  final Iterable<String>? autofillHints;
   const InputField({
     Key? key,
     required this.hintText,
     this.icon,
     required this.controller,
     this.maxLines = 1,
+    this.autofillHints,
   }) : super(key: key);
 
   @override
@@ -28,6 +30,7 @@ class InputField extends StatelessWidget {
       child: TextFieldContainer(
         child: TextField(
           controller: controller,
+          autofillHints: autofillHints,
           decoration: InputDecoration(
             icon: icon != null ? Icon(
               icon,

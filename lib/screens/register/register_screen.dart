@@ -25,33 +25,36 @@ class RegisterScreen extends StatelessWidget {
       child: Scaffold(
         body: KeyboardFriendlyBody(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: defaultPadding),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(_controller.result.value, style: theme.textTheme.subtitle1),
-              const Divider(),
-              InputField(
-                hintText: 'Họ tên',
-                icon: Icons.person,
-                controller: _controller.nameController,
-              ),
-              InputField(
-                hintText: 'Email',
-                icon: Icons.email,
-                controller: _controller.emailController,
-              ),
-              PasswordField(
-                controller: _controller.pwdController,
-              ),
-              AppLevelActionContainer(
-                  child: ElevatedButton(
-                    onPressed: _controller.register,
-                    child: const Text('Đăng Ký'),
-                  )
-              ),
-              const Divider(),
-              RichText(
-                text: TextSpan(
+          child: AutofillGroup(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(_controller.result.value, style: theme.textTheme.subtitle1),
+                const Divider(),
+                InputField(
+                  hintText: 'Họ tên',
+                  icon: Icons.person,
+                  autofillHints: const [AutofillHints.name],
+                  controller: _controller.nameController,
+                ),
+                InputField(
+                  hintText: 'Email',
+                  icon: Icons.email,
+                  autofillHints: const [AutofillHints.email],
+                  controller: _controller.emailController,
+                ),
+                PasswordField(
+                  controller: _controller.pwdController,
+                ),
+                AppLevelActionContainer(
+                    child: ElevatedButton(
+                      onPressed: _controller.register,
+                      child: const Text('Đăng Ký'),
+                    )
+                ),
+                const Divider(),
+                RichText(
+                  text: TextSpan(
                     text: 'Đã có tài khoản? ',
                     style: theme.textTheme.headline6,
                     children: [
@@ -65,9 +68,10 @@ class RegisterScreen extends StatelessWidget {
                         ,
                       ),
                     ]
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
