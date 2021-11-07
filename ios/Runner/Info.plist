@@ -46,5 +46,7 @@
     <string>Camera permission is required for taking photos.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Media Library access is required for picking photos</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Location access is required to find suitable stuff within your area</string>
 </dict>
 </plist>

@@ -101,7 +101,7 @@ class ProductRender extends GetView<ProductScreenController> {
           AppContainer(
             child: HeadlessTable(
               data: {
-                'Khoảng cách': '3.5km',
+                'Khoảng cách': '${_buildDistance()} km',
                 'Ngày đăng': controller.createdAt.value,
                 'Giờ có thể lấy': controller.pickupTime.value,
               },
@@ -146,6 +146,14 @@ class ProductRender extends GetView<ProductScreenController> {
       ),
       child: const Text('Tôi muốn nhận'),
     );
+  }
+
+  String _buildDistance(){
+    final here = controller.here;
+    return here != null
+        ? (controller.distance.as(LengthUnit.Meter,
+        LatLng(here.latitude!, here.longitude!), controller.location!) / 1000).toStringAsFixed(1)
+        : '';
   }
 }
 

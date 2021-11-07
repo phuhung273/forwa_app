@@ -1,11 +1,13 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
+import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/screens/base_controller.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 
 class ProductScreenBinding extends Bindings {
   @override
@@ -18,7 +20,11 @@ class ProductScreenController extends BaseController {
 
   final LocalStorage _localStorage = Get.find();
 
+  final LocationService _locationService = Get.find();
+
   final ProductRepo _productRepo = Get.find();
+
+  final Distance distance = Get.find();
 
   final current = 0.obs;
   final CarouselController sliderController = CarouselController();
@@ -29,6 +35,7 @@ class ProductScreenController extends BaseController {
   final createdAt = ''.obs;
   final pickupTime = ''.obs;
   final isDisabled = true.obs;
+  LocationData? here;
 
   bool _sameWebsiteId = true;
 
@@ -46,6 +53,8 @@ class ProductScreenController extends BaseController {
     super.onReady();
 
     if(sku.isEmpty) return;
+
+    here = await _locationService.here();
 
     showLoadingDialog();
     final response = await _productRepo.getProduct(sku);

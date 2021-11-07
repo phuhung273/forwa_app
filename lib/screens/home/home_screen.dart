@@ -6,6 +6,7 @@ import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:get/get.dart';
+import 'package:latlong2/latlong.dart';
 
 import 'home_screen_controller.dart';
 
@@ -82,7 +83,7 @@ class HomeScreen extends StatelessWidget {
 
 const IMAGE_WIDTH = 150.0;
 
-class ProductCard extends StatelessWidget {
+class ProductCard extends GetView<HomeScreenController> {
   final Product product;
   const ProductCard({
     Key? key,
@@ -157,7 +158,7 @@ class ProductCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: Text(
-                      'Khoảng cách: 3.5 km',
+                      'Cách đây ${_buildDistance()}km',
                     ),
                   )
                 ],
@@ -167,5 +168,14 @@ class ProductCard extends StatelessWidget {
         ],
       )
     );
+  }
+
+  String _buildDistance() {
+    final here = controller.here;
+    return here != null && product.location != null
+        ? (controller.distance.as(LengthUnit.Meter,
+        LatLng(here.latitude!, here.longitude!), product.location!) / 1000)
+        .toStringAsFixed(1)
+        : '';
   }
 }
