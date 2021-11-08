@@ -4,6 +4,8 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
+import 'package:forwa_app/di/firebase_messaging_service.dart';
+import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/screens/home/home_screen.dart';
 import 'package:forwa_app/screens/my_givings/my_givings_creen.dart';
@@ -12,11 +14,34 @@ import 'package:get/get.dart';
 
 import 'main_screen_controller.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
 
-  final MainScreenController _controller = Get.find();
+  const MainScreen({Key? key}) : super(key: key);
 
-  MainScreen({Key? key}) : super(key: key);
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+
+  final FirebaseMessagingService _firebaseMessagingService = Get.find();
+  final NotificationService _notificationService = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+    _notificationService.init();
+    _firebaseMessagingService.init();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const MainScreenView();
+  }
+}
+
+class MainScreenView extends GetView<MainScreenController> {
+  const MainScreenView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +49,7 @@ class MainScreen extends StatelessWidget {
 
     return AdvancedDrawer(
       backdropColor: Colors.blueGrey,
-      controller: _controller.drawerController,
+      controller: controller.drawerController,
       animationCurve: Curves.easeInOut,
       animationDuration: const Duration(milliseconds: 300),
       animateChildDecoration: true,
@@ -36,14 +61,14 @@ class MainScreen extends StatelessWidget {
       child: Scaffold(
         body: SafeArea(
           child: Obx(
-            () => PageTransitionSwitcher(
+                () => PageTransitionSwitcher(
               transitionBuilder: (child, primaryAnimation, secondaryAnimation)=>
                   FadeThroughTransition(
                     animation: primaryAnimation,
                     secondaryAnimation: secondaryAnimation,
                     child: child,
                   ),
-              child:  _buildTab(_controller.pageIndex.value),
+              child:  _buildTab(controller.pageIndex.value),
             ),
           ),
         ),
@@ -52,7 +77,7 @@ class MainScreen extends StatelessWidget {
           child: const Icon(Icons.add),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: MyBottomNavigationBar(),
+        bottomNavigationBar: const MyBottomNavigationBar(),
       ),
       drawer: MyDrawer(),
     );
@@ -78,10 +103,10 @@ class MainScreen extends StatelessWidget {
   }
 }
 
-class MyBottomNavigationBar extends StatelessWidget {
-  final MainScreenController _controller = Get.find();
 
-  MyBottomNavigationBar({Key? key}) : super(key: key);
+class MyBottomNavigationBar extends GetView<MainScreenController> {
+
+  const MyBottomNavigationBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -95,9 +120,9 @@ class MyBottomNavigationBar extends StatelessWidget {
           Icons.card_giftcard,
           Icons.notifications_outlined,
         ],
-        activeIndex: _controller.pageIndex.value,
+        activeIndex: controller.pageIndex.value,
         gapLocation: GapLocation.center,
-        onTap: (index) => _controller.changeTab(index),
+        onTap: (index) => controller.changeTab(index),
         backgroundColor: theme.primaryColor,
         activeColor: theme.colorScheme.secondaryVariant,
         inactiveColor: Colors.grey,
@@ -177,7 +202,7 @@ class MyDrawer extends GetView<MainScreenController> {
               ListTile(
                 onTap: () { },
                 leading: const Icon(Icons.gavel),
-                title: const Text('Điền Khoản'),
+                title: const Text('Điều Khoản'),
               ),
               ElevatedButton(
                 onPressed: controller.logout,

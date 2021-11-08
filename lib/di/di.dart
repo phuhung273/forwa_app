@@ -1,5 +1,6 @@
 
 import 'package:dio/dio.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/remote/address_service.dart';
 import 'package:forwa_app/datasource/remote/auth_service.dart';
@@ -13,7 +14,9 @@ import 'package:forwa_app/datasource/repository/cart_repo.dart';
 import 'package:forwa_app/datasource/repository/customer_repo.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
+import 'package:forwa_app/di/firebase_messaging_service.dart';
 import 'package:forwa_app/di/location_service.dart';
+import 'package:forwa_app/di/notification_service.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -42,7 +45,9 @@ Future configureDependencies() async {
   Get.put(GoogleSignIn());
   Get.put(LocationService());
   Get.put(const Distance());
-
+  Get.put(FlutterLocalNotificationsPlugin());
+  Get.put(NotificationService());
+  Get.put(FirebaseMessagingService());
 }
 
 void _configureApiClient(){

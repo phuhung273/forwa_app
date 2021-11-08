@@ -41,7 +41,7 @@ const ROUTE_MESSAGE = '/message';
 
 var appRoute = [
   GetPage(name: ROUTE_SPLASH, page: () => SplashScreen(), binding: SplashScreenBinding()),
-  GetPage(name: ROUTE_MAIN, page: () => MainScreen(), binding: MainScreenBinding()),
+  GetPage(name: ROUTE_MAIN, page: () => const MainScreen(), binding: MainScreenBinding()),
   GetPage(name: ROUTE_LOGIN, page: () => const LoginScreen(), binding: LoginScreenBinding()),
   GetPage(name: ROUTE_REGISTER, page: () => RegisterScreen(), binding: RegisterScreenBinding()),
   GetPage(name: ROUTE_PRODUCT, page: () => const ProductScreen(), binding: ProductScreenBinding()),

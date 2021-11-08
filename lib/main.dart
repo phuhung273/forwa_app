@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/screens/splash/splash_screen_controller.dart';
@@ -8,7 +9,7 @@ import 'di/di.dart';
 
 Future main() async {
   await configureDependencies();
-
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 

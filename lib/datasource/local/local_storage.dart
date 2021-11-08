@@ -12,6 +12,7 @@ const STORE_WEBSITEID_KEY = 'STORE_WEBSITEID_KEY';
 const DEVICENAME_KEY = 'DEVICENAME_KEY';
 const PHONE_KEY = 'PHONE_KEY';
 const CUSTOMER_NAME_KEY = 'CUSTOMER_NAME_KEY';
+const FIREBASE_TOKEN_KEY = 'FIREBASE_TOKEN_KEY';
 
 class LocalStorage {
   final box = GetStorage();
@@ -102,6 +103,14 @@ class LocalStorage {
 
   String? getCustomerName() {
     return box.read(CUSTOMER_NAME_KEY);
+  }
+
+  void saveFirebaseToken(String value){
+    box.write(FIREBASE_TOKEN_KEY, value);
+  }
+
+  String? getFirebaseToken() {
+    return box.read(FIREBASE_TOKEN_KEY);
   }
 
   void removeCredentials(){

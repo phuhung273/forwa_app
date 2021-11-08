@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
-import 'package:forwa_app/datasource/remote/auth_service.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
+import 'package:forwa_app/di/firebase_messaging_service.dart';
 import 'package:forwa_app/route/route.dart';
-import 'package:forwa_app/schema/auth/login_request.dart';
 import 'package:get/get.dart';
 
 class SplashScreenBinding extends Bindings {
@@ -21,26 +21,32 @@ class SplashScreenController extends GetxController {
   final LocalStorage _localStorage = Get.find();
 
   @override
-  void onInit() {
-    super.onInit();
-
+  void onReady() {
+    super.onReady();
     Future.microtask(() => _loadData());
   }
 
   Future<Timer> _loadData() async {
+    final token = await FirebaseMessaging.instance.getToken();
+
+    if(token != null) {
+      print('Firebase token: $token');
+      _localStorage.saveFirebaseToken(token);
+    }
+
+    if(_isEnoughInfo()){
+      final response = await _authRepo.handshake();
+
+      if(response.isSuccess && response.data != null){
+        _localStorage.saveAccessToken(response.data!.accessToken!);
+      } else {
+        _localStorage.removeCredentials();
+      }
+    }
     return Timer(const Duration(seconds: 1), _onDoneLoading);
   }
 
   Future _onDoneLoading() async {
-    if(_isEnoughInfo()){
-        final response = await _authRepo.handshake();
-
-        if(response.isSuccess && response.data != null){
-          _localStorage.saveAccessToken(response.data!.accessToken!);
-        } else {
-          _localStorage.removeCredentials();
-        }
-    }
     Get.offAndToNamed(ROUTE_MAIN);
   }
 
