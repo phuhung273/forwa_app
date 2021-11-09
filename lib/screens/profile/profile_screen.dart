@@ -62,8 +62,8 @@ class ProfileScreen extends GetView<ProfileScreenController> {
               ProfileAction(
                 icon: Icons.logout,
                 text: 'Đăng xuất',
-                onTap: () {
-                  _mainController.logout();
+                onTap: () async {
+                  await _mainController.logout();
                   Get.back();
                 },
               )

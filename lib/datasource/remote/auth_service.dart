@@ -3,6 +3,7 @@ import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/schema/auth/handshake_response.dart';
 import 'package:forwa_app/schema/auth/login_request.dart';
 import 'package:forwa_app/schema/auth/login_response.dart';
+import 'package:forwa_app/schema/auth/logout_request.dart';
 import 'package:forwa_app/schema/auth/register_request.dart';
 import 'package:forwa_app/schema/auth/social_login_request.dart';
 import 'package:forwa_app/schema/customer/customer.dart';
@@ -25,4 +26,7 @@ abstract class AuthService {
 
   @POST('/V2/handshake')
   Future<HandshakeResponse> handshake();
+
+  @POST('/V2/logout')
+  Future<String> logout(@Body() LogoutRequest request);
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
@@ -5,6 +6,7 @@ import 'package:forwa_app/datasource/repository/auth_repo.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/api_response.dart';
 import 'package:forwa_app/schema/auth/facebook_user.dart';
+import 'package:forwa_app/schema/auth/firebase_token.dart';
 import 'package:forwa_app/schema/auth/login_request.dart';
 import 'package:forwa_app/schema/auth/login_response.dart';
 import 'package:forwa_app/schema/auth/social_login_request.dart';
@@ -43,7 +45,18 @@ class LoginScreenController extends BaseController {
 
     final username = usernameController.text;
     final pwd = passwordController.text;
-    final request = LoginRequest(username: username, password: pwd);
+
+    final firebaseToken = await _prepareFirebaseToken();
+    if(firebaseToken == null){
+      hideDialog();
+      return;
+    }
+
+    final request = LoginRequest(
+      username: username,
+      password: pwd,
+      firebaseToken: firebaseToken,
+    );
     final response = await _authRepo.login(request);
 
     hideDialog();
@@ -118,12 +131,19 @@ class LoginScreenController extends BaseController {
 
     final words = username.split(' ');
 
+    final firebaseToken = await _prepareFirebaseToken();
+    if(firebaseToken == null){
+      hideDialog();
+      return;
+    }
+
     final request = SocialLoginRequest(
       customer: Customer(
         firstName: words.first,
         lastName: words.length > 1 ? words.last : words.first,
         email: email,
       ),
+      firebaseToken: firebaseToken,
     );
 
     final response = await _authRepo.socialLogin(request);
@@ -157,5 +177,16 @@ class LoginScreenController extends BaseController {
       _mainController.refreshCredential();
       Get.offAndToNamed(ROUTE_MAIN);
     }
+  }
+
+  Future<FirebaseToken?> _prepareFirebaseToken() async{
+    final firebaseTokenValue = await FirebaseMessaging.instance.getToken();
+    final deviceName = _localStorage.getDeviceName();
+
+    if(firebaseTokenValue == null || deviceName == null){
+      return null;
+    }
+
+    return FirebaseToken(value: firebaseTokenValue, deviceName: deviceName);
   }
 }

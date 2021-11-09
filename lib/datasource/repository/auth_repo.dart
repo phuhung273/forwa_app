@@ -9,6 +9,7 @@ import 'package:forwa_app/schema/auth/handshake_response.dart';
 import 'package:forwa_app/schema/auth/handshake_response.dart';
 import 'package:forwa_app/schema/auth/login_request.dart';
 import 'package:forwa_app/schema/auth/login_response.dart';
+import 'package:forwa_app/schema/auth/logout_request.dart';
 import 'package:forwa_app/schema/auth/register_request.dart';
 import 'package:forwa_app/schema/auth/social_login_request.dart';
 import 'package:forwa_app/schema/customer/customer.dart';
@@ -103,6 +104,28 @@ class AuthRepo extends BaseRepo{
           final error = obj.toString();
           print(error);
           return ApiResponse<HandshakeResponse>.fromError(error: error);
+      }
+    });
+  }
+
+  Future<ApiResponse<String>> logout(LogoutRequest request) async {
+    return _service.logout(request).then((value){
+      return ApiResponse<String>(data: value);
+    }).catchError((Object obj) {
+      // non-200 error goes here.
+      switch (obj.runtimeType) {
+        case DioError:
+          final res = (obj as DioError).response;
+          if(res == null || res.statusCode == HttpStatus.internalServerError) return ApiResponse<String>.fromError();
+
+          final data = getErrorData(res);
+          final error = data['message'] ?? res.statusMessage;
+          print(error);
+          return ApiResponse<String>.fromError(error: data['message'] ?? 'Lỗi không xác định');
+        default:
+          final error = obj.toString();
+          print(error);
+          return ApiResponse<String>.fromError(error: error);
       }
     });
   }

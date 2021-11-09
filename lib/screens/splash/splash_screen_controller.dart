@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
@@ -23,6 +25,7 @@ class SplashScreenController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+    _configureDevice();
     Future.microtask(() => _loadData());
   }
 
@@ -48,6 +51,22 @@ class SplashScreenController extends GetxController {
 
   Future _onDoneLoading() async {
     Get.offAndToNamed(ROUTE_MAIN);
+  }
+
+  Future _configureDevice() async {
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    if(_localStorage.getDeviceName() == null){
+
+      if(Platform.isIOS){
+        final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        _localStorage.saveDeviceName(iosInfo.utsname.machine!);
+      } else {
+        final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        _localStorage.saveDeviceName(androidInfo.model!);
+      }
+    }
+
   }
 
   bool _isEnoughInfo(){
