@@ -1,3 +1,4 @@
+import 'package:forwa_app/schema/order/create_invoice_request.dart';
 import 'package:forwa_app/schema/order/list_order_response.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
@@ -21,5 +22,6 @@ abstract class OrderService {
   @POST('/V2/order/{orderId}/invoice')
   Future<String> createInvoice(
     @Path('orderId') int orderId,
+    @Body() CreateInvoiceRequest request,
   );
 }

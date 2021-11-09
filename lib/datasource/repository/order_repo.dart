@@ -2,6 +2,7 @@
 import 'package:forwa_app/datasource/remote/order_service.dart';
 import 'package:forwa_app/datasource/repository/base_repo.dart';
 import 'package:forwa_app/schema/api_response.dart';
+import 'package:forwa_app/schema/order/create_invoice_request.dart';
 import 'package:forwa_app/schema/order/list_order_response.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
@@ -56,8 +57,8 @@ class OrderRepo extends BaseRepo{
     );
   }
 
-  Future<ApiResponse<String>> createInvoice(int orderId) async {
-    return _service.createInvoice(orderId).then((value){
+  Future<ApiResponse<String>> createInvoice(int orderId, CreateInvoiceRequest request) async {
+    return _service.createInvoice(orderId, request).then((value){
       return ApiResponse<String>(data: value);
     }).catchError((Object obj) {
       // non-200 error goes here.

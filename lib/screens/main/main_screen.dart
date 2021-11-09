@@ -184,21 +184,21 @@ class MyDrawer extends GetView<MainScreenController> {
                 leading: const Icon(Icons.account_circle_rounded),
                 title: const Text('Hồ Sơ'),
               ),
-              ListTile(
-                onTap: () { },
-                leading: const Icon(Icons.volunteer_activism),
-                title: const Text('Danh Sách Cho Đi'),
-              ),
-              ListTile(
-                onTap: () { },
-                leading: const Icon(Icons.card_giftcard),
-                title: const Text('Danh Sách Nhận'),
-              ),
-              ListTile(
-                onTap: () { },
-                leading: const Icon(Icons.notifications),
-                title: const Text('Thông Báo'),
-              ),
+              // ListTile(
+              //   onTap: () { },
+              //   leading: const Icon(Icons.volunteer_activism),
+              //   title: const Text('Danh Sách Cho Đi'),
+              // ),
+              // ListTile(
+              //   onTap: () { },
+              //   leading: const Icon(Icons.card_giftcard),
+              //   title: const Text('Danh Sách Nhận'),
+              // ),
+              // ListTile(
+              //   onTap: () { },
+              //   leading: const Icon(Icons.notifications),
+              //   title: const Text('Thông Báo'),
+              // ),
               ListTile(
                 onTap: () { },
                 leading: const Icon(Icons.gavel),

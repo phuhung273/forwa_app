@@ -3,6 +3,7 @@ import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/cart_repo.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/schema/cart/cart_customer.dart';
+import 'package:forwa_app/schema/order/create_invoice_request.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/base_controller.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,9 @@ class ChooseReceiverScreenBinding extends Bindings {
   }
 }
 
+const productIdParam = 'product_id';
+const productNameParam = 'product_name';
+
 class ChooseReceiverScreenController extends BaseController {
 
   final LocalStorage _localStorage = Get.find();
@@ -22,18 +26,25 @@ class ChooseReceiverScreenController extends BaseController {
 
   final OrderRepo _orderRepo = Get.find();
 
-  final _productId = Get.arguments;
+  int? _productId;
+  final _productName = Get.parameters[productNameParam];
 
   final customers = List<CartCustomer>.empty().obs;
 
   @override
+  void onInit() {
+    super.onInit();
+    _productId = int.tryParse(Get.parameters[productIdParam]!);
+}
+
+  @override
   Future onReady() async {
-    if(_productId == null) {
+    if(_productId == null || _productName == null) {
       return;
     }
 
     showLoadingDialog();
-    final response = await _cartRepo.getCustomersOfProduct(_productId);
+    final response = await _cartRepo.getCustomersOfProduct(_productId!);
     hideDialog();
     if(!response.isSuccess || response.data == null || response.data!.customers == null){
       return;
@@ -43,11 +54,16 @@ class ChooseReceiverScreenController extends BaseController {
   }
 
   Future pickReceiver(int orderId) async {
+    if(_productId == null || _productName == null) {
+      return;
+    }
+
     final token = _localStorage.getAccessToken();
     _localStorage.removeAccessToken();
 
+    final request = CreateInvoiceRequest(productName: _productName!);
     showLoadingDialog();
-    final response = await _orderRepo.createInvoice(orderId);
+    final response = await _orderRepo.createInvoice(orderId, request);
     hideDialog();
 
     if(token != null) {
