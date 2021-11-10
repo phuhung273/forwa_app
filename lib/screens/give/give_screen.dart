@@ -8,11 +8,9 @@ import 'package:time_range/time_range.dart';
 
 import 'give_screen_controller.dart';
 
-class GiveScreen extends StatelessWidget {
+class GiveScreen extends GetView<GiveScreenController> {
 
-  final GiveScreenController _controller = Get.find();
-
-  GiveScreen({Key? key}) : super(key: key);
+  const GiveScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,23 +28,24 @@ class GiveScreen extends StatelessWidget {
             children: [
               const Divider(),
               ImageGalleryPicker(
-                onPick: (file) => _controller.addImage(file),
+                onPick: (file) => controller.addImage(file),
+                onDelete: controller.deleteImage,
               ),
               InputField(
                 hintText: 'Tên đồ vật',
                 icon: Icons.card_giftcard,
-                controller: _controller.nameController,
+                controller: controller.nameController,
               ),
               InputField(
                 hintText: 'Mô tả',
                 icon: Icons.edit,
-                controller: _controller.descriptionController,
+                controller: controller.descriptionController,
                 maxLines: 3,
               ),
               // InputField(
               //   hintText: 'Giờ có thể lấy',
               //   icon: Icons.schedule,
-              //   controller: _controller.address1Controller,
+              //   controller: controller.address1Controller,
               // ),
               AppLevelActionContainer(
                 child: TimeRange(
@@ -71,14 +70,14 @@ class GiveScreen extends StatelessWidget {
                   timeStep: 60,
                   timeBlock: 60,
                   initialRange: initialPickupTime,
-                  onRangeCompleted: (range) => _controller.time = range,
+                  onRangeCompleted: (range) => controller.time = range,
                 ),
               )
             ],
           ),
           bottom: AppLevelActionContainer(
             child: ElevatedButton(
-              onPressed: _controller.submit,
+              onPressed: controller.submit,
               child: const Text('Gửi Lên'),
             ),
           )

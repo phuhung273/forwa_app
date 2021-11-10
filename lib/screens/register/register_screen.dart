@@ -11,11 +11,9 @@ import 'package:get/get.dart';
 
 import 'register_screen_controller.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends GetView<RegisterScreenController> {
 
-  final RegisterScreenController _controller = Get.find();
-
-  RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,26 +27,26 @@ class RegisterScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(_controller.result.value, style: theme.textTheme.subtitle1),
+                Text(controller.result.value, style: theme.textTheme.subtitle1),
                 const Divider(),
                 InputField(
                   hintText: 'Họ tên',
                   icon: Icons.person,
                   autofillHints: const [AutofillHints.name],
-                  controller: _controller.nameController,
+                  controller: controller.nameController,
                 ),
                 InputField(
                   hintText: 'Email',
                   icon: Icons.email,
                   autofillHints: const [AutofillHints.email],
-                  controller: _controller.emailController,
+                  controller: controller.emailController,
                 ),
                 PasswordField(
-                  controller: _controller.pwdController,
+                  controller: controller.pwdController,
                 ),
                 AppLevelActionContainer(
                     child: ElevatedButton(
-                      onPressed: _controller.register,
+                      onPressed: controller.register,
                       child: const Text('Đăng Ký'),
                     )
                 ),

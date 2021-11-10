@@ -89,6 +89,10 @@ class GiveScreenController extends BaseController {
     ));
   }
 
+  void deleteImage(int index){
+    _imageData.removeAt(index);
+  }
+
   Future submit() async {
     if(_imageData.isEmpty){
       // TODO: set error message

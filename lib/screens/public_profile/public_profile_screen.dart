@@ -8,11 +8,9 @@ import 'package:get/get.dart';
 
 import 'public_profile_screen_controller.dart';
 
-class PublicProfileScreen extends StatelessWidget {
+class PublicProfileScreen extends GetView<PublicProfileScreenController> {
 
-  final PublicProfileScreenController _controller = Get.find();
-
-  PublicProfileScreen({Key? key}) : super(key: key);
+  const PublicProfileScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
