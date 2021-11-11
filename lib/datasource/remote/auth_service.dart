@@ -5,6 +5,7 @@ import 'package:forwa_app/schema/auth/login_request.dart';
 import 'package:forwa_app/schema/auth/login_response.dart';
 import 'package:forwa_app/schema/auth/logout_request.dart';
 import 'package:forwa_app/schema/auth/register_request.dart';
+import 'package:forwa_app/schema/auth/save_firebase_token_request.dart';
 import 'package:forwa_app/schema/auth/social_login_request.dart';
 import 'package:forwa_app/schema/customer/customer.dart';
 import 'package:retrofit/retrofit.dart';
@@ -29,4 +30,7 @@ abstract class AuthService {
 
   @POST('/V2/logout')
   Future<String> logout(@Body() LogoutRequest request);
+
+  @POST('/V2/firebaseTokens')
+  Future<String> saveFirebaseToken(@Body() SaveFirebaseTokenRequest request);
 }
