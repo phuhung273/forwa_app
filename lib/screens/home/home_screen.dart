@@ -21,62 +21,67 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          // title: const Text('Forwa'),
-          floating: true,
-          leading: IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () => _mainController.openDrawer(),
-          ),
-          // title: Text(_controller.greeting.value),
-          actions: [
-            IconButton(
-              icon: const Icon(
-                Icons.send,
-                // color: theme.colorScheme.secondary,
-              ),
-              onPressed: (){ },
-            )
-          ],
-        ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.all(defaultSpacing),
-            child: Column(
-              children: [
-                Text(
-                  'Hãy cho đi đồ không dùng tới người xung quanh có nhu cầu, giảm lãng phí, giải phóng không gian sống, và giảm chất thải vào môi trường.',
-                  style: theme.textTheme.headline6?.copyWith(
-                    color: Colors.grey,
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: defaultSpacing),
-                  child: Obx(
-                    () => ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: _controller.products.length,
-                      itemBuilder: (context, index) {
-                        final product = _controller.products[index];
-                        return InkWell(
-                          onTap: () => Get.toNamed(ROUTE_PRODUCT, arguments: product.sku),
-                          child: ProductCard(
-                            product: product,
-                          )
-                        );
-                        }
-                      ),
-                  ),
-                ),
-                const Divider(),
-              ],
+    return RefreshIndicator(
+      onRefresh: _controller.main,
+      color: theme.colorScheme.secondary,
+      child: CustomScrollView(
+        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        slivers: [
+          SliverAppBar(
+            // title: const Text('Forwa'),
+            floating: true,
+            leading: IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () => _mainController.openDrawer(),
             ),
+            // title: Text(_controller.greeting.value),
+            actions: [
+              IconButton(
+                icon: const Icon(
+                  Icons.send,
+                  // color: theme.colorScheme.secondary,
+                ),
+                onPressed: (){ },
+              )
+            ],
           ),
-        )
-      ],
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(defaultSpacing),
+              child: Column(
+                children: [
+                  Text(
+                    'Hãy cho đi đồ không dùng tới người xung quanh có nhu cầu, giảm lãng phí, giải phóng không gian sống, và giảm chất thải vào môi trường.',
+                    style: theme.textTheme.headline6?.copyWith(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: defaultSpacing),
+                    child: Obx(
+                      () => ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: _controller.products.length,
+                        itemBuilder: (context, index) {
+                          final product = _controller.products[index];
+                          return InkWell(
+                            onTap: () => Get.toNamed(ROUTE_PRODUCT, arguments: product.sku),
+                            child: ProductCard(
+                              product: product,
+                            )
+                          );
+                          }
+                        ),
+                    ),
+                  ),
+                  const Divider(),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

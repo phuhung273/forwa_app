@@ -3,7 +3,7 @@ import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
-import 'package:forwa_app/screens/base_controller.dart';
+import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';

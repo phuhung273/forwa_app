@@ -1,11 +1,10 @@
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/schema/product/product.dart';
+import 'package:forwa_app/screens/base_controller/refreshable_controller.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
-
-import '../base_controller.dart';
 
 class HomeScreenBinding extends Bindings {
   @override
@@ -14,7 +13,7 @@ class HomeScreenBinding extends Bindings {
   }
 }
 
-class HomeScreenController extends BaseController {
+class HomeScreenController extends RefreshableController {
 
   final ProductRepo _productRepo = Get.find();
 
@@ -31,10 +30,11 @@ class HomeScreenController extends BaseController {
     super.onReady();
 
     here = await _locationService.here();
+  }
 
-    showLoadingDialog();
+  @override
+  Future main() async {
     final response = await _productRepo.getProductsOnWebsite();
-    hideDialog();
 
     if(!response.isSuccess || response.data == null || response.data!.items == null){
       return;
@@ -42,4 +42,5 @@ class HomeScreenController extends BaseController {
 
     products.assignAll(response.data!.items!);
   }
+
 }

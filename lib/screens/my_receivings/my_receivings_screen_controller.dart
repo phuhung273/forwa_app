@@ -1,7 +1,7 @@
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/schema/order/order.dart';
-import 'package:forwa_app/screens/base_controller.dart';
+import 'package:forwa_app/screens/base_controller/authorized_refreshable_controller.dart';
 import 'package:get/get.dart';
 
 class MyReceivingsScreenBinding extends Bindings {
@@ -11,7 +11,7 @@ class MyReceivingsScreenBinding extends Bindings {
   }
 }
 
-class MyReceivingsScreenController extends BaseController {
+class MyReceivingsScreenController extends AuthorizedRefreshableController {
 
   final LocalStorage _localStorage = Get.find();
 
@@ -29,17 +29,13 @@ class MyReceivingsScreenController extends BaseController {
   }
 
   @override
-  Future onReady() async {
-    super.onReady();
+  bool isAuthorized() {
+    return _customerId != null;
+  }
 
-    if(_customerId == null) {
-      showLoginDialog();
-      return;
-    }
-
-    showLoadingDialog();
+  @override
+  Future main() async {
     final response = await _orderRepo.getOrdersOfCustomer(_customerId!);
-    hideDialog();
     if(!response.isSuccess || response.data == null || response.data!.items == null){
       return;
     }

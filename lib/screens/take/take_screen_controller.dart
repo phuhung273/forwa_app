@@ -4,7 +4,7 @@ import 'package:forwa_app/datasource/repository/cart_repo.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:get/get.dart';
 
-import '../base_controller.dart';
+import '../base_controller/base_controller.dart';
 
 const skuParam = 'sku';
 const sellerNameParam = 'seller_name';

@@ -15,7 +15,7 @@ import 'package:forwa_app/schema/product/media_gallery_entry.dart';
 import 'package:forwa_app/schema/product/media_gallery_entry_content.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/schema/product/stock_item.dart';
-import 'package:forwa_app/screens/base_controller.dart';
+import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:get/get.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart';

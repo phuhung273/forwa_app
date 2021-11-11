@@ -1,6 +1,6 @@
 import 'package:forwa_app/datasource/repository/customer_repo.dart';
 import 'package:forwa_app/schema/address/customer_address_response.dart';
-import 'package:forwa_app/screens/base_controller.dart';
+import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:get/get.dart';
 
 class ProfileAddressBinding extends Bindings {

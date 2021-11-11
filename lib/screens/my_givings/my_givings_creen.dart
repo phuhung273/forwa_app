@@ -24,56 +24,61 @@ class MyGivingsScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            const SliverAppBar(
-              automaticallyImplyLeading: false,
-              title: Text('Danh Sách Cho Đi'),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(defaultSpacing),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Obx(
-                          () => Text(
-                            'Tổng cho đi: ${_controller.products.length}',
-                            style: theme.textTheme.headline6,
-                          ),
-                        ),
-                        SecondaryActionContainer(
-                          child: ElevatedButton(
-                            onPressed: () => Get.toNamed(ROUTE_GIVE),
-                            child: const Text('Tải lên')
-                          ),
-                        )
-                      ],
-                    ),
-                    const Divider(),
-                    Obx(
-                      () => ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _controller.products.length,
-                        itemBuilder: (context, index) =>
-                          InkWell(
-                            onTap: () => Get.toNamed(
-                              ROUTE_CHOOSE_RECEIVER,
-                              arguments: _controller.products[index].id
-                            ),
-                            child: GivingItem(product: _controller.products[index]),
-                          ),
-                        separatorBuilder: (context, index) => const SizedBox(height: defaultPadding),
-                      ),
-                    )
-                  ],
-                ),
+        body: RefreshIndicator(
+          color: theme.colorScheme.secondary,
+          onRefresh: _controller.authorizedMain,
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            slivers: [
+              const SliverAppBar(
+                automaticallyImplyLeading: false,
+                title: Text('Danh Sách Cho Đi'),
               ),
-            )
-          ],
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(defaultSpacing),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Obx(
+                            () => Text(
+                              'Tổng cho đi: ${_controller.products.length}',
+                              style: theme.textTheme.headline6,
+                            ),
+                          ),
+                          SecondaryActionContainer(
+                            child: ElevatedButton(
+                              onPressed: () => Get.toNamed(ROUTE_GIVE),
+                              child: const Text('Tải lên')
+                            ),
+                          )
+                        ],
+                      ),
+                      const Divider(),
+                      Obx(
+                        () => ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: _controller.products.length,
+                          itemBuilder: (context, index) =>
+                            InkWell(
+                              onTap: () => Get.toNamed(
+                                ROUTE_CHOOSE_RECEIVER,
+                                arguments: _controller.products[index].id
+                              ),
+                              child: GivingItem(product: _controller.products[index]),
+                            ),
+                          separatorBuilder: (context, index) => const SizedBox(height: defaultPadding),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       )
     );

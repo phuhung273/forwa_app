@@ -1,8 +1,7 @@
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
-import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
-import 'package:forwa_app/screens/base_controller.dart';
+import 'package:forwa_app/screens/base_controller/authorized_refreshable_controller.dart';
 import 'package:get/get.dart';
 
 class MyGivingsScreenBinding extends Bindings {
@@ -12,7 +11,7 @@ class MyGivingsScreenBinding extends Bindings {
   }
 }
 
-class MyGivingsScreenController extends BaseController {
+class MyGivingsScreenController extends AuthorizedRefreshableController {
 
   final ProductRepo _productRepo = Get.find();
 
@@ -29,21 +28,18 @@ class MyGivingsScreenController extends BaseController {
   }
 
   @override
-  Future onReady() async {
-    super.onReady();
-
-    if(_websiteId == null) {
-      showLoginDialog();
-      return;
-    }
-
-    showLoadingDialog();
+  Future main() async {
     final response = await _productRepo.getProductsOnWebsite(websiteId: _websiteId!);
-    hideDialog();
+
     if(!response.isSuccess || response.data == null || response.data!.items == null){
       return;
     }
 
     products.assignAll(response.data!.items!);
+  }
+
+  @override
+  bool isAuthorized() {
+    return _websiteId != null;
   }
 }

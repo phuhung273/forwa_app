@@ -16,33 +16,40 @@ class MyReceivingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return SafeArea(
       child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            const SliverAppBar(
-              automaticallyImplyLeading: false,
-              title: Text('Danh Sách Nhận'),
-            ),
-            const SliverToBoxAdapter(
-              child: Divider(),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(defaultPadding),
-                child: Obx(
-                  () => ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: _controller.orders.length,
-                    itemBuilder: (context, index)
-                      => ReceivingCard(order: _controller.orders[index]),
-                    separatorBuilder: (context, index) => const Divider(),
+        body: RefreshIndicator(
+          color: theme.colorScheme.secondary,
+          onRefresh: _controller.authorizedMain,
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            slivers: [
+              const SliverAppBar(
+                automaticallyImplyLeading: false,
+                title: Text('Danh Sách Nhận'),
+              ),
+              const SliverToBoxAdapter(
+                child: Divider(),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(defaultPadding),
+                  child: Obx(
+                    () => ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _controller.orders.length,
+                      itemBuilder: (context, index)
+                        => ReceivingCard(order: _controller.orders[index]),
+                      separatorBuilder: (context, index) => const Divider(),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ]
+            ]
+          ),
         ),
       )
     );

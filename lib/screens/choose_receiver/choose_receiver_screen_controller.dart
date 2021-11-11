@@ -5,7 +5,7 @@ import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/schema/cart/cart_customer.dart';
 import 'package:forwa_app/schema/order/create_invoice_request.dart';
 import 'package:forwa_app/schema/order/order.dart';
-import 'package:forwa_app/screens/base_controller.dart';
+import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:get/get.dart';
 
 class ChooseReceiverScreenBinding extends Bindings {
