@@ -7,7 +7,7 @@ abstract class AuthorizedRefreshableController extends BaseController{
 
   Future authorizedMain() async {
     if(!isAuthorized()) return;
-    main();
+    await main();
   }
 
   bool isAuthorized();

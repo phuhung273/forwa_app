@@ -2,10 +2,12 @@ import 'package:enum_to_string/enum_to_string.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/cart_repo.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart';
+import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/cart/cart_customer.dart';
 import 'package:forwa_app/schema/order/create_invoice_request.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
+import 'package:forwa_app/screens/give_success/give_success_screen_controller.dart';
 import 'package:get/get.dart';
 
 class ChooseReceiverScreenBinding extends Bindings {
@@ -77,5 +79,14 @@ class ChooseReceiverScreenController extends BaseController {
     final index = customers.indexWhere((element) => element.orderId == orderId);
     customers[index].orderStatus = EnumToString.convertToString(OrderStatus.PROCESSING).toLowerCase();
     customers.refresh();
+  }
+
+  Future shipSuccess(String customerName) async {
+    Get.toNamed(
+      ROUTE_GIVE_SUCCESS,
+      parameters: {
+        customerNameParam: customerName
+      }
+    );
   }
 }

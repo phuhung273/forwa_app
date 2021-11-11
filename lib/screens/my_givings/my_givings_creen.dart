@@ -5,6 +5,7 @@ import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
+import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
 import 'package:forwa_app/widgets/secondary_action_container.dart';
 import 'package:get/get.dart';
 
@@ -62,14 +63,21 @@ class MyGivingsScreen extends StatelessWidget {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: _controller.products.length,
-                          itemBuilder: (context, index) =>
-                            InkWell(
+                          itemBuilder: (context, index) {
+                            final product = _controller.products[index];
+                            return InkWell(
                               onTap: () => Get.toNamed(
                                 ROUTE_CHOOSE_RECEIVER,
-                                arguments: _controller.products[index].id
+                                parameters: {
+                                  productIdParam: product.id.toString(),
+                                  productNameParam: product.name,
+                                }
                               ),
-                              child: GivingItem(product: _controller.products[index]),
-                            ),
+                              child: GivingItem(
+                                product: _controller.products[index]
+                              ),
+                            );
+                          },
                           separatorBuilder: (context, index) => const SizedBox(height: defaultPadding),
                         ),
                       )

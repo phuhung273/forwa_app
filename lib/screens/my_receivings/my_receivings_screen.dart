@@ -41,8 +41,11 @@ class MyReceivingsScreen extends StatelessWidget {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: _controller.orders.length,
-                      itemBuilder: (context, index)
-                        => ReceivingCard(order: _controller.orders[index]),
+                      itemBuilder: (context, index) =>
+                        ReceivingCard(
+                          order: _controller.orders[index],
+                          onTakeSuccess: () => _controller.takeSuccess('Hung Tran'),
+                        ),
                       separatorBuilder: (context, index) => const Divider(),
                     ),
                   ),
@@ -60,9 +63,11 @@ const IMAGE_WIDTH = 150.0;
 
 class ReceivingCard extends StatelessWidget {
   final Order order;
+  final VoidCallback onTakeSuccess;
   const ReceivingCard({
     Key? key,
     required this.order,
+    required this.onTakeSuccess,
   }) : super(key: key);
 
   @override
@@ -136,6 +141,15 @@ class ReceivingCard extends StatelessWidget {
                       )
                     ),
                   ),
+                Center(
+                  child: SecondaryActionContainer(
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.done),
+                        onPressed: onTakeSuccess,
+                        label: const Text('Hoàn thành'),
+                      )
+                  ),
+                ),
               ],
             ),
           ),

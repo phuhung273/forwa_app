@@ -32,6 +32,7 @@ class ChooseReceiverScreen extends GetView<ChooseReceiverScreenController> {
                 return ReceiverCard(
                   customer: customer,
                   onPick: () => controller.pickReceiver(customer.orderId),
+                  onSuccess: () => controller.shipSuccess('${customer.customerFirstName} ${customer.customerLastName}'),
                 );
               },
               separatorBuilder: (context, index) => const Divider(),
@@ -46,10 +47,12 @@ class ChooseReceiverScreen extends GetView<ChooseReceiverScreenController> {
 class ReceiverCard extends StatelessWidget {
   final CartCustomer customer;
   final VoidCallback onPick;
+  final VoidCallback onSuccess;
   const ReceiverCard({
     Key? key,
     required this.customer,
     required this.onPick,
+    required this.onSuccess,
   }) : super(key: key);
 
   @override
@@ -120,6 +123,11 @@ class ReceiverCard extends StatelessWidget {
         onPressed: onPick,
         child: Text(_buildMainButtonText(status)),
       );
+    } else if(status == OrderStatus.PROCESSING){
+      return ElevatedButton(
+        onPressed: onSuccess,
+        child: Text(_buildMainButtonText(status)),
+      );
     }
 
     return TextButton(
@@ -133,7 +141,7 @@ class ReceiverCard extends StatelessWidget {
       case OrderStatus.PENDING:
         return 'Chọn';
       case OrderStatus.PROCESSING:
-        return 'Đã chọn';
+        return 'Hoàn thành';
       case OrderStatus.SUCCESS:
         return 'Đã giao';
       default:

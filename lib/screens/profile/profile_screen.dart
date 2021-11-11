@@ -36,6 +36,7 @@ class ProfileScreen extends GetView<ProfileScreenController> {
                 hintText: 'Your Email',
                 icon: Icons.email,
                 controller: controller.emailController,
+                textCapitalization: TextCapitalization.none,
               ),
               InputField(
                 hintText: 'Your Phone',

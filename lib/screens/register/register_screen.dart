@@ -40,6 +40,7 @@ class RegisterScreen extends GetView<RegisterScreenController> {
                   icon: Icons.email,
                   autofillHints: const [AutofillHints.email],
                   controller: controller.emailController,
+                  textCapitalization: TextCapitalization.none,
                 ),
                 PasswordField(
                   controller: controller.pwdController,

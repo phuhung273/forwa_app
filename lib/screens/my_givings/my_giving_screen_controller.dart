@@ -40,6 +40,7 @@ class MyGivingsScreenController extends AuthorizedRefreshableController {
 
   @override
   bool isAuthorized() {
+    _websiteId = _localStorage.getStoreWebsiteId();
     return _websiteId != null;
   }
 }

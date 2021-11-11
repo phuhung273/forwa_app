@@ -37,6 +37,7 @@ class LoginScreen extends GetView<LoginScreenController> {
                     icon: Icons.person,
                     autofillHints: const [AutofillHints.email],
                     controller: controller.usernameController,
+                    textCapitalization: TextCapitalization.none,
                   ),
                   PasswordField(
                     controller: controller.passwordController,
