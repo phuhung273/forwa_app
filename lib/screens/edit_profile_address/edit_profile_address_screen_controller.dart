@@ -4,7 +4,7 @@ import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/address_repo.dart';
 import 'package:forwa_app/schema/address/create_address_request.dart';
 import 'package:forwa_app/schema/address/customer_address.dart';
-import 'package:forwa_app/schema/product/custom_attribute.dart';
+import 'package:forwa_app/schema/custom_attribute.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';

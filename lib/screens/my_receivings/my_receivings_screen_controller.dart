@@ -39,19 +39,22 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController {
   @override
   Future main() async {
     final response = await _orderRepo.getOrdersOfCustomer(_customerId!);
-    if(!response.isSuccess || response.data == null || response.data!.items == null){
+    if(!response.isSuccess || response.data == null){
       return;
     }
 
-    orders.assignAll(response.data!.items!);
+    orders.assignAll(response.data!.items ?? []);
   }
 
-  Future takeSuccess(String customerName) async {
+  Future takeSuccess(int index) async {
+    final order = orders[index];
     Get.toNamed(
-        ROUTE_TAKE_SUCCESS,
-        parameters: {
-          customerNameParam: customerName
-        }
+      ROUTE_TAKE_SUCCESS,
+      parameters: {
+        customerNameParam: order.sellerName!,
+        toIdParam: order.sellerId.toString(),
+        productIdParam: order.items.first.productId.toString(),
+      }
     );
   }
 }

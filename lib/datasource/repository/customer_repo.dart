@@ -31,4 +31,26 @@ class CustomerRepo extends BaseRepo {
       }
     });
   }
+
+  Future<ApiResponse<Customer>> customerInfo(int customerId) async {
+    return _service.customerInfo(customerId).then((value){
+      return ApiResponse<Customer>(data: value);
+    }).catchError((Object obj) {
+      // non-200 error goes here.
+      switch (obj.runtimeType) {
+        case DioError:
+          final res = (obj as DioError).response;
+          if(res == null || res.statusCode == HttpStatus.internalServerError) return ApiResponse<Customer>.fromError();
+
+          final data = getErrorData(res);
+          final error = data['message'] ?? res.statusMessage;
+          print(error);
+          return ApiResponse<Customer>.fromError(error: data['message'] ?? 'Lỗi không xác định');
+        default:
+          final error = obj.toString();
+          print(error);
+          return ApiResponse<Customer>.fromError(error: error);
+      }
+    });
+  }
 }

@@ -31,11 +31,11 @@ class MyGivingsScreenController extends AuthorizedRefreshableController {
   Future main() async {
     final response = await _productRepo.getProductsOnWebsite(websiteId: _websiteId!);
 
-    if(!response.isSuccess || response.data == null || response.data!.items == null){
+    if(!response.isSuccess || response.data == null){
       return;
     }
 
-    products.assignAll(response.data!.items!);
+    products.assignAll(response.data!.items ?? []);
   }
 
   @override

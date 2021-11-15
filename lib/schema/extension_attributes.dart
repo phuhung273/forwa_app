@@ -1,6 +1,7 @@
+import 'package:forwa_app/schema/review/review.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import 'stock_item.dart';
+import 'product/stock_item.dart';
 
 part 'extension_attributes.g.dart';
 
@@ -22,6 +23,9 @@ class ExtensionAttributes {
   @JsonKey(name: 'seller_name')
   String? sellerName;
 
+  @JsonKey(name: 'seller_id')
+  int? sellerId;
+
   @JsonKey(name: 'is_disabled')
   bool? isDisabled;
 
@@ -31,15 +35,24 @@ class ExtensionAttributes {
   @JsonKey(name: 'longitude')
   String? longitude;
 
+  @JsonKey(name: 'reviews')
+  List<Review>? reviews;
+
+  @JsonKey(name: 'rating')
+  double? rating;
+
   ExtensionAttributes({
     this.websiteIds,
     this.stockItem,
     this.imageUrls,
     this.quantity,
     this.sellerName,
+    this.sellerId,
     this.isDisabled,
     this.latitude,
     this.longitude,
+    this.reviews,
+    this.rating,
   });
 
   factory ExtensionAttributes.fromJson(Map<String, dynamic> json) =>

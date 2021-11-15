@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/cart/cart_customer.dart';
 import 'package:forwa_app/schema/order/order.dart';
+import 'package:forwa_app/screens/public_profile/public_profile_screen_controller.dart';
 import 'package:forwa_app/widgets/rating.dart';
 import 'package:forwa_app/widgets/secondary_action_container.dart';
 import 'package:get/get.dart';
@@ -32,7 +32,7 @@ class ChooseReceiverScreen extends GetView<ChooseReceiverScreenController> {
                 return ReceiverCard(
                   customer: customer,
                   onPick: () => controller.pickReceiver(customer.orderId),
-                  onSuccess: () => controller.shipSuccess('${customer.customerFirstName} ${customer.customerLastName}'),
+                  onSuccess: () => controller.shipSuccess(index),
                 );
               },
               separatorBuilder: (context, index) => const Divider(),
@@ -103,7 +103,13 @@ class ReceiverCard extends StatelessWidget {
           children: [
             SecondaryActionContainer(
               child: OutlinedButton(
-                onPressed: () => Get.toNamed(ROUTE_PUBLIC_PROFILE),
+                onPressed: () =>
+                  Get.toNamed(
+                    ROUTE_PUBLIC_PROFILE,
+                    parameters: {
+                      customerIdParam: customer.customerId.toString()
+                    }
+                  ),
                 child: const Text('Xem thêm'),
               ),
             ),
@@ -126,6 +132,9 @@ class ReceiverCard extends StatelessWidget {
     } else if(status == OrderStatus.PROCESSING){
       return ElevatedButton(
         onPressed: onSuccess,
+        style: ElevatedButton.styleFrom(
+          primary: Colors.green,
+        ),
         child: Text(_buildMainButtonText(status)),
       );
     }

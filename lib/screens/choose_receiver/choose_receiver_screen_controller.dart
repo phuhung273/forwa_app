@@ -41,6 +41,8 @@ class ChooseReceiverScreenController extends BaseController {
 
   @override
   Future onReady() async {
+    super.onReady();
+
     if(_productId == null || _productName == null) {
       return;
     }
@@ -81,11 +83,14 @@ class ChooseReceiverScreenController extends BaseController {
     customers.refresh();
   }
 
-  Future shipSuccess(String customerName) async {
+  Future shipSuccess(int index) async {
+    final customer = customers[index];
     Get.toNamed(
       ROUTE_GIVE_SUCCESS,
       parameters: {
-        customerNameParam: customerName
+        customerNameParam: '${customer.customerFirstName} ${customer.customerLastName}',
+        toIdParam: customer.customerId.toString(),
+        productIdParam: customer.productId.toString(),
       }
     );
   }

@@ -46,7 +46,7 @@ class OrderRepo extends BaseRepo{
     customerId,
     {
       pageSize = 10,
-      fields = 'items[entity_id,status,items[name,sku,updated_at],extension_attributes[base_image_urls]]',
+      fields = 'items[entity_id,status,items[name,sku,product_id,created_at],extension_attributes[base_image_urls,seller_name,seller_id]]',
     }
   ) async {
     return _service.getOrdersOfCustomer(

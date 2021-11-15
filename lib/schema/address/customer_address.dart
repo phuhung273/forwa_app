@@ -1,5 +1,5 @@
 import 'package:forwa_app/schema/custom_attribute_data.dart';
-import 'package:forwa_app/schema/product/custom_attribute.dart';
+import 'package:forwa_app/schema/custom_attribute.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'customer_address.g.dart';

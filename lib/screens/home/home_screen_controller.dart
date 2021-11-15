@@ -36,11 +36,11 @@ class HomeScreenController extends RefreshableController {
   Future main() async {
     final response = await _productRepo.getProductsOnWebsite();
 
-    if(!response.isSuccess || response.data == null || response.data!.items == null){
+    if(!response.isSuccess || response.data == null){
       return;
     }
 
-    products.assignAll(response.data!.items!);
+    products.assignAll(response.data!.items ?? []);
   }
 
 }

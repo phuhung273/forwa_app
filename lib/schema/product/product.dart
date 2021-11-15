@@ -3,8 +3,8 @@ import 'package:forwa_app/schema/custom_attribute_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlong2/latlong.dart';
 
-import 'custom_attribute.dart';
-import 'extension_attributes.dart';
+import '../custom_attribute.dart';
+import '../extension_attributes.dart';
 import 'media_gallery_entry.dart';
 
 part 'product.g.dart';

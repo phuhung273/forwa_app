@@ -12,4 +12,7 @@ abstract class CustomerService {
 
   @GET('/V1/customers/me')
   Future<Customer> myInfo();
+
+  @GET('/V2/customers/{customerId}')
+  Future<Customer> customerInfo(@Path('customerId') int customerId);
 }

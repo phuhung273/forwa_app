@@ -44,7 +44,7 @@ class MyReceivingsScreen extends StatelessWidget {
                       itemBuilder: (context, index) =>
                         ReceivingCard(
                           order: _controller.orders[index],
-                          onTakeSuccess: () => _controller.takeSuccess('Hung Tran'),
+                          onTakeSuccess: () => _controller.takeSuccess(index),
                         ),
                       separatorBuilder: (context, index) => const Divider(),
                     ),
@@ -73,8 +73,8 @@ class ReceivingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final product = order.items.first;
-    final name = product.sellerName ?? 'Không tên';
+    final item = order.items.first;
+    final name = order.sellerName ?? 'Không tên';
     final List<String> words = name.split(' ');
     final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
     final imageUrl = order.firstImageUrl;
@@ -117,7 +117,7 @@ class ReceivingCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: defaultPadding),
                   child: Text(
-                    product.name,
+                    item.name,
                     style: theme.textTheme.subtitle1,
                   ),
                 ),
@@ -141,15 +141,19 @@ class ReceivingCard extends StatelessWidget {
                       )
                     ),
                   ),
-                Center(
-                  child: SecondaryActionContainer(
+                if(order.statusType == OrderStatus.PROCESSING)
+                  Center(
+                    child: SecondaryActionContainer(
                       child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.green,
+                        ),
                         icon: const Icon(Icons.done),
                         onPressed: onTakeSuccess,
                         label: const Text('Hoàn thành'),
                       )
+                    ),
                   ),
-                ),
               ],
             ),
           ),

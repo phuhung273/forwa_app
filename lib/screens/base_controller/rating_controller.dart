@@ -3,8 +3,9 @@ import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:get/get.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 
-class RatingController extends BaseController {
+abstract class RatingController extends BaseController {
 
+  Future onRating(RatingDialogResponse ratingDialogResponse);
 
   void showRatingDialog(String customerName){
     final context = Get.context;
@@ -23,9 +24,7 @@ class RatingController extends BaseController {
       // image: const FlutterLogo(size: 100),
       commentHint: 'Nhập đánh giá',
       submitButtonText: 'Gửi',
-      onSubmitted: (response) {
-        print('rating: ${response.rating}, comment: ${response.comment}');
-      },
+      onSubmitted: onRating,
     );
 
     // show the dialog
