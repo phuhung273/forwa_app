@@ -1,6 +1,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/remote/address_service.dart';
 import 'package:forwa_app/datasource/remote/auth_service.dart';
@@ -23,6 +24,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 Future configureDependencies() async {
   await GetStorage.init();
@@ -30,6 +32,7 @@ Future configureDependencies() async {
   Get.put(LocalStorage());
 
   _configureApiClient();
+  _congifureSocketIO();
 
   Get.put(AuthService(Get.find()));
   Get.put(AuthRepo());
@@ -52,6 +55,16 @@ Future configureDependencies() async {
   Get.put(FlutterLocalNotificationsPlugin());
   Get.put(NotificationService());
   Get.put(FirebaseMessagingService());
+}
+
+void _congifureSocketIO() {
+  final Socket socket = io(CHAT_HOST_URL,
+      OptionBuilder()
+          .setTransports(['websocket'])
+          .disableAutoConnect()
+          .build()
+  );
+  Get.put(socket);
 }
 
 void _configureApiClient(){

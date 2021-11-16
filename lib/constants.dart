@@ -41,5 +41,5 @@ final thinRoundedRectangleShape = RoundedRectangleBorder(
 // const HOST_URL = 'http://157.245.207.9/';
 const HOST_URL = 'http://192.168.1.7';
 // const HOST_URL = 'http://10.0.2.2';
-const CHAT_HOST_URL = 'http://10.0.2.2:3000';
-const CHAT_PUBLIC_URL = 'http://10.0.2.2:3000/public';
+const CHAT_HOST_URL = 'http://192.168.1.7:3000';
+const CHAT_PUBLIC_URL = 'http://192.168.1.7:3000/public';

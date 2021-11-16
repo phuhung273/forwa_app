@@ -71,6 +71,8 @@ dependencies:
   device_info_plus: ^3.1.1
   rating_dialog: ^2.0.3
   lottie: ^1.2.1
+  dash_chat: ^1.1.16
+  socket_io_client: ^2.0.0-beta.4-nullsafety.0
 
 dev_dependencies:
   retrofit_generator: ^2.0.1

@@ -1,4 +1,5 @@
 
+import 'package:forwa_app/screens/chat/message_screen.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
 import 'package:forwa_app/screens/edit_profile_address/edit_profile_address_screen.dart';
@@ -60,5 +61,5 @@ var appRoute = [
   GetPage(name: ROUTE_CHOOSE_RECEIVER, page: () => const ChooseReceiverScreen(), binding: ChooseReceiverScreenBinding()),
   GetPage(name: ROUTE_GIVE_SUCCESS, page: () => const GiveSuccessScreen(), binding: GiveSuccessBinding()),
   GetPage(name: ROUTE_TAKE_SUCCESS, page: () => const TakeSuccessScreen(), binding: TakeSuccessScreenBinding()),
-  // GetPage(name: ROUTE_MESSAGE, page: () => MessageScreen()),
+  GetPage(name: ROUTE_MESSAGE, page: () => MessageScreen()),
 ];

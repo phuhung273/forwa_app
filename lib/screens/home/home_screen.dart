@@ -4,6 +4,7 @@ import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
+import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
@@ -41,7 +42,7 @@ class HomeScreen extends StatelessWidget {
                   Icons.send,
                   // color: theme.colorScheme.secondary,
                 ),
-                onPressed: (){ },
+                onPressed: () => _mainController.changeTab(CHAT_SCREEN_INDEX),
               )
             ],
           ),

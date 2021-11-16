@@ -7,12 +7,15 @@ import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/di/firebase_messaging_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
+import 'package:forwa_app/screens/chat/chat_screen.dart';
 import 'package:forwa_app/screens/home/home_screen.dart';
 import 'package:forwa_app/screens/my_givings/my_givings_creen.dart';
 import 'package:forwa_app/screens/my_receivings/my_receivings_screen.dart';
 import 'package:get/get.dart';
 
 import 'main_screen_controller.dart';
+
+const CHAT_SCREEN_INDEX = 4;
 
 class MainScreen extends StatefulWidget {
 
@@ -61,7 +64,7 @@ class MainScreenView extends GetView<MainScreenController> {
       child: Scaffold(
         body: SafeArea(
           child: Obx(
-                () => PageTransitionSwitcher(
+            () => PageTransitionSwitcher(
               transitionBuilder: (child, primaryAnimation, secondaryAnimation)=>
                   FadeThroughTransition(
                     animation: primaryAnimation,
@@ -96,6 +99,9 @@ class MainScreenView extends GetView<MainScreenController> {
 
       case 3:
         return HomeScreen();
+
+      case CHAT_SCREEN_INDEX:
+        return ChatScreen();
 
       default:
         return HomeScreen();
