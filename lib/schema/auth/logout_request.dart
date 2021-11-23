@@ -5,7 +5,7 @@ part 'logout_request.g.dart';
 @JsonSerializable()
 class LogoutRequest {
 
-  @JsonKey(name: 'device_name')
+  @JsonKey(name: 'device')
   String deviceName;
 
   LogoutRequest({

@@ -9,20 +9,16 @@ class LoginResponse {
   @JsonKey(name: 'access_token')
   String accessToken;
 
-  @JsonKey(name: 'store_code')
-  String storeCode;
+  @JsonKey(name: 'user_name')
+  String username;
 
-  @JsonKey(name: 'store_website_id')
-  int storeWebsiteId;
-
-  @JsonKey(name: 'customer')
-  Customer customer;
+  @JsonKey(name: 'user_id')
+  int userId;
 
   LoginResponse({
     required this.accessToken,
-    required this.customer,
-    required this.storeCode,
-    required this.storeWebsiteId,
+    required this.username,
+    required this.userId,
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) =>

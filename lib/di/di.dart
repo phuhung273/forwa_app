@@ -70,7 +70,7 @@ void _congifureSocketIO() {
 void _configureApiClient(){
   final dio = Dio(BaseOptions(
     contentType: 'application/json',
-    connectTimeout: 60000,
+    connectTimeout: 10000,
   ));
 
   dio.interceptors.addAll([
@@ -87,6 +87,7 @@ void _configureApiClient(){
         // Do something before request is sent
         options.headers['Authorization'] = 'Bearer $accessToken';
         options.headers['Accept'] = 'application/json';
+        options.headers['Content-Type'] = 'application/json';
         return handler.next(options);
       }
     ),

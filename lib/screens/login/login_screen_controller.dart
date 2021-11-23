@@ -7,9 +7,9 @@ import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/api_response.dart';
 import 'package:forwa_app/schema/auth/facebook_user.dart';
 import 'package:forwa_app/schema/auth/firebase_token.dart';
-import 'package:forwa_app/schema/auth/login_request.dart';
+import 'package:forwa_app/schema/auth/email_login_request.dart';
 import 'package:forwa_app/schema/auth/login_response.dart';
-import 'package:forwa_app/schema/auth/social_login_request.dart';
+import 'package:forwa_app/schema/auth/social_email_login_request.dart';
 import 'package:forwa_app/schema/customer/customer.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
@@ -52,10 +52,11 @@ class LoginScreenController extends BaseController {
       return;
     }
 
-    final request = LoginRequest(
-      username: username,
+    final request = EmailLoginRequest(
+      email: username,
       password: pwd,
-      firebaseToken: firebaseToken,
+      firebaseToken: firebaseToken.value,
+      device: firebaseToken.deviceName,
     );
     final response = await _authRepo.login(request);
 
@@ -89,7 +90,7 @@ class LoginScreenController extends BaseController {
       final username = googleAccount.displayName ?? 'Guest';
       final email = googleAccount.email;
       final avatar = googleAccount.photoUrl;
-      _socialLogin(username, email, avatar);
+      _socialEmailLogin(username, email, avatar);
 
     } catch (error) {
       print(error);
@@ -118,7 +119,7 @@ class LoginScreenController extends BaseController {
         return;
       }
 
-      _socialLogin(username, email, avatar);
+      _socialEmailLogin(username, email, avatar);
     } else {
       print(response.status);
       print(response.message);
@@ -126,10 +127,8 @@ class LoginScreenController extends BaseController {
 
   }
 
-  Future _socialLogin(String username, String email, String? avatar) async {
+  Future _socialEmailLogin(String username, String email, String? avatar) async {
     showLoadingDialog();
-
-    final words = username.split(' ');
 
     final firebaseToken = await _prepareFirebaseToken();
     if(firebaseToken == null){
@@ -137,16 +136,14 @@ class LoginScreenController extends BaseController {
       return;
     }
 
-    final request = SocialLoginRequest(
-      customer: Customer(
-        firstName: words.first,
-        lastName: words.length > 1 ? words.last : words.first,
-        email: email,
-      ),
-      firebaseToken: firebaseToken,
+    final request = SocialEmailLoginRequest(
+      email: email,
+      name: username,
+      firebaseToken: firebaseToken.value,
+      device: firebaseToken.deviceName,
     );
 
-    final response = await _authRepo.socialLogin(request);
+    final response = await _authRepo.socialEmailLogin(request);
 
     hideDialog();
 
@@ -168,12 +165,10 @@ class LoginScreenController extends BaseController {
       if(avatar != null) _localStorage.saveAvatarUrl(avatar);
 
       _localStorage.saveAccessToken(data!.accessToken);
-      _localStorage.saveUserID(data.customer.id!);
+      _localStorage.saveUserID(data.userId);
       _localStorage.saveUsername(email);
       // _localStorage.savePwd(pwd);
-      _localStorage.saveStoreCode(data.storeCode);
-      _localStorage.saveStoreWebsiteId(data.storeWebsiteId);
-      _localStorage.saveCustomerName('${data.customer.firstName} ${data.customer.lastName}');
+      _localStorage.saveCustomerName(data.username);
       _mainController.refreshCredential();
       Get.offAndToNamed(ROUTE_MAIN);
     }

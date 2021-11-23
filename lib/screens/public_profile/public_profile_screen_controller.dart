@@ -46,7 +46,7 @@ class PublicProfileScreenController extends BaseController {
     }
     final customer = response.data!;
 
-    name.value = '${customer.firstName} ${customer.lastName}';
+    name.value = customer.name;
     reviews.assignAll(customer.reviews ?? []);
     rating.value = customer.rating ?? 0.0;
   }

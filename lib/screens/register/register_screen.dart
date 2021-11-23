@@ -36,10 +36,9 @@ class RegisterScreen extends GetView<RegisterScreenController> {
                   controller: controller.nameController,
                 ),
                 InputField(
-                  hintText: 'Email',
-                  icon: Icons.email,
-                  autofillHints: const [AutofillHints.email],
-                  controller: controller.emailController,
+                  hintText: 'Email hoặc Điện thoại',
+                  icon: Icons.verified_user,
+                  controller: controller.methodController,
                   textCapitalization: TextCapitalization.none,
                 ),
                 PasswordField(

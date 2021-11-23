@@ -1,14 +1,11 @@
 import 'package:forwa_app/schema/address/customer_address_response.dart';
-import 'package:forwa_app/schema/custom_attribute.dart';
-import 'package:forwa_app/schema/custom_extensible_data.dart';
-import 'package:forwa_app/schema/extension_attributes.dart';
 import 'package:forwa_app/schema/review/review.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'customer.g.dart';
 
 @JsonSerializable()
-class Customer extends CustomExtensibleData {
+class Customer {
 
   @JsonKey(name: 'id')
   int? id;
@@ -16,49 +13,34 @@ class Customer extends CustomExtensibleData {
   @JsonKey(name: 'email')
   String? email;
 
-  @JsonKey(name: 'firstname')
-  String firstName;
+  @JsonKey(name: 'phone')
+  String? phone;
 
-  @JsonKey(name: 'lastname')
-  String lastName;
-
-  @JsonKey(name: 'store_id')
-  int? storeId;
-
-  @JsonKey(name: 'website_id')
-  int? websiteId;
+  @JsonKey(name: 'name')
+  String name;
 
   @JsonKey(name: 'addresses')
   List<CustomerAddressResponse>? addresses;
 
+  @JsonKey(name: 'reviews')
+  List<Review>? reviews;
+
+  @JsonKey(name: 'rating')
+  double? rating;
+
   Customer({
     this.id,
     this.email,
-    required this.firstName,
-    required this.lastName,
-    this.storeId,
-    this.websiteId,
+    this.phone,
+    required this.name,
     this.addresses,
-    List<CustomAttribute>? customAttributes,
-    ExtensionAttributes? extensionAttributes,
-  }) : super(
-    customAttributes: customAttributes,
-    extensionAttributes: extensionAttributes,
-  );
+    this.reviews,
+    this.rating,
+  });
 
   factory Customer.fromJson(Map<String, dynamic> json) =>
       _$CustomerFromJson(json);
 
   Map<String, dynamic> toJson() => _$CustomerToJson(this);
-
-  List<Review>? get reviews {
-    if(extensionAttributes == null) return null;
-    return extensionAttributes!.reviews;
-  }
-
-  double? get rating {
-    if(extensionAttributes == null) return null;
-    return extensionAttributes!.rating;
-  }
 
 }

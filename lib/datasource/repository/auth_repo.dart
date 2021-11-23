@@ -2,18 +2,13 @@
 import 'package:forwa_app/datasource/remote/auth_service.dart';
 import 'package:forwa_app/datasource/repository/base_repo.dart';
 import 'package:forwa_app/schema/api_response.dart';
-import 'package:forwa_app/schema/auth/handshake_response.dart';
-import 'package:forwa_app/schema/auth/handshake_response.dart';
-import 'package:forwa_app/schema/auth/handshake_response.dart';
-import 'package:forwa_app/schema/auth/handshake_response.dart';
-import 'package:forwa_app/schema/auth/handshake_response.dart';
-import 'package:forwa_app/schema/auth/login_request.dart';
+import 'package:forwa_app/schema/auth/email_login_request.dart';
 import 'package:forwa_app/schema/auth/login_response.dart';
 import 'package:forwa_app/schema/auth/logout_request.dart';
-import 'package:forwa_app/schema/auth/register_request.dart';
-import 'package:forwa_app/schema/auth/save_firebase_token_request.dart';
-import 'package:forwa_app/schema/auth/social_login_request.dart';
-import 'package:forwa_app/schema/customer/customer.dart';
+import 'package:forwa_app/schema/auth/refresh_token_request.dart';
+import 'package:forwa_app/schema/auth/refresh_token_response.dart';
+import 'package:forwa_app/schema/auth/email_register_request.dart';
+import 'package:forwa_app/schema/auth/social_email_login_request.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get_connect/http/src/status/http_status.dart';
@@ -21,10 +16,8 @@ import 'package:get/get_connect/http/src/status/http_status.dart';
 class AuthRepo extends BaseRepo{
   final AuthService _service = Get.find();
 
-  Future<ApiResponse<LoginResponse>> login(LoginRequest request) async {
-    return _service.login(request).then((value){
-      return ApiResponse<LoginResponse>(data: value);
-    }).catchError((Object obj) {
+  Future<ApiResponse<LoginResponse>> login(EmailLoginRequest request) async {
+    return _service.login(request).catchError((Object obj) {
       // non-200 error goes here.
       switch (obj.runtimeType) {
         case DioError:
@@ -43,10 +36,8 @@ class AuthRepo extends BaseRepo{
     });
   }
 
-  Future<ApiResponse<LoginResponse>> socialLogin(SocialLoginRequest request) async {
-    return _service.socialLogin(request).then((value){
-      return ApiResponse<LoginResponse>(data: value);
-    }).catchError((Object obj) {
+  Future<ApiResponse<LoginResponse>> socialEmailLogin(SocialEmailLoginRequest request) async {
+    return _service.socialEmailLogin(request).catchError((Object obj) {
       // non-200 error goes here.
       switch (obj.runtimeType) {
         case DioError:
@@ -65,46 +56,24 @@ class AuthRepo extends BaseRepo{
     });
   }
 
-  Future<ApiResponse<Customer>> register(RegisterRequest request) async {
+  Future<ApiResponse<String>> emailRegister(EmailRegisterRequest request) async {
     return _service.register(request).then((value){
-      return ApiResponse<Customer>(data: value);
+      return ApiResponse<String>(data: 'success');
     }).catchError((Object obj) {
       // non-200 error goes here.
       switch (obj.runtimeType) {
         case DioError:
           final res = (obj as DioError).response;
-          if(res == null || res.statusCode == HttpStatus.internalServerError) return ApiResponse<Customer>.fromError();
+          if(res == null || res.statusCode == HttpStatus.internalServerError) return ApiResponse<String>.fromError();
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
           print(error);
-          return ApiResponse<Customer>.fromError(error: data['message'] ?? 'Lỗi không xác định');
+          return ApiResponse<String>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
           print(error);
-          return ApiResponse<Customer>.fromError(error: error);
-      }
-    });
-  }
-
-  Future<ApiResponse<HandshakeResponse>> handshake() async {
-    return _service.handshake().then((value){
-      return ApiResponse<HandshakeResponse>(data: value);
-    }).catchError((Object obj) {
-      // non-200 error goes here.
-      switch (obj.runtimeType) {
-        case DioError:
-          final res = (obj as DioError).response;
-          if(res == null || res.statusCode == HttpStatus.internalServerError) return ApiResponse<HandshakeResponse>.fromError();
-
-          final data = getErrorData(res);
-          final error = data['message'] ?? res.statusMessage;
-          print(error);
-          return ApiResponse<HandshakeResponse>.fromError(error: data['message'] ?? 'Lỗi không xác định');
-        default:
-          final error = obj.toString();
-          print(error);
-          return ApiResponse<HandshakeResponse>.fromError(error: error);
+          return ApiResponse<String>.fromError(error: error);
       }
     });
   }
@@ -131,24 +100,22 @@ class AuthRepo extends BaseRepo{
     });
   }
 
-  Future<ApiResponse<String>> saveFirebaseToken(SaveFirebaseTokenRequest request) async {
-    return _service.saveFirebaseToken(request).then((value){
-      return ApiResponse<String>(data: value);
-    }).catchError((Object obj) {
+  Future<ApiResponse<RefreshTokenResponse>> refreshToken(RefreshTokenRequest request) async {
+    return _service.refreshToken(request).catchError((Object obj) {
       // non-200 error goes here.
       switch (obj.runtimeType) {
         case DioError:
           final res = (obj as DioError).response;
-          if(res == null || res.statusCode == HttpStatus.internalServerError) return ApiResponse<String>.fromError();
+          if(res == null || res.statusCode == HttpStatus.internalServerError) return ApiResponse<RefreshTokenResponse>.fromError();
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
           print(error);
-          return ApiResponse<String>.fromError(error: data['message'] ?? 'Lỗi không xác định');
+          return ApiResponse<RefreshTokenResponse>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
           print(error);
-          return ApiResponse<String>.fromError(error: error);
+          return ApiResponse<RefreshTokenResponse>.fromError(error: error);
       }
     });
   }

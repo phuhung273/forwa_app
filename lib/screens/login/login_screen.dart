@@ -119,13 +119,6 @@ class LoginScreen extends GetView<LoginScreenController> {
                       ],
                     )
                   ),
-                  const Divider(),
-                  AppLevelActionContainer(
-                    child: TextButton(
-                      onPressed: () => Get.back(),
-                      child: const Text('Quay Lại'),
-                    ),
-                  ),
                 ],
               ),
             ),

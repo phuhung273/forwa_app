@@ -7,6 +7,7 @@ import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
 import 'package:forwa_app/di/firebase_messaging_service.dart';
 import 'package:forwa_app/route/route.dart';
+import 'package:forwa_app/schema/auth/refresh_token_request.dart';
 import 'package:get/get.dart';
 
 class SplashScreenBinding extends Bindings {
@@ -38,10 +39,11 @@ class SplashScreenController extends GetxController {
     }
 
     if(_isEnoughInfo()){
-      final response = await _authRepo.handshake();
+      final request = RefreshTokenRequest(device: _localStorage.getDeviceName()!);
+      final response = await _authRepo.refreshToken(request);
 
       if(response.isSuccess && response.data != null){
-        _localStorage.saveAccessToken(response.data!.accessToken!);
+        _localStorage.saveAccessToken(response.data!.accessToken);
       } else {
         _localStorage.removeCredentials();
       }
@@ -70,6 +72,6 @@ class SplashScreenController extends GetxController {
   }
 
   bool _isEnoughInfo(){
-    return _localStorage.getAccessToken() != null;
+    return _localStorage.getAccessToken() != null && _localStorage.getDeviceName() != null;
   }
 }
