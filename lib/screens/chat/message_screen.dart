@@ -70,7 +70,7 @@ class MessageScreen extends GetView<ChatScreenController> {
             key: _chatViewKey,
             messages: messages,
             user: ChatUser(
-              name: _localStorage.getUsername(),
+              name: _localStorage.getCustomerName(),
               uid: _localStorage.getUserID().toString(),
             ),
             inputDecoration: const InputDecoration.collapsed(hintText: "Add message here..."),

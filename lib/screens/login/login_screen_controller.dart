@@ -3,12 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
+import 'package:forwa_app/helpers/email_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/api_response.dart';
 import 'package:forwa_app/schema/auth/facebook_user.dart';
 import 'package:forwa_app/schema/auth/firebase_token.dart';
 import 'package:forwa_app/schema/auth/email_login_request.dart';
 import 'package:forwa_app/schema/auth/login_response.dart';
+import 'package:forwa_app/schema/auth/phone_login_request.dart';
 import 'package:forwa_app/schema/auth/social_email_login_request.dart';
 import 'package:forwa_app/schema/customer/customer.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
@@ -40,7 +42,15 @@ class LoginScreenController extends BaseController {
   final TextEditingController passwordController = TextEditingController();
 
   Future login() async {
+    final method = usernameController.text;
+    if(isValidEmail(method)){
+      await emailLogin();
+    } else {
+      await phoneLogin();
+    }
+  }
 
+  Future emailLogin() async {
     showLoadingDialog();
 
     final username = usernameController.text;
@@ -58,23 +68,34 @@ class LoginScreenController extends BaseController {
       firebaseToken: firebaseToken.value,
       device: firebaseToken.deviceName,
     );
-    final response = await _authRepo.login(request);
+    final response = await _authRepo.emailLogin(request);
 
     hideDialog();
+    _processLoginResponse(response, username);
 
-    // if(!response.isSuccess){
-    //   result.value = response.message!;
-    // } else {
-    //   final data = response.data;
-    //   _localStorage.saveAccessToken(data!.accessToken);
-    //   _localStorage.saveUsername(username);
-    //   _localStorage.saveUserID(data.customer.id!);
-    //   // _localStorage.savePwd(pwd);
-    //   _localStorage.saveStoreId(data.customer.storeId!);
-    //   _localStorage.saveWebsiteId(data.customer.websiteId!);
-    //   Get.offAndToNamed(ROUTE_MAIN);
-    // }
+  }
 
+  Future phoneLogin() async {
+    showLoadingDialog();
+
+    final username = usernameController.text;
+    final pwd = passwordController.text;
+
+    final firebaseToken = await _prepareFirebaseToken();
+    if(firebaseToken == null){
+      hideDialog();
+      return;
+    }
+
+    final request = PhoneLoginRequest(
+      phone: username,
+      password: pwd,
+      firebaseToken: firebaseToken.value,
+      device: firebaseToken.deviceName,
+    );
+    final response = await _authRepo.phoneLogin(request);
+
+    hideDialog();
     _processLoginResponse(response, username);
 
   }
@@ -152,7 +173,7 @@ class LoginScreenController extends BaseController {
 
   void _processLoginResponse(
       ApiResponse<LoginResponse> response,
-      String email,
+      String emailOrPhone,
       {
         String? avatar
       }
@@ -166,7 +187,7 @@ class LoginScreenController extends BaseController {
 
       _localStorage.saveAccessToken(data!.accessToken);
       _localStorage.saveUserID(data.userId);
-      _localStorage.saveUsername(email);
+      _localStorage.saveUsername(emailOrPhone);
       // _localStorage.savePwd(pwd);
       _localStorage.saveCustomerName(data.username);
       _mainController.refreshCredential();

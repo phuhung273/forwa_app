@@ -33,7 +33,7 @@ class ChatScreenController extends AuthorizedController {
   @override
   void onInit(){
     super.onInit();
-    _username = _localStorage.getUsername();
+    _username = _localStorage.getCustomerName();
     _userId = _localStorage.getUserID();
     _token = _localStorage.getAccessToken();
   }

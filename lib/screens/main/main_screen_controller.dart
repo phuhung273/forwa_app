@@ -38,7 +38,7 @@ class MainScreenController extends BaseController {
 
   void refreshCredential(){
     avatar.value = _localStorage.getAvatarUrl() ?? '';
-    fullname.value = _localStorage.getUsername() ?? '';
+    fullname.value = _localStorage.getCustomerName() ?? '';
   }
 
   void changeTab(int value) {

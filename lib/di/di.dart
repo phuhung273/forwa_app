@@ -8,6 +8,7 @@ import 'package:forwa_app/datasource/remote/auth_service.dart';
 import 'package:forwa_app/datasource/remote/cart_service.dart';
 import 'package:forwa_app/datasource/remote/customer_service.dart';
 import 'package:forwa_app/datasource/remote/order_service.dart';
+import 'package:forwa_app/datasource/remote/otp_service.dart';
 import 'package:forwa_app/datasource/remote/product_service.dart';
 import 'package:forwa_app/datasource/remote/review_service.dart';
 import 'package:forwa_app/datasource/repository/address_repo.dart';
@@ -15,6 +16,7 @@ import 'package:forwa_app/datasource/repository/auth_repo.dart';
 import 'package:forwa_app/datasource/repository/cart_repo.dart';
 import 'package:forwa_app/datasource/repository/customer_repo.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart';
+import 'package:forwa_app/datasource/repository/otp_repo.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/datasource/repository/review_repo.dart';
 import 'package:forwa_app/di/firebase_messaging_service.dart';
@@ -48,6 +50,8 @@ Future configureDependencies() async {
   Get.put(AddressRepo());
   Get.put(ReviewService(Get.find()));
   Get.put(ReviewRepo());
+  Get.put(OtpService(Get.find()));
+  Get.put(OtpRepo());
 
   Get.put(GoogleSignIn());
   Get.put(LocationService());

@@ -33,9 +33,8 @@ class LoginScreen extends GetView<LoginScreenController> {
                   Obx(() => Text(controller.result.value, style: theme.textTheme.subtitle1)),
                   const SizedBox(height: defaultSpacing * 5),
                   InputField(
-                    hintText: 'Email',
+                    hintText: 'Email hoặc Số điện thoại',
                     icon: Icons.person,
-                    autofillHints: const [AutofillHints.email],
                     controller: controller.usernameController,
                     textCapitalization: TextCapitalization.none,
                   ),
