@@ -1,13 +1,10 @@
 import 'package:enum_to_string/enum_to_string.dart';
-import 'package:forwa_app/datasource/local/local_storage.dart';
-import 'package:forwa_app/datasource/repository/cart_repo.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/route/route.dart';
-import 'package:forwa_app/schema/cart/cart_customer.dart';
-import 'package:forwa_app/schema/order/create_invoice_request.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/give_success/give_success_screen_controller.dart';
+import 'package:forwa_app/screens/my_givings/my_giving_screen_controller.dart';
 import 'package:get/get.dart';
 
 class ChooseReceiverScreenBinding extends Bindings {
@@ -18,79 +15,52 @@ class ChooseReceiverScreenBinding extends Bindings {
 }
 
 const productIdParam = 'product_id';
-const productNameParam = 'product_name';
 
 class ChooseReceiverScreenController extends BaseController {
 
-  final LocalStorage _localStorage = Get.find();
-
-  final CartRepo _cartRepo = Get.find();
+  final MyGivingsScreenController _myGivingsScreenController = Get.find();
 
   final OrderRepo _orderRepo = Get.find();
 
   int? _productId;
-  final _productName = Get.parameters[productNameParam];
 
-  final customers = List<CartCustomer>.empty().obs;
+  final orders = List<Order>.empty().obs;
 
   @override
   void onInit() {
     super.onInit();
     _productId = int.tryParse(Get.parameters[productIdParam]!);
-}
 
-  @override
-  Future onReady() async {
-    super.onReady();
-
-    if(_productId == null || _productName == null) {
-      return;
-    }
-
-    showLoadingDialog();
-    final response = await _cartRepo.getCustomersOfProduct(_productId!);
-    hideDialog();
-    if(!response.isSuccess || response.data == null || response.data!.customers == null){
-      return;
-    }
-
-    customers.assignAll(response.data!.customers!);
+    final product = _myGivingsScreenController.products.firstWhere((element) => element.id == _productId);
+    orders.assignAll(product.orders ?? []);
   }
 
   Future pickReceiver(int orderId) async {
-    if(_productId == null || _productName == null) {
+    if(_productId == null) {
       return;
     }
 
-    final token = _localStorage.getAccessToken();
-    _localStorage.removeAccessToken();
-
-    final request = CreateInvoiceRequest(productName: _productName!);
     showLoadingDialog();
-    final response = await _orderRepo.createInvoice(orderId, request);
+    final response = await _orderRepo.selectOrder(orderId);
     hideDialog();
-
-    if(token != null) {
-      _localStorage.saveAccessToken(token);
-    }
 
     if(!response.isSuccess || response.data == null){
       return;
     }
 
-    final index = customers.indexWhere((element) => element.orderId == orderId);
-    customers[index].orderStatus = EnumToString.convertToString(OrderStatus.PROCESSING).toLowerCase();
-    customers.refresh();
+    final index = orders.indexWhere((element) => element.id == orderId);
+    orders[index].status = EnumToString.convertToString(OrderStatus.SELECTED).toLowerCase();
+    orders.refresh();
   }
 
-  Future shipSuccess(int index) async {
-    final customer = customers[index];
+  Future toSuccess(int index) async {
+    final order = orders[index];
     Get.toNamed(
       ROUTE_GIVE_SUCCESS,
       parameters: {
-        customerNameParam: '${customer.customerFirstName} ${customer.customerLastName}',
-        toIdParam: customer.customerId.toString(),
-        productIdParam: customer.productId.toString(),
+        customerNameParam: order.user!.name,
+        toIdParam: order.userId.toString(),
+        orderIdParam: order.id.toString(),
       }
     );
   }

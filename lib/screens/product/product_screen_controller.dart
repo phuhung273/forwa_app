@@ -18,8 +18,6 @@ class ProductScreenBinding extends Bindings {
 
 class ProductScreenController extends BaseController {
 
-  final LocalStorage _localStorage = Get.find();
-
   final LocationService _locationService = Get.find();
 
   final ProductRepo _productRepo = Get.find();
@@ -34,17 +32,13 @@ class ProductScreenController extends BaseController {
   final description = ''.obs;
   final createdAt = ''.obs;
   final pickupTime = ''.obs;
-  final isDisabled = true.obs;
+  final enabled = false.obs;
   LocationData? here;
-
-  bool _sameWebsiteId = true;
-
-  bool get disableTakeButton => isDisabled.value || _sameWebsiteId;
 
   set page(int index) => current.value = index;
   int get page => current.value;
 
-  final String sku = Get.arguments;
+  final int id = Get.arguments;
 
   LatLng? location;
 
@@ -52,12 +46,10 @@ class ProductScreenController extends BaseController {
   Future onReady() async {
     super.onReady();
 
-    if(sku.isEmpty) return;
-
     here = await _locationService.here();
 
     showLoadingDialog();
-    final response = await _productRepo.getProduct(sku);
+    final response = await _productRepo.getProduct(id);
     hideDialog();
 
     if(!response.isSuccess || response.data == null){
@@ -66,16 +58,13 @@ class ProductScreenController extends BaseController {
     }
     final product = response.data!;
 
-    images.assignAll(product.images!.map((e) => resolveUrl(e)));
+    images.assignAll(product.images.map((e) => resolveUrl(e.url)));
     name.value = product.name;
     sellerName.value = product.sellerName!;
     description.value = product.description!;
     pickupTime.value = product.pickupTime!;
     createdAt.value = DateFormat.yMMMd().format(product.createdAt!);
-    isDisabled.value = product.isDisabled;
-    location = product.location;
-
-    final websiteId = _localStorage.getStoreWebsiteId();
-    _sameWebsiteId = websiteId == product.websiteId;
+    enabled.value = product.enabled!;
+    location = product.location ?? product.address!.location;
   }
 }

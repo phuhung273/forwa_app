@@ -6,7 +6,7 @@ part 'list_order_response.g.dart';
 @JsonSerializable()
 class ListOrderResponse {
 
-  @JsonKey(name: 'items')
+  @JsonKey(name: 'data')
   List<Order>? items;
 
   ListOrderResponse({

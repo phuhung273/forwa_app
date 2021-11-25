@@ -1,4 +1,4 @@
-import 'package:forwa_app/datasource/repository/customer_repo.dart';
+import 'package:forwa_app/datasource/repository/user_repo.dart';
 import 'package:forwa_app/schema/review/review.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:get/get.dart';
@@ -10,13 +10,13 @@ class PublicProfileScreenBinding extends Bindings {
   }
 }
 
-const customerIdParam = 'customer_id';
+const userIdParam = 'user_id';
 
 class PublicProfileScreenController extends BaseController {
 
-  final CustomerRepo _customerRepo = Get.find();
+  final UserRepo _userRepo = Get.find();
 
-  int? _customerId;
+  int? _userId;
   final name = ''.obs;
   final rating = 0.0.obs;
   final status = ''.obs;
@@ -26,28 +26,28 @@ class PublicProfileScreenController extends BaseController {
   void onInit() {
     super.onInit();
 
-    _customerId = int.tryParse(Get.parameters[customerIdParam]!);
+    _userId = int.tryParse(Get.parameters[userIdParam]!);
   }
 
   @override
   Future onReady() async {
     super.onReady();
 
-    if(_customerId == null){
+    if(_userId == null){
       return;
     }
 
     showLoadingDialog();
-    final response = await _customerRepo.customerInfo(_customerId!);
+    final response = await _userRepo.userInfo(_userId!);
     hideDialog();
 
     if(!response.isSuccess || response.data == null){
       return;
     }
-    final customer = response.data!;
+    final user = response.data!;
 
-    name.value = customer.name;
-    reviews.assignAll(customer.reviews ?? []);
-    rating.value = customer.rating ?? 0.0;
+    name.value = user.name;
+    reviews.assignAll(user.reviews ?? []);
+    rating.value = user.rating ?? 0.0;
   }
 }

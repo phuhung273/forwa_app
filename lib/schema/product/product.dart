@@ -1,16 +1,16 @@
-import 'package:forwa_app/datasource/remote/product_service.dart';
-import 'package:forwa_app/schema/custom_attribute_data.dart';
+
+import 'package:forwa_app/schema/address/address.dart';
+import 'package:forwa_app/schema/image/image.dart';
+import 'package:forwa_app/schema/order/order.dart';
+import 'package:forwa_app/schema/product/product_detail.dart';
+import 'package:forwa_app/schema/user/user.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlong2/latlong.dart';
-
-import '../custom_attribute.dart';
-import '../extension_attributes.dart';
-import 'media_gallery_entry.dart';
 
 part 'product.g.dart';
 
 @JsonSerializable()
-class Product extends CustomAttributeData{
+class Product{
 
   @JsonKey(name: 'id')
   int? id;
@@ -19,97 +19,67 @@ class Product extends CustomAttributeData{
   String name;
 
   @JsonKey(name: 'sku')
-  String? sku;
-
-  @JsonKey(name: 'attribute_set_id')
-  int? attributeSetId;
-
-  @JsonKey(name: 'price')
-  double? price;
-
-  @JsonKey(name: 'type_id')
-  String? typeId;
+  String sku;
 
   @JsonKey(name: 'created_at')
   DateTime? createdAt;
 
-  @JsonKey(name: 'extension_attributes')
-  ExtensionAttributes? extensionAttributes;
+  @JsonKey(name: 'latitude')
+  String? latitude;
 
-  @JsonKey(name: 'media_gallery_entries')
-  List<MediaGalleryEntry>? medias;
+  @JsonKey(name: 'longitude')
+  String? longitude;
+
+  @JsonKey(name: 'images')
+  List<Image> images;
+
+  @JsonKey(name: 'user')
+  User? user;
+
+  @JsonKey(name: 'address')
+  Address? address;
+
+  @JsonKey(name: 'detail')
+  ProductDetail? detail;
+
+  @JsonKey(name: 'enabled')
+  bool? enabled;
+
+  @JsonKey(name: 'orders')
+  List<Order>? orders;
 
   Product({
-      this.id,
-      required this.name,
-      this.sku,
-      this.attributeSetId = 4,
-      this.price = 0,
-      this.typeId = 'simple',
-      this.createdAt,
-      this.extensionAttributes,
-      List<CustomAttribute>? customAttributes,
-      this.medias,
-  }) : super(customAttributes: customAttributes);
+    this.id,
+    required this.name,
+    required this.sku,
+    this.createdAt,
+    required this.images,
+    this.latitude,
+    this.longitude,
+    this.user,
+    this.address,
+    this.detail,
+    this.enabled,
+    this.orders,
+  });
 
   factory Product.fromJson(Map<String, dynamic> json) =>
       _$ProductFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProductToJson(this);
 
-  String? get firstImageUrl {
-    if(extensionAttributes == null || extensionAttributes!.imageUrls == null || extensionAttributes!.imageUrls!.isEmpty) return null;
-    return extensionAttributes!.imageUrls!.first;
-  }
+  String get firstImageUrl => images.first.url;
 
-  int? get quantity {
-    if(extensionAttributes == null) return null;
-    return extensionAttributes!.quantity;
-  }
+  int? get quantity => detail?.quantity;
 
-  String? get sellerName {
-    if(extensionAttributes == null) return null;
-    return extensionAttributes!.sellerName;
-  }
+  String? get sellerName => user?.name;
 
-  List<String>? get images {
-    if(extensionAttributes == null) return null;
-    return extensionAttributes!.imageUrls;
-  }
+  String? get description => detail?.description;
 
-  int? get websiteId {
-    if(extensionAttributes == null) return null;
-    return extensionAttributes!.websiteIds!.firstWhere((element) => element != DEFAULT_WEBSITE_ID);
-  }
-
-  bool get isDisabled {
-    if(extensionAttributes == null) return true;
-    return extensionAttributes!.isDisabled!;
-  }
-
-  String? get description => _getCustomAttributeByCode(CustomAttributeCode.DESCRIPTION);
-
-  String? get pickupTime => _getCustomAttributeByCode(CustomAttributeCode.PICKUP_TIME);
-
-  double? get latitude {
-    if(extensionAttributes == null) return null;
-    return double.parse(extensionAttributes!.latitude!);
-  }
-
-  double? get longitude {
-    if(extensionAttributes == null) return null;
-    return double.parse(extensionAttributes!.longitude!);
-  }
+  String? get pickupTime => detail?.pickupTime;
 
   LatLng? get location {
     if(latitude == null && longitude == null) return null;
-    return LatLng(latitude!, longitude!);
-  }
-
-  String? _getCustomAttributeByCode(CustomAttributeCode code){
-    if(customAttributes == null) return null;
-    return customAttributes?.firstWhere(
-            (element) => element.attributeCode == CustomAttribute.getCode(code)
-    ).value;
+    return LatLng(double.tryParse(latitude!)!, double.tryParse(longitude!)!);
   }
 }

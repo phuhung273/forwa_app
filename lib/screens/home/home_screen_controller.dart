@@ -34,13 +34,13 @@ class HomeScreenController extends RefreshableController {
 
   @override
   Future main() async {
-    // final response = await _productRepo.getProductsOnWebsite();
-    //
-    // if(!response.isSuccess || response.data == null){
-    //   return;
-    // }
-    //
-    // products.assignAll(response.data!.items ?? []);
+    final response = await _productRepo.getProducts();
+
+    if(!response.isSuccess || response.data == null){
+      return;
+    }
+
+    products.assignAll(response.data!.items);
   }
 
 }

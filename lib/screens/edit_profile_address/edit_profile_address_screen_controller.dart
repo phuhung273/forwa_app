@@ -1,10 +1,7 @@
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/address_repo.dart';
-import 'package:forwa_app/schema/address/create_address_request.dart';
-import 'package:forwa_app/schema/address/customer_address.dart';
-import 'package:forwa_app/schema/custom_attribute.dart';
+import 'package:forwa_app/schema/address/address.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
@@ -28,27 +25,21 @@ class EditProfileAddressController extends BaseController {
   final cityController = TextEditingController();
   final phoneController = TextEditingController();
 
-  String? firstName;
-  String? lastName;
-  int? customerId;
+  String? _name;
 
   @override
   void onInit() {
     super.onInit();
 
-    final name = _localStorage.getCustomerName();
-    customerId = _localStorage.getUserID();
+    _name = _localStorage.getCustomerName();
 
-    if(name == null){
+    if(_name == null){
       return;
     }
-    final words = name.split(' ');
-    firstName = words.first;
-    lastName = words.length > 1 ? words.last : words.first;
   }
 
   Future save() async {
-    if(customerId == null || firstName == null || lastName == null){
+    if(_name == null){
       // TODO: add error text
       return;
     }
@@ -58,33 +49,21 @@ class EditProfileAddressController extends BaseController {
       print('${location.latitude} - ${location.longitude}');
     }
     final location = locations.first;
-    final latAttribute = CustomAttribute(
-      attributeCode: CustomAttribute.getCode(CustomAttributeCode.LATITUDE),
-      value: location.latitude.toString(),
-    );
-    final longAttribute = CustomAttribute(
-      attributeCode: CustomAttribute.getCode(CustomAttributeCode.LONGITUDE),
-      value: location.longitude.toString(),
-    );
 
-    final address = CustomerAddress(
-      customerId: customerId!,
-      region: 'abcxyz',
-      regionId: 999,
-      countryId: 'VN',
-      street: [streetController.text, wardController.text, districtController.text],
-      postCode: '700000',
+    final address = Address(
+      street: streetController.text,
+      ward: wardController.text,
+      district: districtController.text,
       city: cityController.text,
-      firstName: firstName!,
-      lastName: lastName!,
-      telephone: phoneController.text,
-      defaultBilling: true,
-      defaultShipping: true,
-      customAttributes: [latAttribute, longAttribute],
+      name: _name!,
+      phone: phoneController.text,
+      isDefault: true,
+      latitude: location.latitude.toString(),
+      longitude: location.longitude.toString(),
     );
 
     showLoadingDialog();
-    final response = await _addressRepo.saveAddress(CreateAddressRequest(address: address));
+    final response = await _addressRepo.saveAddress(address);
     hideDialog();
 
     if(!response.isSuccess || response.data == null){

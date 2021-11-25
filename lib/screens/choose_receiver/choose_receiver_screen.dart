@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/route/route.dart';
-import 'package:forwa_app/schema/cart/cart_customer.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/public_profile/public_profile_screen_controller.dart';
 import 'package:forwa_app/widgets/rating.dart';
@@ -25,14 +24,14 @@ class ChooseReceiverScreen extends GetView<ChooseReceiverScreenController> {
           padding: const EdgeInsets.all(defaultPadding),
           child: Obx(
             () => ListView.separated(
-              itemCount: controller.customers.length,
+              itemCount: controller.orders.length,
               itemBuilder: (context, index) {
-                final customer = controller.customers[index];
+                final order = controller.orders[index];
 
                 return ReceiverCard(
-                  customer: customer,
-                  onPick: () => controller.pickReceiver(customer.orderId),
-                  onSuccess: () => controller.shipSuccess(index),
+                  order: order,
+                  onPick: () => controller.pickReceiver(order.id),
+                  onSuccess: () => controller.toSuccess(index),
                 );
               },
               separatorBuilder: (context, index) => const Divider(),
@@ -45,12 +44,12 @@ class ChooseReceiverScreen extends GetView<ChooseReceiverScreenController> {
 }
 
 class ReceiverCard extends StatelessWidget {
-  final CartCustomer customer;
+  final Order order;
   final VoidCallback onPick;
   final VoidCallback onSuccess;
   const ReceiverCard({
     Key? key,
-    required this.customer,
+    required this.order,
     required this.onPick,
     required this.onSuccess,
   }) : super(key: key);
@@ -58,7 +57,7 @@ class ReceiverCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final name = customer.customerFirstName + customer.customerLastName;
+    final name = order.user!.name;
     final List<String> words = name.split(' ');
     final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
 
@@ -89,7 +88,7 @@ class ReceiverCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
-                      customer.customerNote ?? 'Không có lời nhắn',
+                      order.message,
                       style: theme.textTheme.bodyText2,
                     ),
                   ),
@@ -107,7 +106,7 @@ class ReceiverCard extends StatelessWidget {
                   Get.toNamed(
                     ROUTE_PUBLIC_PROFILE,
                     parameters: {
-                      customerIdParam: customer.customerId.toString()
+                      userIdParam: order.userId.toString()
                     }
                   ),
                 child: const Text('Xem thêm'),
@@ -115,7 +114,7 @@ class ReceiverCard extends StatelessWidget {
             ),
             const SizedBox(width: defaultPadding),
             SecondaryActionContainer(
-              child: _buildMainButton(customer.status!),
+              child: _buildMainButton(order.statusType!),
             ),
           ],
         )
@@ -124,12 +123,12 @@ class ReceiverCard extends StatelessWidget {
   }
 
   Widget _buildMainButton(OrderStatus status){
-    if(status == OrderStatus.PENDING){
+    if(status == OrderStatus.PROCESSING){
       return ElevatedButton(
         onPressed: onPick,
         child: Text(_buildMainButtonText(status)),
       );
-    } else if(status == OrderStatus.PROCESSING){
+    } else if(status == OrderStatus.SELECTED){
       return ElevatedButton(
         onPressed: onSuccess,
         style: ElevatedButton.styleFrom(
@@ -147,11 +146,11 @@ class ReceiverCard extends StatelessWidget {
 
   _buildMainButtonText(OrderStatus status){
     switch(status){
-      case OrderStatus.PENDING:
-        return 'Chọn';
       case OrderStatus.PROCESSING:
+        return 'Chọn';
+      case OrderStatus.SELECTED:
         return 'Hoàn thành';
-      case OrderStatus.SUCCESS:
+      case OrderStatus.FINISH:
         return 'Đã giao';
       default:
         return 'Chọn';

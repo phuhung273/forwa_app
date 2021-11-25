@@ -3,6 +3,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/screens/take/take_screen_controller.dart';
 import 'package:forwa_app/widgets/app_container.dart';
@@ -130,7 +131,7 @@ class ProductRender extends GetView<ProductScreenController> {
   }
 
   _buildTakeButton(){
-    if(controller.disableTakeButton){
+    if(!controller.enabled.value){
       return const TextButton(
         onPressed: null,
         child: Text('Không thể nhận'),
@@ -140,7 +141,7 @@ class ProductRender extends GetView<ProductScreenController> {
       onPressed: () => Get.toNamed(
         ROUTE_TAKE,
         parameters: {
-          skuParam: controller.sku,
+          idParam: controller.id.toString(),
           sellerNameParam: controller.sellerName.value,
         }
       ),
@@ -167,7 +168,7 @@ class ImageSlider extends GetView<ProductScreenController> {
 
     return CarouselSlider(
       items: controller.images.map((item) => ExtendedImage.network(
-        item,
+        '$HOST_URL/$item',
         width: size.width,
         fit: BoxFit.cover,
       )).toList(),

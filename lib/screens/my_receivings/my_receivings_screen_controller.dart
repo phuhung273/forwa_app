@@ -38,7 +38,7 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController {
 
   @override
   Future main() async {
-    final response = await _orderRepo.getOrdersOfCustomer(_customerId!);
+    final response = await _orderRepo.getMyOrders();
     if(!response.isSuccess || response.data == null){
       return;
     }
@@ -52,8 +52,8 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController {
       ROUTE_TAKE_SUCCESS,
       parameters: {
         customerNameParam: order.sellerName!,
-        toIdParam: order.sellerId.toString(),
-        productIdParam: order.items.first.productId.toString(),
+        toIdParam: order.product!.user!.id.toString(),
+        orderIdParam: order.id.toString(),
       }
     );
   }

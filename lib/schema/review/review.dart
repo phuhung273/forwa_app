@@ -1,3 +1,5 @@
+import 'package:forwa_app/schema/order/order.dart';
+import 'package:forwa_app/schema/user/user.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'review.g.dart';
@@ -5,51 +7,43 @@ part 'review.g.dart';
 @JsonSerializable()
 class Review {
 
-  @JsonKey(name: 'entity_id')
+  @JsonKey(name: 'id')
   int? id;
 
-  @JsonKey(name: 'comment')
-  String comment;
+  @JsonKey(name: 'message')
+  String message;
 
   @JsonKey(name: 'rating')
   int rating;
 
-  @JsonKey(name: 'from_customer_id')
-  int fromCustomerId;
+  @JsonKey(name: 'from_user')
+  User? fromUser;
 
-  @JsonKey(name: 'from_customer_name')
-  String? fromCustomerName;
+  @JsonKey(name: 'to_user_id')
+  int? toUserId;
 
-  @JsonKey(name: 'to_customer_id')
-  int toCustomerId;
+  @JsonKey(name: 'order_id')
+  int? orderId;
 
-  @JsonKey(name: 'product_id')
-  int productId;
-
-  @JsonKey(name: 'product_base_image_url')
-  String? productBaseImageUrl;
-
-  @JsonKey(name: 'product_name')
-  String? productName;
-
-  @JsonKey(name: 'product_sku')
-  String? productSku;
+  @JsonKey(name: 'order')
+  Order? order;
 
   Review({
     this.id,
-    required this.comment,
+    required this.message,
     required this.rating,
-    required this.fromCustomerId,
-    this.fromCustomerName,
-    required this.toCustomerId,
-    required this.productId,
-    this.productName,
-    this.productBaseImageUrl,
-    this.productSku,
+    this.fromUser,
+    this.toUserId,
+    this.orderId,
+    this.order,
   });
 
   factory Review.fromJson(Map<String, dynamic> json) => _$ReviewFromJson(json);
 
   Map<String, dynamic> toJson() => _$ReviewToJson(this);
+
+  String? get productBaseImageUrl => order?.product?.images.first.url;
+
+  String? get productName => order?.product?.name;
 
 }

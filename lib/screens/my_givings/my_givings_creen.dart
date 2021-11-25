@@ -2,7 +2,6 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
-import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
@@ -10,8 +9,6 @@ import 'package:forwa_app/widgets/secondary_action_container.dart';
 import 'package:get/get.dart';
 
 import 'my_giving_screen_controller.dart';
-
-const DEFAULT_MAX_QUANTITY = 5;
 
 class MyGivingsScreen extends StatelessWidget {
 
@@ -45,7 +42,7 @@ class MyGivingsScreen extends StatelessWidget {
                         children: [
                           Obx(
                             () => Text(
-                              'Tổng cho đi: ${_controller.products.length}',
+                              'Bạn đã cho đi: ${_controller.products.length}',
                               style: theme.textTheme.headline6,
                             ),
                           ),
@@ -70,7 +67,6 @@ class MyGivingsScreen extends StatelessWidget {
                                 ROUTE_CHOOSE_RECEIVER,
                                 parameters: {
                                   productIdParam: product.id.toString(),
-                                  productNameParam: product.name,
                                 }
                               ),
                               child: GivingItem(
@@ -109,9 +105,7 @@ class GivingItem extends StatelessWidget {
     return Row(
       children: [
         ExtendedImage.network(
-          imageUrl != null
-              ? resolveUrl(imageUrl)
-              : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRMJzoA-zbaFtz6UF7qt9Be1d_601nNAoDTA&usqp=CAU',
+          '$HOST_URL/$imageUrl',
           width: IMAGE_WIDTH,
           fit: BoxFit.cover,
         ),
@@ -125,10 +119,10 @@ class GivingItem extends StatelessWidget {
                   product.name,
                   style: theme.textTheme.headline6,
                 ),
-                if(product.quantity != null)
+                if(product.orders!.isNotEmpty)
                   RichText(
                     text: TextSpan(
-                      text: '${DEFAULT_MAX_QUANTITY - product.quantity!} người',
+                      text: '${product.orders!.length} người',
                       style: theme.textTheme.subtitle1?.copyWith(
                         color: theme.colorScheme.secondaryVariant,
                         fontWeight: FontWeight.w500,

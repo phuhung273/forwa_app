@@ -1,4 +1,3 @@
-import 'package:forwa_app/schema/customer/customer.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'login_response.g.dart';

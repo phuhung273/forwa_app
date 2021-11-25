@@ -18,29 +18,29 @@ class MyGivingsScreenController extends AuthorizedRefreshableController {
   final LocalStorage _localStorage = Get.find();
 
   final products = List<Product>.empty().obs;
-  int? _websiteId;
+  int? _userId;
 
   @override
   void onInit() {
     super.onInit();
 
-    _websiteId = _localStorage.getStoreWebsiteId();
+    _userId = _localStorage.getUserID();
   }
 
   @override
   Future main() async {
-    final response = await _productRepo.getProductsOnWebsite(websiteId: _websiteId!);
+    final response = await _productRepo.getMyProducts();
 
     if(!response.isSuccess || response.data == null){
       return;
     }
 
-    products.assignAll(response.data!.items ?? []);
+    products.assignAll(response.data!.items);
   }
 
   @override
   bool isAuthorized() {
-    _websiteId = _localStorage.getStoreWebsiteId();
-    return _websiteId != null;
+    _userId = _localStorage.getUserID();
+    return _userId != null;
   }
 }

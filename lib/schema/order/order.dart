@@ -1,58 +1,58 @@
-import 'package:enum_to_string/enum_to_string.dart';
-import 'package:forwa_app/schema/order/order_item.dart';
-import 'package:forwa_app/schema/extension_attributes.dart';
+import 'package:forwa_app/schema/user/user.dart';
 import 'package:forwa_app/schema/product/product.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'order.g.dart';
 
 enum OrderStatus{
-  PENDING,
   PROCESSING,
-  SUCCESS,
-  CANCELED,
+  SELECTED,
+  FINISH,
+  CANCEL,
 }
 
 @JsonSerializable()
 class Order {
 
-  @JsonKey(name: 'entity_id')
+  @JsonKey(name: 'id')
   int id;
 
   @JsonKey(name: 'status')
   String status;
 
-  @JsonKey(name: 'items')
-  List<OrderItem> items;
+  @JsonKey(name: 'message')
+  String message;
 
-  @JsonKey(name: 'extension_attributes')
-  ExtensionAttributes? extensionAttributes;
+  @JsonKey(name: 'product_id')
+  int productId;
+
+  @JsonKey(name: 'user_id')
+  int userId;
+
+  @JsonKey(name: 'user')
+  User? user;
+
+  @JsonKey(name: 'product')
+  Product? product;
 
   Order({
     required this.id,
     required this.status,
-    required this.items,
-    this.extensionAttributes,
+    required this.message,
+    required this.productId,
+    required this.userId,
+    this.user,
+    this.product,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderToJson(this);
 
-  String? get firstImageUrl {
-    if(extensionAttributes == null || extensionAttributes!.imageUrls == null || extensionAttributes!.imageUrls!.isEmpty) return null;
-    return extensionAttributes!.imageUrls!.first;
-  }
+  String? get sellerName => product?.user?.name;
 
-  String? get sellerName {
-    if(extensionAttributes == null) return null;
-    return extensionAttributes!.sellerName;
-  }
-
-  int? get sellerId {
-    if(extensionAttributes == null) return null;
-    return extensionAttributes!.sellerId;
-  }
+  String? get firstImageUrl => product?.images.first.url;
 
   OrderStatus? get statusType{
     return EnumToString.fromString(OrderStatus.values, status.toUpperCase());

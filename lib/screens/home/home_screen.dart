@@ -67,7 +67,7 @@ class HomeScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final product = _controller.products[index];
                           return InkWell(
-                            onTap: () => Get.toNamed(ROUTE_PRODUCT, arguments: product.sku),
+                            onTap: () => Get.toNamed(ROUTE_PRODUCT, arguments: product.id),
                             child: ProductCard(
                               product: product,
                             )
@@ -100,7 +100,7 @@ class ProductCard extends GetView<HomeScreenController> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final name = product.sellerName ?? 'Không tên';
+    final name = product.sellerName!;
     final List<String> words = name.split(' ');
     final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
 
@@ -121,9 +121,7 @@ class ProductCard extends GetView<HomeScreenController> {
             //   )
             // ),
             child: ExtendedImage.network(
-              imageUrl != null
-                  ? resolveUrl(imageUrl)
-                  : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRMJzoA-zbaFtz6UF7qt9Be1d_601nNAoDTA&usqp=CAU',
+              '$HOST_URL/$imageUrl',
               width: IMAGE_WIDTH,
               fit: BoxFit.cover,
             ),

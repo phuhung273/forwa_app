@@ -1,24 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
-import 'package:forwa_app/datasource/remote/product_service.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
-import 'package:forwa_app/helpers/product_helper.dart';
 import 'package:forwa_app/route/route.dart';
-import 'package:forwa_app/schema/product/add_product_request.dart';
-import 'package:forwa_app/schema/custom_attribute.dart';
-import 'package:forwa_app/schema/extension_attributes.dart';
-import 'package:forwa_app/schema/product/media_gallery_entry.dart';
-import 'package:forwa_app/schema/product/media_gallery_entry_content.dart';
-import 'package:forwa_app/schema/product/product.dart';
-import 'package:forwa_app/schema/product/stock_item.dart';
+import 'package:forwa_app/schema/product/product_add.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:get/get.dart';
-import 'package:mime/mime.dart';
-import 'package:path/path.dart';
 import 'package:time_range/time_range.dart';
 import 'package:uuid/uuid.dart';
 
@@ -34,6 +23,8 @@ final initialPickupTime = TimeRangeResult(
     const TimeOfDay(hour: 16, minute: 00)
 );
 
+const DEFAULT_PRODUCT_ADD_QUANTITY = 5;
+
 class GiveScreenController extends BaseController {
 
   final LocalStorage _localStorage = Get.find();
@@ -45,10 +36,9 @@ class GiveScreenController extends BaseController {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   String? _pickupTime;
-  String? _storeCode;
-  int? _websiteId;
+  int? _userId;
 
-  final List<MediaGalleryEntry> _imageData = [];
+  final List<File> _imageData = [];
 
   set time(TimeRangeResult? range){
     if(range == null) return;
@@ -63,30 +53,18 @@ class GiveScreenController extends BaseController {
   void onInit() {
     super.onInit();
     _setPickupTime(initialPickupTime);
-    _storeCode = _localStorage.getStoreCode();
-    _websiteId = _localStorage.getStoreWebsiteId();
+    _userId = _localStorage.getUserID();
   }
 
 
   @override
   void onReady() {
     super.onReady();
-    if(_storeCode == null || _websiteId == null) Get.offAndToNamed(ROUTE_LOGIN);
+    if(_userId == null) Get.offAndToNamed(ROUTE_LOGIN);
   }
 
   void addImage(File file){
-    // _imageData.add(base64Encode(file.readAsBytesSync()));
-    final type = lookupMimeType(file.path)!;
-    final name = '${uuid.v4()}${extension(file.path)}';
-    final data = base64Encode(file.readAsBytesSync());
-
-    _imageData.add(MediaGalleryEntry(
-      content: MediaGalleryEntryContent(
-        base64Data: data,
-        type: type,
-        name: name,
-      )
-    ));
+    _imageData.add(file);
   }
 
   void deleteImage(int index){
@@ -99,36 +77,21 @@ class GiveScreenController extends BaseController {
       return;
     }
 
-    if(_storeCode == null || _websiteId == null) Get.offAndToNamed(ROUTE_LOGIN);
+    if(_userId == null) Get.offAndToNamed(ROUTE_LOGIN);
 
-    final customAttributes = [
-      CustomAttribute(
-        attributeCode: CustomAttribute.getCode(CustomAttributeCode.DESCRIPTION),
-        value: descriptionController.text
-      ),
-      CustomAttribute(
-        attributeCode: CustomAttribute.getCode(CustomAttributeCode.PICKUP_TIME),
-        value: _pickupTime
-      ),
+    final products = [
+      ProductAdd(
+        name: nameController.text,
+        sku: uuid.v4(),
+        description: descriptionController.text,
+        quantity: DEFAULT_PRODUCT_ADD_QUANTITY,
+        pickupTime: _pickupTime!,
+        images: _imageData,
+      )
     ];
 
-    final extensionAttributes = ExtensionAttributes(
-      websiteIds: [DEFAULT_WEBSITE_ID, _websiteId!],
-      stockItem: StockItem(),
-    );
-
-    final request = AddProductRequest(
-      product: Product(
-        name: nameController.text,
-        sku: genSku(_storeCode!),
-        customAttributes: customAttributes,
-        extensionAttributes: extensionAttributes,
-        medias: _imageData,
-      )
-    );
-
     showLoadingDialog();
-    final response = await _productRepo.addProduct(request);
+    final response = await _productRepo.addProduct(products);
     hideDialog();
     if(!response.isSuccess || response.data == null){
       return;

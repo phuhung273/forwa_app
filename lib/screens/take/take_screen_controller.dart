@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
-import 'package:forwa_app/datasource/repository/cart_repo.dart';
+import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/route/route.dart';
+import 'package:forwa_app/schema/order/create_order_request.dart';
 import 'package:get/get.dart';
 
 import '../base_controller/base_controller.dart';
 
-const skuParam = 'sku';
+const idParam = 'id';
 const sellerNameParam = 'seller_name';
 
 class TakeScreenBinding extends Bindings {
@@ -20,9 +21,9 @@ class TakeScreenController extends BaseController {
 
   final LocalStorage _localStorage = Get.find();
 
-  final CartRepo _cartRepo = Get.find();
+  final OrderRepo _orderRepo = Get.find();
 
-  final String _sku = Get.parameters[skuParam]!;
+  final String _id = Get.parameters[idParam]!;
   final String sellerName = Get.parameters[sellerNameParam]!;
 
   final TextEditingController messageController = TextEditingController();
@@ -47,7 +48,8 @@ class TakeScreenController extends BaseController {
 
   Future addToOrder() async{
     showLoadingDialog();
-    final response = await _cartRepo.addToOrder(_sku, messageController.text);
+    final request = CreateOrderRequest(message: messageController.text, productId: int.tryParse(_id)!);
+    final response = await _orderRepo.createOrder(request);
     hideDialog();
 
     if(!response.isSuccess || response.data == null){

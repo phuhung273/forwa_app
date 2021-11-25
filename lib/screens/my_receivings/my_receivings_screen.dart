@@ -1,7 +1,6 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
-import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/widgets/secondary_action_container.dart';
 import 'package:get/get.dart';
@@ -73,7 +72,7 @@ class ReceivingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final item = order.items.first;
+    final item = order.product;
     final name = order.sellerName ?? 'Không tên';
     final List<String> words = name.split(' ');
     final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
@@ -82,9 +81,7 @@ class ReceivingCard extends StatelessWidget {
     return Row(
       children: [
         ExtendedImage.network(
-          imageUrl != null
-              ? resolveUrl(imageUrl)
-              : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRMJzoA-zbaFtz6UF7qt9Be1d_601nNAoDTA&usqp=CAU',
+          '$HOST_URL/$imageUrl',
           width: IMAGE_WIDTH,
           fit: BoxFit.cover,
         ),
@@ -117,7 +114,7 @@ class ReceivingCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: defaultPadding),
                   child: Text(
-                    item.name,
+                    item!.name,
                     style: theme.textTheme.subtitle1,
                   ),
                 ),
@@ -131,17 +128,17 @@ class ReceivingCard extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: StatusChip(status: order.statusType!),
                 ),
-                if(order.statusType == OrderStatus.PROCESSING)
+                if(order.statusType == OrderStatus.SELECTED)
                   Center(
                     child: SecondaryActionContainer(
                       child: ElevatedButton.icon(
-                        icon: const Icon(Icons.call),
+                        icon: const Icon(Icons.send),
                         onPressed: () { },
-                        label: const Text('Gọi ngay'),
+                        label: const Text('Nhắn tin'),
                       )
                     ),
                   ),
-                if(order.statusType == OrderStatus.PROCESSING)
+                if(order.statusType == OrderStatus.SELECTED)
                   Center(
                     child: SecondaryActionContainer(
                       child: ElevatedButton.icon(
@@ -191,13 +188,13 @@ class StatusChip extends StatelessWidget {
 
   IconData _buildIcon(OrderStatus status){
     switch(status){
-      case OrderStatus.PENDING:
-        return Icons.pending;
       case OrderStatus.PROCESSING:
         return Icons.pending;
-      case OrderStatus.SUCCESS:
+      case OrderStatus.SELECTED:
+        return Icons.pending;
+      case OrderStatus.FINISH:
         return Icons.done;
-      case OrderStatus.CANCELED:
+      case OrderStatus.CANCEL:
         return Icons.close;
       default:
         return Icons.pending;
@@ -206,13 +203,13 @@ class StatusChip extends StatelessWidget {
 
   _buildColor(OrderStatus status){
     switch(status){
-      case OrderStatus.PENDING:
-        return Colors.blueGrey;
       case OrderStatus.PROCESSING:
+        return Colors.blueGrey;
+      case OrderStatus.SELECTED:
         return Colors.amber;
-      case OrderStatus.SUCCESS:
+      case OrderStatus.FINISH:
         return Colors.green;
-      case OrderStatus.CANCELED:
+      case OrderStatus.CANCEL:
         return Colors.black;
       default:
         return Colors.blueGrey;
@@ -221,13 +218,13 @@ class StatusChip extends StatelessWidget {
 
   _buildMessage(OrderStatus status){
     switch(status){
-      case OrderStatus.PENDING:
-        return 'Chờ xác nhận';
       case OrderStatus.PROCESSING:
+        return 'Chờ xác nhận';
+      case OrderStatus.SELECTED:
         return 'Hãy tới lấy';
-      case OrderStatus.SUCCESS:
+      case OrderStatus.FINISH:
         return 'Đã nhận';
-      case OrderStatus.CANCELED:
+      case OrderStatus.CANCEL:
         return 'Đã hủy';
       default:
         return 'Chờ xác nhận';

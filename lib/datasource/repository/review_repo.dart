@@ -12,10 +12,8 @@ class ReviewRepo extends BaseRepo{
 
   final ReviewService _service = Get.find();
 
-  Future<ApiResponse<Review>> createReview(CreateReviewRequest request) async {
-    return _service.createReview(request).then((value){
-      return ApiResponse<Review>(data: value);
-    }).catchError((Object obj) {
+  Future<ApiResponse<Review>> createReview(Review review) async {
+    return _service.createReview(review).catchError((Object obj) {
       // non-200 error goes here.
       switch (obj.runtimeType) {
         case DioError:

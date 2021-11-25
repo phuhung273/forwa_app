@@ -1,7 +1,6 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
-import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/schema/review/review.dart';
 import 'package:forwa_app/widgets/rating.dart';
 import 'package:get/get.dart';
@@ -48,7 +47,7 @@ class PublicProfileScreen extends GetView<PublicProfileScreenController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Divider(),
+                      const Divider(height: defaultSpacing * 2),
                       Obx(
                         () => ListView.separated(
                           shrinkWrap: true,
@@ -266,14 +265,14 @@ class ReviewItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final name = review.fromCustomerName ?? 'Không tên';
+    final name = review.fromUser?.name ?? 'Không tên';
     final words = name.split(' ');
     final shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
 
     return Row(
       children: [
         ExtendedImage.network(
-          resolveUrl(review.productBaseImageUrl!),
+          '$HOST_URL/${review.productBaseImageUrl}',
           width: IMAGE_WIDTH,
           fit: BoxFit.cover,
         ),
@@ -284,7 +283,7 @@ class ReviewItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  review.productName!,
+                  review.productName ?? '',
                   style: theme.textTheme.headline6,
                 ),
                 const Divider(),
@@ -310,7 +309,7 @@ class ReviewItem extends StatelessWidget {
                 ),
                 Rating(score: review.rating),
                 Text(
-                  review.comment,
+                  review.message,
                   style: theme.textTheme.subtitle1,
                 )
               ],

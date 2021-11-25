@@ -7,8 +7,8 @@ part 'product_list_response.g.dart';
 @JsonSerializable()
 class ProductListResponse {
 
-  @JsonKey(name: 'items')
-  List<Product>? items;
+  @JsonKey(name: 'data')
+  List<Product> items;
 
   ProductListResponse({
     required this.items,

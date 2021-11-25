@@ -1,5 +1,5 @@
-import 'package:forwa_app/datasource/repository/customer_repo.dart';
-import 'package:forwa_app/schema/address/customer_address_response.dart';
+import 'package:forwa_app/datasource/repository/address_repo.dart';
+import 'package:forwa_app/schema/address/address.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:get/get.dart';
 
@@ -12,16 +12,16 @@ class ProfileAddressBinding extends Bindings {
 
 class ProfileAddressScreenController extends BaseController {
 
-  final CustomerRepo _customerRepo = Get.find();
+  final AddressRepo _addressRepo = Get.find();
 
-  final addresses = List<CustomerAddressResponse>.empty().obs;
+  final addresses = List<Address>.empty().obs;
 
   @override
   Future onReady() async {
     super.onReady();
 
     showLoadingDialog();
-    final response = await _customerRepo.myInfo();
+    final response = await _addressRepo.getMyAddresses();
     hideDialog();
 
     if(!response.isSuccess || response.data == null){
@@ -29,6 +29,6 @@ class ProfileAddressScreenController extends BaseController {
       return;
     }
 
-    addresses.assignAll(response.data!.addresses!);
+    addresses.assignAll(response.data!);
   }
 }

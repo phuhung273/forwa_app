@@ -2,7 +2,7 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/route/route.dart';
-import 'package:forwa_app/schema/address/customer_address_response.dart';
+import 'package:forwa_app/schema/address/address.dart';
 import 'package:forwa_app/widgets/app_container.dart';
 import 'package:forwa_app/widgets/app_level_action_container.dart';
 import 'package:get/get.dart';
@@ -50,7 +50,7 @@ class ProfileAddressScreen extends GetView<ProfileAddressScreenController> {
 }
 
 class AddressCard extends StatelessWidget {
-  final CustomerAddressResponse address;
+  final Address address;
   const AddressCard({
     Key? key,
     required this.address,
@@ -58,7 +58,7 @@ class AddressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final addressMark = address.defaultBilling == null || address.defaultBilling == false
+    final addressMark = address.isDefault == null || address.isDefault == false
         ? 'Địa chỉ khác'
         : 'Địa chỉ mặc định';
 
@@ -81,7 +81,7 @@ class AddressCard extends StatelessWidget {
                     .bodyText2,
               )),
           collapsed: Text(
-            address.street.join(', '),
+            '${address.street} ${address.ward} ${address.district} ${address.city}',
             softWrap: true,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -92,7 +92,7 @@ class AddressCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: defaultPadding),
                 child: Text(
-                    address.street.join(', '),
+                  '${address.street} ${address.ward} ${address.district} ${address.city}',
                   softWrap: true,
                   overflow: TextOverflow.fade,
                 ),
@@ -108,7 +108,7 @@ class AddressCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: defaultPadding),
                 child: Text(
-                  '${address.firstName} ${address.lastName}',
+                  address.name,
                   softWrap: true,
                   overflow: TextOverflow.fade,
                 ),
@@ -116,7 +116,7 @@ class AddressCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: defaultPadding),
                 child: Text(
-                  address.telephone,
+                  address.phone,
                   softWrap: true,
                   overflow: TextOverflow.fade,
                 ),
