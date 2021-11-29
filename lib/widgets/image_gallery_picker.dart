@@ -56,6 +56,7 @@ class _ImageGalleryPickerState extends State<ImageGalleryPicker> {
       onTap: () async {
         final result = await showModalActionSheet<String>(
           context: context,
+          style: AdaptiveStyle.material,
           actions: [
             const SheetAction(
               icon: Icons.photo_camera,
@@ -99,6 +100,7 @@ class _ImageGalleryPickerState extends State<ImageGalleryPicker> {
 
     final croppedFile = await ImageCropper.cropImage(
         sourcePath: image.path,
+        aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
         ],
@@ -112,6 +114,8 @@ class _ImageGalleryPickerState extends State<ImageGalleryPicker> {
         ),
         iosUiSettings: const IOSUiSettings(
           minimumAspectRatio: 1.0,
+          aspectRatioLockEnabled: true,
+          resetAspectRatioEnabled: false,
           aspectRatioLockDimensionSwapEnabled: true,
           aspectRatioPickerButtonHidden: true,
           rotateButtonsHidden: true,

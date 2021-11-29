@@ -13,6 +13,7 @@ import 'package:forwa_app/screens/my_givings/my_givings_creen.dart';
 import 'package:forwa_app/screens/my_receivings/my_receivings_screen.dart';
 import 'package:get/get.dart';
 
+import '../../constants.dart';
 import 'main_screen_controller.dart';
 
 const CHAT_SCREEN_INDEX = 4;
@@ -151,84 +152,87 @@ class MyDrawer extends GetView<MainScreenController> {
         textColor: Colors.white,
         iconColor: Colors.white,
         child: Obx(
-          () => Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                width: 128.0,
-                height: 128.0,
-                margin: const EdgeInsets.only(
-                  top: 24.0,
-                  bottom: 64.0,
+          () => SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Container(
+                  width: 128.0,
+                  height: 128.0,
+                  margin: const EdgeInsets.only(
+                    top: 24.0,
+                    bottom: 64.0,
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  decoration: const BoxDecoration(
+                    color: Colors.black26,
+                    shape: BoxShape.circle,
+                  ),
+                  child: controller.avatar.isNotEmpty ? ExtendedImage.network(
+                    controller.avatar.value,
+                    fit: BoxFit.cover,
+                  ): CircleAvatar(
+                    backgroundColor: theme.colorScheme.surface,
+                  ),
                 ),
-                clipBehavior: Clip.antiAlias,
-                decoration: const BoxDecoration(
-                  color: Colors.black26,
-                  shape: BoxShape.circle,
+                Text(
+                  controller.fullname.value,
+                  style: theme.textTheme.subtitle1?.copyWith(
+                    color: Colors.white,
+                  ),
                 ),
-                child: controller.avatar.isNotEmpty ? ExtendedImage.network(
-                  controller.avatar.value,
-                  fit: BoxFit.cover,
-                ): CircleAvatar(
-                  backgroundColor: theme.colorScheme.surface,
+                ListTile(
+                  onTap: () {
+                    if(_localStorage.getAccessToken() == null){
+                      Get.toNamed(ROUTE_LOGIN);
+                    } else {
+                      Get.toNamed(ROUTE_PROFILE);
+                    }
+                  },
+                  leading: const Icon(Icons.account_circle_rounded),
+                  title: const Text('Tài Khoản'),
                 ),
-              ),
-              Text(
-                controller.fullname.value,
-                style: theme.textTheme.subtitle1?.copyWith(
-                  color: Colors.white,
+                ListTile(
+                  onTap: () { },
+                  leading: const Icon(Icons.volunteer_activism),
+                  title: const Text('Danh Sách Cho Đi'),
                 ),
-              ),
-              ListTile(
-                onTap: () {
-                  if(_localStorage.getAccessToken() == null){
-                    Get.toNamed(ROUTE_LOGIN);
-                  } else {
-                    Get.toNamed(ROUTE_PROFILE);
-                  }
-                },
-                leading: const Icon(Icons.account_circle_rounded),
-                title: const Text('Tài Khoản'),
-              ),
-              ListTile(
-                onTap: () { },
-                leading: const Icon(Icons.volunteer_activism),
-                title: const Text('Danh Sách Cho Đi'),
-              ),
-              ListTile(
-                onTap: () { },
-                leading: const Icon(Icons.card_giftcard),
-                title: const Text('Danh Sách Nhận'),
-              ),
-              ListTile(
-                onTap: () { },
-                leading: const Icon(Icons.textsms),
-                title: const Text('Tin nhắn'),
-              ),
-              ListTile(
-                onTap: () { },
-                leading: const Icon(Icons.notifications),
-                title: const Text('Thông Báo'),
-              ),
-              ListTile(
-                onTap: () { },
-                leading: const Icon(Icons.gavel),
-                title: const Text('Điều Khoản'),
-              ),
-              ListTile(
-                onTap: controller.logout,
-                leading: const Icon(Icons.logout),
-                title: const Text('Đăng Xuất'),
-              ),
-              // ElevatedButton(
-              //   onPressed: controller.logout,
-              //   child: const Text('Đăng Xuất'),
-              //   style: ElevatedButton.styleFrom(
-              //     primary: Colors.white,
-              //     onPrimary: Colors.black,
-              //   ),
-              // )
-            ],
+                ListTile(
+                  onTap: () { },
+                  leading: const Icon(Icons.card_giftcard),
+                  title: const Text('Danh Sách Nhận'),
+                ),
+                ListTile(
+                  onTap: () { },
+                  leading: const Icon(Icons.textsms),
+                  title: const Text('Tin nhắn'),
+                ),
+                ListTile(
+                  onTap: () { },
+                  leading: const Icon(Icons.notifications),
+                  title: const Text('Thông Báo'),
+                ),
+                ListTile(
+                  onTap: () { },
+                  leading: const Icon(Icons.gavel),
+                  title: const Text('Điều Khoản'),
+                ),
+                ListTile(
+                  onTap: controller.logout,
+                  leading: const Icon(Icons.logout),
+                  title: const Text('Đăng Xuất'),
+                ),
+                // ElevatedButton(
+                //   onPressed: controller.logout,
+                //   child: const Text('Đăng Xuất'),
+                //   style: ElevatedButton.styleFrom(
+                //     primary: Colors.white,
+                //     onPrimary: Colors.black,
+                //   ),
+                // )
+                const SizedBox(height: defaultSpacing),
+              ],
+            ),
           ),
         ),
       ),
