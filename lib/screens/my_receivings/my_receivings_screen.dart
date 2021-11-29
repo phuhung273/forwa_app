@@ -2,6 +2,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/schema/order/order.dart';
+import 'package:forwa_app/widgets/rating.dart';
 import 'package:forwa_app/widgets/secondary_action_container.dart';
 import 'package:get/get.dart';
 
@@ -25,16 +26,21 @@ class MyReceivingsScreen extends StatelessWidget {
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             slivers: [
-              const SliverAppBar(
+              SliverAppBar(
                 automaticallyImplyLeading: false,
-                title: Text('Danh Sách Nhận'),
+                title: Text(
+                  'Danh Sách Nhận',
+                  style: theme.textTheme.headline6?.copyWith(
+                    color: theme.colorScheme.secondary,
+                  ),
+                ),
               ),
               const SliverToBoxAdapter(
                 child: Divider(),
               ),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.all(defaultPadding),
+                  padding: const EdgeInsets.all(6.0),
                   child: Obx(
                     () => ListView.separated(
                       shrinkWrap: true,
@@ -78,84 +84,199 @@ class ReceivingCard extends StatelessWidget {
     final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
     final imageUrl = order.firstImageUrl;
 
-    return Row(
-      children: [
-        ExtendedImage.network(
-          '$HOST_URL/$imageUrl',
-          width: IMAGE_WIDTH,
-          fit: BoxFit.cover,
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(defaultPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListTile(
-                  minVerticalPadding: 0.0,
-                  minLeadingWidth: 0.0,
-                  horizontalTitleGap: 8.0,
-                  contentPadding: EdgeInsets.zero,
-                  leading: CircleAvatar(
-                    child: Text(
-                      shortWords.map((e) => e[0]).join(),
-                      style: theme.textTheme.headline6!.copyWith(
-                        color: Colors.white,
+    // return Row(
+    //   children: [
+    //     ExtendedImage.network(
+    //       '$HOST_URL/$imageUrl',
+    //       width: IMAGE_WIDTH,
+    //       fit: BoxFit.cover,
+    //     ),
+    //     Expanded(
+    //       child: Padding(
+    //         padding: const EdgeInsets.all(defaultPadding),
+    //         child: Column(
+    //           crossAxisAlignment: CrossAxisAlignment.start,
+    //           children: [
+    //             ListTile(
+    //               minVerticalPadding: 0.0,
+    //               minLeadingWidth: 0.0,
+    //               horizontalTitleGap: 8.0,
+    //               contentPadding: EdgeInsets.zero,
+    //               leading: CircleAvatar(
+    //                 child: Text(
+    //                   shortWords.map((e) => e[0]).join(),
+    //                   style: theme.textTheme.headline6!.copyWith(
+    //                     color: Colors.white,
+    //                   ),
+    //                 ),
+    //               ),
+    //               title: Text(
+    //                 shortWords.join(' '),
+    //                 style: theme.textTheme.bodyText1,
+    //                 // overflow: TextOverflow.ellipsis,
+    //               ),
+    //               // subtitle: ,
+    //             ),
+    //             Padding(
+    //               padding: const EdgeInsets.symmetric(vertical: defaultPadding),
+    //               child: Text(
+    //                 item!.name,
+    //                 style: theme.textTheme.subtitle1,
+    //               ),
+    //             ),
+    //             Padding(
+    //               padding: const EdgeInsets.only(bottom: 8.0),
+    //               child: Text(
+    //                 'Khoảng cách: 3.5 km',
+    //               ),
+    //             ),
+    //             Padding(
+    //               padding: const EdgeInsets.only(bottom: 8.0),
+    //               child: StatusChip(status: order.statusType!),
+    //             ),
+    //             if(order.statusType == OrderStatus.SELECTED)
+    //               Center(
+    //                 child: SecondaryActionContainer(
+    //                   child: ElevatedButton.icon(
+    //                     icon: const Icon(Icons.send),
+    //                     onPressed: () { },
+    //                     label: const Text('Nhắn tin'),
+    //                   )
+    //                 ),
+    //               ),
+    //             if(order.statusType == OrderStatus.SELECTED)
+    //               Center(
+    //                 child: SecondaryActionContainer(
+    //                   child: ElevatedButton.icon(
+    //                     style: ElevatedButton.styleFrom(
+    //                       primary: Colors.green,
+    //                     ),
+    //                     icon: const Icon(Icons.done),
+    //                     onPressed: onTakeSuccess,
+    //                     label: const Text('Hoàn thành'),
+    //                   )
+    //                 ),
+    //               ),
+    //           ],
+    //         ),
+    //       ),
+    //     )
+    //   ],
+    // );
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: Card(
+        shape: roundedRectangleShape,
+        elevation: 4.0,
+        child: Row(
+          children: [
+            Container(
+              height: IMAGE_WIDTH,
+              width: IMAGE_WIDTH,
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                  borderRadius: roundedRectangleBorderRadius
+              ),
+              margin: const EdgeInsets.only(
+                right: 0.0,
+                left: 8.0,
+                top: 8.0,
+                bottom: 8.0,
+              ),
+              child: ExtendedImage.network(
+                '$HOST_URL/$imageUrl',
+                width: IMAGE_WIDTH,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.only(
+                    top: 0.0,
+                    bottom: 4.0,
+                    right: 4.0,
+                    left: 12.0
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      minVerticalPadding: 0.0,
+                      minLeadingWidth: 0.0,
+                      horizontalTitleGap: 8.0,
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                      leading: CircleAvatar(
+                        radius: 16.0,
+                        backgroundColor: theme.colorScheme.secondary,
+                        child: Text(
+                          shortWords.map((e) => e[0]).join(),
+                          style: theme.textTheme.bodyText1!.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        // shortWords.join(' '),
+                        name,
+                        style: theme.textTheme.bodyText1?.copyWith(
+                            fontWeight: FontWeight.w600
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: Rating(score: 5, size: 12.0),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12.0),
+                      child: Text(
+                        item!.name,
+                        style: theme.textTheme.bodyText1,
                       ),
                     ),
-                  ),
-                  title: Text(
-                    shortWords.join(' '),
-                    style: theme.textTheme.bodyText1,
-                    // overflow: TextOverflow.ellipsis,
-                  ),
-                  // subtitle: ,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: defaultPadding),
-                  child: Text(
-                    item!.name,
-                    style: theme.textTheme.subtitle1,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Text(
-                    'Khoảng cách: 3.5 km',
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: StatusChip(status: order.statusType!),
-                ),
-                if(order.statusType == OrderStatus.SELECTED)
-                  Center(
-                    child: SecondaryActionContainer(
-                      child: ElevatedButton.icon(
-                        icon: const Icon(Icons.send),
-                        onPressed: () { },
-                        label: const Text('Nhắn tin'),
-                      )
-                    ),
-                  ),
-                if(order.statusType == OrderStatus.SELECTED)
-                  Center(
-                    child: SecondaryActionContainer(
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.green,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Text(
+                        'Cách 3.5km',
+                        style: theme.textTheme.bodyText1?.copyWith(
+                          color: theme.colorScheme.secondary
                         ),
-                        icon: const Icon(Icons.done),
-                        onPressed: onTakeSuccess,
-                        label: const Text('Hoàn thành'),
-                      )
+                      ),
                     ),
-                  ),
-              ],
-            ),
-          ),
-        )
-      ],
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: StatusChip(status: order.statusType!),
+                    ),
+                    if(order.statusType == OrderStatus.SELECTED)
+                      Center(
+                        child: SecondaryActionContainer(
+                          child: ElevatedButton.icon(
+                            icon: const Icon(Icons.textsms),
+                            onPressed: () { },
+                            label: const Text('Nhắn tin'),
+                          )
+                        ),
+                      ),
+                    if(order.statusType == OrderStatus.SELECTED)
+                      Center(
+                        child: SecondaryActionContainer(
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.green,
+                            ),
+                            icon: const Icon(Icons.done),
+                            onPressed: onTakeSuccess,
+                            label: const Text('Hoàn thành'),
+                          )
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

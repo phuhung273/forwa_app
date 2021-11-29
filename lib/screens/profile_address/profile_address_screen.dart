@@ -15,10 +15,20 @@ class ProfileAddressScreen extends GetView<ProfileAddressScreenController> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Quản lý địa chỉ'),
+          title: Text(
+            'Quản lý địa chỉ',
+            style: theme.textTheme.headline6?.copyWith(
+              color: theme.colorScheme.secondary,
+            ),
+          ),
+          iconTheme: IconThemeData(
+            color: theme.colorScheme.secondary,
+          ),
         ),
         body: Column(
           children: [
@@ -58,6 +68,8 @@ class AddressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     final addressMark = address.isDefault == null || address.isDefault == false
         ? 'Địa chỉ khác'
         : 'Địa chỉ mặc định';
@@ -72,19 +84,18 @@ class AddressCard extends StatelessWidget {
             tapBodyToCollapse: true,
           ),
           header: Padding(
-              padding: const EdgeInsets.all(defaultPadding),
-              child: Text(
-                addressMark,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .bodyText2,
-              )),
+            padding: const EdgeInsets.all(defaultPadding),
+            child: Text(
+              addressMark,
+              style: theme.textTheme.subtitle1,
+            )
+          ),
           collapsed: Text(
             '${address.street} ${address.ward} ${address.district} ${address.city}',
             softWrap: true,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.bodyText1,
           ),
           expanded: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,6 +106,7 @@ class AddressCard extends StatelessWidget {
                   '${address.street} ${address.ward} ${address.district} ${address.city}',
                   softWrap: true,
                   overflow: TextOverflow.fade,
+                  style: theme.textTheme.bodyText1,
                 ),
               ),
               Padding(
@@ -103,6 +115,7 @@ class AddressCard extends StatelessWidget {
                   address.city,
                   softWrap: true,
                   overflow: TextOverflow.fade,
+                  style: theme.textTheme.bodyText1,
                 ),
               ),
               Padding(
@@ -111,6 +124,7 @@ class AddressCard extends StatelessWidget {
                   address.name,
                   softWrap: true,
                   overflow: TextOverflow.fade,
+                  style: theme.textTheme.bodyText1,
                 ),
               ),
               Padding(
@@ -119,6 +133,7 @@ class AddressCard extends StatelessWidget {
                   address.phone,
                   softWrap: true,
                   overflow: TextOverflow.fade,
+                  style: theme.textTheme.bodyText1,
                 ),
               ),
             ],

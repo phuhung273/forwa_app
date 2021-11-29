@@ -51,7 +51,7 @@ class MainScreenView extends GetView<MainScreenController> {
     final theme = Theme.of(context);
 
     return AdvancedDrawer(
-      backdropColor: Colors.blueGrey,
+      backdropColor: theme.colorScheme.secondary,
       controller: controller.drawerController,
       animationCurve: Curves.easeInOut,
       animationDuration: const Duration(milliseconds: 300),
@@ -130,7 +130,7 @@ class MyBottomNavigationBar extends GetView<MainScreenController> {
         gapLocation: GapLocation.center,
         onTap: (index) => controller.changeTab(index),
         backgroundColor: theme.primaryColor,
-        activeColor: theme.colorScheme.secondaryVariant,
+        activeColor: theme.colorScheme.secondary,
         inactiveColor: Colors.grey,
       )
     );
@@ -188,23 +188,28 @@ class MyDrawer extends GetView<MainScreenController> {
                   }
                 },
                 leading: const Icon(Icons.account_circle_rounded),
-                title: const Text('Hồ Sơ'),
+                title: const Text('Tài Khoản'),
               ),
-              // ListTile(
-              //   onTap: () { },
-              //   leading: const Icon(Icons.volunteer_activism),
-              //   title: const Text('Danh Sách Cho Đi'),
-              // ),
-              // ListTile(
-              //   onTap: () { },
-              //   leading: const Icon(Icons.card_giftcard),
-              //   title: const Text('Danh Sách Nhận'),
-              // ),
-              // ListTile(
-              //   onTap: () { },
-              //   leading: const Icon(Icons.notifications),
-              //   title: const Text('Thông Báo'),
-              // ),
+              ListTile(
+                onTap: () { },
+                leading: const Icon(Icons.volunteer_activism),
+                title: const Text('Danh Sách Cho Đi'),
+              ),
+              ListTile(
+                onTap: () { },
+                leading: const Icon(Icons.card_giftcard),
+                title: const Text('Danh Sách Nhận'),
+              ),
+              ListTile(
+                onTap: () { },
+                leading: const Icon(Icons.textsms),
+                title: const Text('Tin nhắn'),
+              ),
+              ListTile(
+                onTap: () { },
+                leading: const Icon(Icons.notifications),
+                title: const Text('Thông Báo'),
+              ),
               ListTile(
                 onTap: () { },
                 leading: const Icon(Icons.gavel),

@@ -20,7 +20,15 @@ class GiveScreen extends GetView<GiveScreenController> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Tải lên'),
+          title: Text(
+            'Tải lên',
+            style: theme.textTheme.headline6?.copyWith(
+              color: theme.colorScheme.secondary,
+            ),
+          ),
+          iconTheme: IconThemeData(
+            color: theme.colorScheme.secondary,
+          ),
         ),
         body: BodyWithPersistentBottom(
           isKeyboard: isKeyboard,

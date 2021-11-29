@@ -3,9 +3,11 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class Rating extends StatelessWidget {
   final int score;
+  final double size;
   const Rating({
     Key? key,
     required this.score,
+    this.size = 20.0
   }) : super(key: key);
 
   @override
@@ -17,7 +19,7 @@ class Rating extends StatelessWidget {
         color: Colors.amber,
       ),
       itemCount: score,
-      itemSize: 20.0,
+      itemSize: size,
     );
   }
 }

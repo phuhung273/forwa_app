@@ -5,7 +5,6 @@ import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
-import 'package:forwa_app/widgets/secondary_action_container.dart';
 import 'package:get/get.dart';
 
 import 'my_giving_screen_controller.dart';
@@ -28,35 +27,47 @@ class MyGivingsScreen extends StatelessWidget {
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             slivers: [
-              const SliverAppBar(
+              SliverAppBar(
                 automaticallyImplyLeading: false,
-                title: Text('Danh Sách Cho Đi'),
+                title: Text(
+                  'Danh Sách Cho Đi',
+                  style: theme.textTheme.headline6?.copyWith(
+                    color: theme.colorScheme.secondary,
+                  ),
+                ),
               ),
               SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(defaultSpacing),
-                  child: Column(
-                    children: [
-                      Row(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Obx(
                             () => Text(
                               'Bạn đã cho đi: ${_controller.products.length}',
-                              style: theme.textTheme.headline6,
+                              style: theme.textTheme.subtitle1,
                             ),
                           ),
-                          SecondaryActionContainer(
-                            child: ElevatedButton(
-                              onPressed: () => Get.toNamed(ROUTE_GIVE),
-                              child: const Text('Tải lên')
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: thinRoundedRectangleShape,
+                              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                              primary: secondaryColor,
+                              onPrimary: Colors.white,
                             ),
+                            onPressed: () => Get.toNamed(ROUTE_GIVE),
+                            child: const Text('Tải lên')
                           )
                         ],
                       ),
-                      const Divider(),
-                      Obx(
-                        () => ListView.separated(
+                    ),
+                    const Divider(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                      child: Obx(
+                        () => ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: _controller.products.length,
@@ -74,11 +85,10 @@ class MyGivingsScreen extends StatelessWidget {
                               ),
                             );
                           },
-                          separatorBuilder: (context, index) => const SizedBox(height: defaultPadding),
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    )
+                  ],
                 ),
               )
             ],
@@ -89,7 +99,7 @@ class MyGivingsScreen extends StatelessWidget {
   }
 }
 
-const IMAGE_WIDTH = 150.0;
+const IMAGE_WIDTH = 140.0;
 
 class GivingItem extends StatelessWidget {
   final Product product;
@@ -102,45 +112,83 @@ class GivingItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final imageUrl = product.firstImageUrl;
-    return Row(
-      children: [
-        ExtendedImage.network(
-          '$HOST_URL/$imageUrl',
-          width: IMAGE_WIDTH,
-          fit: BoxFit.cover,
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  product.name,
-                  style: theme.textTheme.headline6,
-                ),
-                if(product.orders!.isNotEmpty)
-                  RichText(
-                    text: TextSpan(
-                      text: '${product.orders!.length} người',
-                      style: theme.textTheme.subtitle1?.copyWith(
-                        color: theme.colorScheme.secondaryVariant,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      children: [
-                        TextSpan(
-                          text: ' đang xin',
-                          style: theme.textTheme.subtitle1,
-                        )
-                      ]
-                    ),
-                  ),
-              ],
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: Card(
+        shape: roundedRectangleShape,
+        elevation: 4.0,
+        child: Row(
+          children: [
+            Container(
+              height: IMAGE_WIDTH,
+              width: IMAGE_WIDTH,
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                  borderRadius: roundedRectangleBorderRadius
+              ),
+              margin: const EdgeInsets.only(
+                right: 0.0,
+                left: 8.0,
+                top: 8.0,
+                bottom: 8.0,
+              ),
+              child: ExtendedImage.network(
+                '$HOST_URL/$imageUrl',
+                width: IMAGE_WIDTH,
+                fit: BoxFit.cover,
+              ),
             ),
-          )
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.only(
+                    top: 0.0,
+                    bottom: 4.0,
+                    right: 4.0,
+                    left: 12.0
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12.0),
+                      child: Text(
+                        product.name,
+                        style: theme.textTheme.bodyText1?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    if(product.orders!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: RichText(
+                          text: TextSpan(
+                            text: '${product.orders!.length} người',
+                            style: theme.textTheme.bodyText1?.copyWith(
+                              color: theme.colorScheme.secondaryVariant,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: ' đang xin',
+                                style: theme.textTheme.bodyText1,
+                              )
+                            ]
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Icon(Icons.arrow_forward_ios),
+            ),
+          ],
         ),
-        const Icon(Icons.arrow_forward_ios),
-      ],
+      ),
     );
   }
 }

@@ -32,25 +32,26 @@ class HeadlessTable extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: matchBackground ? 0 : defaultPadding,
-                vertical: defaultPadding
+                // vertical: defaultPadding
+                vertical: 8.0
               ),
               child: Text(
                 e.key,
-                style: theme.textTheme.subtitle1!.copyWith(
+                style: theme.textTheme.bodyText1?.copyWith(
                   fontWeight: FontWeight.w400,
+                  color: theme.colorScheme.secondary,
                 ),
               ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: matchBackground ? 0 : defaultPadding,
-                  vertical: defaultPadding
+                  // vertical: defaultPadding
+                  vertical: 8.0
               ),
               child: Text(
                 e.value,
-                style: theme.textTheme.subtitle1?.copyWith(
-                  fontWeight: FontWeight.w500
-                ),
+                style: theme.textTheme.bodyText1
               ),
             ),
           ]
@@ -60,8 +61,10 @@ class HeadlessTable extends StatelessWidget {
   }
 
   _rowColor(BuildContext context, int index){
-    if(matchBackground) return Theme.of(context).scaffoldBackgroundColor;
-    if(!striped) return Colors.white;
-    return index % 2 == 0 ? Colors.white : Colors.grey[100];
+    // if(matchBackground) return Theme.of(context).scaffoldBackgroundColor;
+    // if(!striped) return Colors.white;
+    // return index % 2 == 0 ? Colors.white : Colors.grey[100];
+
+    return Colors.grey[200];
   }
 }

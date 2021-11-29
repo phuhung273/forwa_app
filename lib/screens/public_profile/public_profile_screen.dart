@@ -186,13 +186,13 @@ class ItemCountBox extends GetView<PublicProfileScreenController> {
         children: [
           Text(
             'Đã cho đi',
-            style: theme.textTheme.headline6,
+            style: theme.textTheme.subtitle1,
           ),
           const SizedBox(height: defaultPadding),
           Obx(
             () => Text(
               controller.reviews.length.toString(),
-              style: theme.textTheme.headline6?.copyWith(
+              style: theme.textTheme.subtitle1?.copyWith(
                   color: theme.colorScheme.secondary
               ),
             ),
@@ -216,14 +216,14 @@ class RatingBox extends GetView<PublicProfileScreenController> {
           children: [
             Text(
               'Đánh giá',
-              style: theme.textTheme.headline6,
+              style: theme.textTheme.subtitle1,
             ),
             const SizedBox(height: defaultPadding),
             Obx(
               () => Text(
                 controller.rating.value.toString(),
-                style: theme.textTheme.headline6?.copyWith(
-                    color: theme.colorScheme.secondary
+                style: theme.textTheme.subtitle1?.copyWith(
+                  color: theme.colorScheme.secondary
                 ),
               ),
             ),

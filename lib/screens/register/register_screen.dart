@@ -54,7 +54,7 @@ class RegisterScreen extends GetView<RegisterScreenController> {
                 RichText(
                   text: TextSpan(
                     text: 'Đã có tài khoản? ',
-                    style: theme.textTheme.headline6,
+                    style: theme.textTheme.subtitle1,
                     children: [
                       TextSpan(
                         text: 'Đăng nhập',

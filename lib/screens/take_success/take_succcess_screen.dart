@@ -18,37 +18,37 @@ class TakeSuccessScreen extends GetView<TakeSuccessScreenController> {
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
 
     return SafeArea(
-        child: Scaffold(
-          body: BodyWithPersistentBottom(
-              isKeyboard: isKeyboard,
-              child: Column(
-                children: [
-                  Divider(
-                    height: size.height * 0.2,
-                  ),
-                  Lottie.asset(
-                    'assets/animations/11504-birthday.json',
-                    width: pictureWidth,
-                    height: pictureWidth,
-                    fit: BoxFit.fill,
-                  ),
-                  AppContainer(
-                    child: Text(
-                      'Trân trọng tấm lòng của người khác',
-                      style: theme.textTheme.headline5,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
+      child: Scaffold(
+        body: BodyWithPersistentBottom(
+          isKeyboard: isKeyboard,
+          child: Column(
+            children: [
+              Divider(
+                height: size.height * 0.2,
               ),
-              bottom: AppLevelActionContainer(
-                child: ElevatedButton(
-                  onPressed: controller.submit,
-                  child: const Text('Hoàn tất'),
+              Lottie.asset(
+                'assets/animations/11504-birthday.json',
+                width: pictureWidth,
+                height: pictureWidth,
+                fit: BoxFit.fill,
+              ),
+              AppContainer(
+                child: Text(
+                  'Trân trọng tấm lòng của người khác',
+                  style: theme.textTheme.headline5,
+                  textAlign: TextAlign.center,
                 ),
-              )
+              ),
+            ],
           ),
-        )
+          bottom: AppLevelActionContainer(
+            child: ElevatedButton(
+              onPressed: controller.submit,
+              child: const Text('Hoàn tất'),
+            ),
+          )
+        ),
+      )
     );
   }
 }

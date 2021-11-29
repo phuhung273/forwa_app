@@ -50,81 +50,83 @@ final appTheme = _base.copyWith(
   dividerTheme: const DividerThemeData(
     color: Colors.white,
     space: defaultSpacing,
-  )
+  ),
 );
 
 final _textTheme = _base.textTheme.copyWith(
   // headline1: TextStyle(
-  //   fontFamily: 'Rubik',
+  //   fontFamily: 'Montserrat',
   //   fontSize: 96.0,
   //   fontWeight: FontWeight.w300,
   //   color: primaryColor,
   // ),
   // headline2: TextStyle(
-  //   fontFamily: 'Rubik',
+  //   fontFamily: 'Montserrat',
   //   fontSize: 60.0,
   //   fontWeight: FontWeight.w300,
   //   color: primaryColor,
   // ),
   // headline3: TextStyle(
-  //   fontFamily: 'Rubik',
+  //   fontFamily: 'Montserrat',
   //   fontSize: 48.0,
   //   fontWeight: FontWeight.w400,
   //   color: primaryColor,
   // ),
-  // // Only use below headline4
-  // headline4: TextStyle(
-  //   fontFamily: 'Rubik',
-  //   fontSize: 34.0,
-  //   fontWeight: FontWeight.w400,
-  //   color: primaryColor,
-  // ),
-  // headline5: TextStyle(
-  //   fontFamily: 'Rubik',
-  //   fontSize: 24.0,
-  //   fontWeight: FontWeight.w500,
-  //   color: primaryColor,
-  // ),
-  // headline6: TextStyle(
-  //   fontFamily: 'Rubik',
-  //   fontSize: 20.0,
-  //   fontWeight: FontWeight.w500,
-  //   color: primaryColor,
-  // ),
-  // subtitle1: TextStyle(
-  //   fontFamily: 'Rubik',
-  //   fontSize: 16.0,
-  //   fontWeight: FontWeight.w500,
-  //   color: onSurfaceColor,
-  // ),
-  // subtitle2: TextStyle(
-  //   fontFamily: 'Rubik',
-  //   fontSize: 14.0,
-  //   fontWeight: FontWeight.w500,
-  //   color: onSurfaceColor,
-  // ),
-  // bodyText1: TextStyle(
-  //   fontFamily: 'Rubik',
-  //   fontSize: 16.0,
-  //   fontWeight: FontWeight.w400,
-  //   color: onSurfaceColor,
-  // ),
-  // bodyText2: TextStyle(
-  //   fontFamily: 'Rubik',
-  //   fontSize: 14.0,
-  //   fontWeight: FontWeight.w400,
-  //   color: onSurfaceColor,
-  // ),
+  // Only use below headline4
+  headline4: const TextStyle(
+    fontFamily: 'Montserrat',
+    // fontSize: 34.0,
+    fontWeight: FontWeight.w400,
+    color: Colors.black,
+  ),
+  headline5: const TextStyle(
+    fontFamily: 'Montserrat',
+    // fontSize: 24.0,
+    fontWeight: FontWeight.w500,
+    color: Colors.black,
+  ),
+  headline6: const TextStyle(
+    fontFamily: 'Montserrat',
+    // fontSize: 20.0,
+    fontSize: 24.0,
+    fontWeight: FontWeight.w500,
+    color: Colors.black,
+  ),
+  subtitle1: const TextStyle(
+    fontFamily: 'Montserrat',
+    fontSize: 16.0,
+    fontWeight: FontWeight.w500,
+    color: Colors.black,
+  ),
+  subtitle2: const TextStyle(
+    fontFamily: 'Montserrat',
+    // fontSize: 14.0,
+    fontWeight: FontWeight.w500,
+    color: Colors.black,
+  ),
+  bodyText1: const TextStyle(
+    fontFamily: 'Montserrat',
+    // fontSize: 16.0,
+    fontSize: 12.0,
+    fontWeight: FontWeight.w400,
+    color: Colors.black,
+  ),
+  bodyText2: const TextStyle(
+    fontFamily: 'Montserrat',
+    // fontSize: 14.0,
+    fontWeight: FontWeight.w400,
+    color: Colors.black,
+  ),
   button: const TextStyle(
-    // fontFamily: 'Rubik',
-    fontSize: 18.0,
+    fontFamily: 'Montserrat',
+    // fontSize: 18.0,
     fontWeight: FontWeight.w500,
     // letterSpacing: 1.1,
   ),
-  // caption: TextStyle(
-  //   fontFamily: 'Rubik',
-  //   fontSize: 12.0,
-  //   fontWeight: FontWeight.w400,
-  //   color: onSurfaceColor,
-  // ),
+  caption: const TextStyle(
+    fontFamily: 'Montserrat',
+    // fontSize: 12.0,
+    fontWeight: FontWeight.w400,
+    color: Colors.black,
+  ),
 );

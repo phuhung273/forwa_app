@@ -8,6 +8,8 @@ import 'package:forwa_app/screens/give/give_screen.dart';
 import 'package:forwa_app/screens/give/give_screen_controller.dart';
 import 'package:forwa_app/screens/give_success/give_success_screen.dart';
 import 'package:forwa_app/screens/give_success/give_success_screen_controller.dart';
+import 'package:forwa_app/screens/introduction/intro_screen.dart';
+import 'package:forwa_app/screens/introduction/intro_screen_controller.dart';
 import 'package:forwa_app/screens/login/login_screen.dart';
 import 'package:forwa_app/screens/login/login_screen_controller.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
@@ -31,6 +33,7 @@ import 'package:forwa_app/screens/take_success/take_success_screen_controller.da
 import 'package:get/get_navigation/src/routes/get_route.dart';
 
 const ROUTE_SPLASH = '/splash';
+const ROUTE_INTRODUCTION = '/introduction';
 const ROUTE_LOGIN = '/login';
 const ROUTE_REGISTER = '/register';
 const ROUTE_PROFILE = '/profile';
@@ -48,6 +51,7 @@ const ROUTE_MESSAGE = '/message';
 
 var appRoute = [
   GetPage(name: ROUTE_SPLASH, page: () => SplashScreen(), binding: SplashScreenBinding()),
+  GetPage(name: ROUTE_INTRODUCTION, page: () => const IntroScreen(), binding: IntroScreenBinding()),
   GetPage(name: ROUTE_MAIN, page: () => const MainScreen(), binding: MainScreenBinding()),
   GetPage(name: ROUTE_LOGIN, page: () => const LoginScreen(), binding: LoginScreenBinding()),
   GetPage(name: ROUTE_REGISTER, page: () => const RegisterScreen(), binding: RegisterScreenBinding()),

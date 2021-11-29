@@ -29,6 +29,8 @@ class _ChatCardState extends State<ChatCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final words = _chat.name.split(' ');
+    final shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
 
     return InkWell(
       onTap: widget.press,
@@ -44,7 +46,7 @@ class _ChatCardState extends State<ChatCard> {
                   radius: 24,
                   // backgroundImage: AssetImage(_chat.image),
                   child: Text(
-                    _chat.name.split(' ').map((e) => e[0]).join(),
+                    shortWords.map((e) => e[0]).join(),
                     style: theme.textTheme.headline6!.copyWith(
                       color: Colors.white,
                     ),

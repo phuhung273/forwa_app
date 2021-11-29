@@ -5,7 +5,6 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
-import 'package:forwa_app/di/firebase_messaging_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/auth/refresh_token_request.dart';
 import 'package:get/get.dart';
@@ -52,7 +51,7 @@ class SplashScreenController extends GetxController {
   }
 
   Future _onDoneLoading() async {
-    Get.offAndToNamed(ROUTE_MAIN);
+    Get.offAndToNamed(ROUTE_INTRODUCTION);
   }
 
   Future _configureDevice() async {

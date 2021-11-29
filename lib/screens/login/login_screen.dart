@@ -56,7 +56,7 @@ class LoginScreen extends GetView<LoginScreenController> {
                   RichText(
                     text: TextSpan(
                         text: 'Chưa có tài khoản? ',
-                      style: theme.textTheme.headline6,
+                      style: theme.textTheme.subtitle1,
                       children: [
                         TextSpan(
                           text: 'Đăng ký',
@@ -150,7 +150,7 @@ class SocialButton extends StatelessWidget {
           icon: icon,
           iconSize: 48.0,
         ),
-        Text(text, style: theme.textTheme.subtitle1),
+        Text(text, style: theme.textTheme.bodyText1),
       ],
     );
   }

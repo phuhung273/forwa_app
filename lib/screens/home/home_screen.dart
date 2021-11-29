@@ -1,11 +1,11 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
-import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
+import 'package:forwa_app/widgets/rating.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -21,6 +21,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
 
     return RefreshIndicator(
       onRefresh: _controller.main,
@@ -29,52 +30,103 @@ class HomeScreen extends StatelessWidget {
         physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         slivers: [
           SliverAppBar(
-            // title: const Text('Forwa'),
             floating: true,
-            leading: IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () => _mainController.openDrawer(),
-            ),
-            // title: Text(_controller.greeting.value),
-            actions: [
-              IconButton(
-                icon: const Icon(
-                  Icons.send,
-                  // color: theme.colorScheme.secondary,
+            leading: Container(
+              margin: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: IconButton(
+                icon: Icon(
+                  Icons.menu,
+                  color: theme.colorScheme.secondary,
                 ),
-                onPressed: () => _mainController.changeTab(CHAT_SCREEN_INDEX),
+                iconSize: 20.0,
+                onPressed: () => _mainController.openDrawer(),
+              ),
+            ),
+            actions: [
+              Container(
+                margin: const EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.textsms,
+                    color: theme.colorScheme.secondary,
+                  ),
+                  iconSize: 20.0,
+                  onPressed: () => _mainController.changeTab(CHAT_SCREEN_INDEX),
+                ),
               )
             ],
           ),
           SliverToBoxAdapter(
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                // borderRadius: roundedRectangleBorderRadius,
+              ),
+              child: Text(
+                'Chào buổi sáng, người lạ!',
+                style: theme.textTheme.subtitle1?.copyWith(
+                  color: theme.colorScheme.secondary,
+                ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(defaultSpacing),
+              padding: const EdgeInsets.all(6.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Hãy cho đi đồ không dùng tới người xung quanh có nhu cầu, giảm lãng phí, giải phóng không gian sống, và giảm chất thải vào môi trường.',
-                    style: theme.textTheme.headline6?.copyWith(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: defaultSpacing),
-                    child: Obx(
-                      () => ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _controller.products.length,
-                        itemBuilder: (context, index) {
-                          final product = _controller.products[index];
-                          return InkWell(
-                            onTap: () => Get.toNamed(ROUTE_PRODUCT, arguments: product.id),
-                            child: ProductCard(
-                              product: product,
-                            )
-                          );
-                          }
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.secondary,
+                          borderRadius: BorderRadius.circular(8.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 3,
+                              offset: const Offset(0, 1), // changes position of shadow
+                            ),
+                          ],
                         ),
-                    ),
+                        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                        margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+                        child: Text(
+                          'Miễn phí',
+                          style: theme.textTheme.subtitle1?.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
+                  Obx(
+                    () => ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _controller.products.length,
+                      itemBuilder: (context, index) {
+                        final product = _controller.products[index];
+                        return InkWell(
+                          onTap: () => Get.toNamed(ROUTE_PRODUCT, arguments: product.id),
+                          child: ProductCard(
+                            product: product,
+                          )
+                        );
+                        }
+                      ),
                   ),
                   const Divider(),
                 ],
@@ -87,7 +139,7 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-const IMAGE_WIDTH = 150.0;
+const IMAGE_WIDTH = 140.0;
 
 class ProductCard extends GetView<HomeScreenController> {
   final Product product;
@@ -106,71 +158,114 @@ class ProductCard extends GetView<HomeScreenController> {
 
     final imageUrl = product.firstImageUrl;
 
-    return  Card(
-      child: Row(
-        children: [
-          SizedBox(
-            height: IMAGE_WIDTH,
-            width: IMAGE_WIDTH,
-            // decoration: BoxDecoration(
-            //   image: DecorationImage(
-            //     image: NetworkImage(
-            //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRMJzoA-zbaFtz6UF7qt9Be1d_601nNAoDTA&usqp=CAU',
-            //     ),
-            //     fit: BoxFit.cover,
-            //   )
-            // ),
-            child: ExtendedImage.network(
-              '$HOST_URL/$imageUrl',
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: Card(
+        shape: roundedRectangleShape,
+        elevation: 4.0,
+        child: Row(
+          children: [
+            Container(
+              height: IMAGE_WIDTH,
               width: IMAGE_WIDTH,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(defaultPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ListTile(
-                    minVerticalPadding: 0.0,
-                    minLeadingWidth: 0.0,
-                    horizontalTitleGap: 8.0,
-                    contentPadding: EdgeInsets.zero,
-                    leading: CircleAvatar(
-                      child: Text(
-                        shortWords.map((e) => e[0]).join(),
-                        style: theme.textTheme.headline6!.copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    title: Text(
-                      shortWords.join(' '),
-                      style: theme.textTheme.subtitle1,
-                      // overflow: TextOverflow.ellipsis,
-                    ),
-                    // subtitle: ,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: defaultPadding),
-                    child: Text(
-                      product.name,
-                      style: theme.textTheme.subtitle1,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Text(
-                      'Cách đây ${_buildDistance()}km',
-                    ),
-                  )
-                ],
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                borderRadius: roundedRectangleBorderRadius
+              ),
+              margin: const EdgeInsets.only(
+                right: 0.0,
+                left: 8.0,
+                top: 4.0,
+                bottom: 4.0,
+              ),
+              child: ExtendedImage.network(
+                '$HOST_URL/$imageUrl',
+                width: IMAGE_WIDTH,
+                fit: BoxFit.cover,
               ),
             ),
-          )
-        ],
-      )
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.only(
+                  top: 0.0,
+                  bottom: 4.0,
+                  right: 4.0,
+                  left: 12.0
+                ),
+                child: SizedBox(
+                  height: 150.0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ListTile(
+                        minVerticalPadding: 0.0,
+                        minLeadingWidth: 0.0,
+                        horizontalTitleGap: 8.0,
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                        leading: CircleAvatar(
+                          radius: 16.0,
+                          backgroundColor: theme.colorScheme.secondary,
+                          child: Text(
+                            shortWords.map((e) => e[0]).join(),
+                            style: theme.textTheme.bodyText1!.copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        title: Text(
+                          // shortWords.join(' '),
+                          name,
+                          style: theme.textTheme.bodyText1?.copyWith(
+                            fontWeight: FontWeight.w600
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        subtitle: Rating(score: 5, size: 12.0),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 12.0),
+                        child: Text(
+                          product.name,
+                          style: theme.textTheme.bodyText1,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          'Cách ${_buildDistance()}km',
+                          style: theme.textTheme.bodyText1?.copyWith(
+                            color: theme.colorScheme.secondary
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 4.0,
+                            right: 4.0,
+                          ),
+                          child: Text(
+                            'Mới lên',
+                            textAlign: TextAlign.end,
+                            style: theme.textTheme.bodyText1?.copyWith(
+                                // color: theme.colorScheme.secondaryVariant
+                              fontStyle: FontStyle.italic,
+                              color: Colors.grey[600]
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 

@@ -15,10 +15,20 @@ class ChooseReceiverScreen extends GetView<ChooseReceiverScreenController> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Chọn người nhận'),
+          title: Text(
+            'Chọn người nhận',
+            style: theme.textTheme.headline6?.copyWith(
+              color: theme.colorScheme.secondary,
+            ),
+          ),
+          iconTheme: IconThemeData(
+            color: theme.colorScheme.secondary,
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(defaultPadding),
@@ -68,9 +78,10 @@ class ReceiverCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 24.0,
+              backgroundColor: theme.colorScheme.secondary,
               child: Text(
                 shortWords.map((e) => e[0]).join(),
-                style: theme.textTheme.headline5!.copyWith(
+                style: theme.textTheme.subtitle1!.copyWith(
                   color: Colors.white,
                 ),
               ),
@@ -82,14 +93,14 @@ class ReceiverCard extends StatelessWidget {
                 children: [
                   Text(
                     name,
-                    style: theme.textTheme.headline6,
+                    style: theme.textTheme.subtitle1,
                   ),
-                  const Rating(score: 3),
+                  const Rating(score: 3, size: 12.0),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
                       order.message,
-                      style: theme.textTheme.bodyText2,
+                      style: theme.textTheme.bodyText1,
                     ),
                   ),
                 ],
