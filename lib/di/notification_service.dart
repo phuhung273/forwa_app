@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:forwa_app/constants.dart';
 import 'package:get/get.dart';
 
 class NotificationService {
@@ -7,12 +8,14 @@ class NotificationService {
 
   final _platformChannelSpecifics = const NotificationDetails(
     android: AndroidNotificationDetails(
-      'forwa_channel_id',
-      'forwa_channel_name',
+      'forwa_channel_id4',
+      'forwa_channel_name4',
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'Ticker',
-      icon: '@mipmap/launcher_icon',
+      icon: '@drawable/launcher_icon',
+      largeIcon: DrawableResourceAndroidBitmap('launcher_icon'),
+      color: secondaryColorDark,
     ),
     iOS: IOSNotificationDetails(),
   );
@@ -22,7 +25,7 @@ class NotificationService {
   Future init() async {
 
     const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/launcher_icon');
+    AndroidInitializationSettings('launcher_icon');
 
     /// Note: permissions aren't requested here just to demonstrate that can be
     /// done later
