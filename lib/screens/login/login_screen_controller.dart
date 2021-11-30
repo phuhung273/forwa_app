@@ -124,12 +124,22 @@ class LoginScreenController extends BaseController {
     // or FacebookAuth.i.login()
     if (response.status == LoginStatus.success) {
       // you are logged
-      final AccessToken accessToken = response.accessToken!;
+      // final AccessToken accessToken = response.accessToken!;
       final data = await FacebookAuth.i.getUserData();
+      print(data.toString());
+
       final facebookAccount = FacebookUser.fromJson(data);
       final username = facebookAccount.name;
       final email = facebookAccount.email;
       final avatar = facebookAccount.picture?.data.url;
+      // print('Start');
+      // print(data.toString());
+      // print('Finish');
+      //
+      // final username = data['name'];
+      // final email = data['email'];
+      // // final avatar = facebookAccount.picture?.data.url;
+      // final avatar = null;
 
       if(username == null){
         result.value = 'Đăng nhập Facebook thất bại';
