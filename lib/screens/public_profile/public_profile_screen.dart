@@ -272,7 +272,7 @@ class ReviewItem extends StatelessWidget {
     return Row(
       children: [
         ExtendedImage.network(
-          '$HOST_URL/${review.productBaseImageUrl}',
+          review.productBaseImageUrl!,
           width: IMAGE_WIDTH,
           fit: BoxFit.cover,
         ),

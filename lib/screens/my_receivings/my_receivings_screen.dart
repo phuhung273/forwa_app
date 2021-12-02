@@ -185,7 +185,7 @@ class ReceivingCard extends StatelessWidget {
                 bottom: 8.0,
               ),
               child: ExtendedImage.network(
-                '$HOST_URL/$imageUrl',
+                imageUrl!,
                 width: IMAGE_WIDTH,
                 fit: BoxFit.cover,
               ),

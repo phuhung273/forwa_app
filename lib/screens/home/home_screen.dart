@@ -125,8 +125,8 @@ class HomeScreen extends StatelessWidget {
                             product: product,
                           )
                         );
-                        }
-                      ),
+                      }
+                    ),
                   ),
                   const Divider(),
                 ],
@@ -179,7 +179,7 @@ class ProductCard extends GetView<HomeScreenController> {
                 bottom: 4.0,
               ),
               child: ExtendedImage.network(
-                '$HOST_URL/$imageUrl',
+                imageUrl,
                 width: IMAGE_WIDTH,
                 fit: BoxFit.cover,
               ),

@@ -33,15 +33,13 @@ final thinRoundedRectangleShape = RoundedRectangleBorder(
   borderRadius: thinRoundedRectangleBorderRadius,
 );
 
-// const HOST_URL = 'http://157.245.60.30';
-// const CHAT_HOST_URL = 'http://157.245.60.30';
-// const CHAT_PUBLIC_URL = 'http://157.245.60.30/chat_public';
+const HOST_URL = 'http://159.223.58.233';
+const CHAT_HOST_URL = 'http://159.223.58.233';
+const CHAT_PUBLIC_URL = 'http://159.223.58.233/chat_public';
 
-// const HOST_URL = 'http://68.183.186.121/';
-// const HOST_URL = 'http://157.245.207.9/';
-const HOST_URL = 'http://192.168.1.4:8000';
-// const HOST_URL = 'http://10.0.2.2';
-const CHAT_HOST_URL = 'http://192.168.1.11:3000';
-const CHAT_PUBLIC_URL = 'http://192.168.1.11:3000/public';
+// const HOST_URL = 'http://192.168.1.8:8000';
+// // const HOST_URL = 'http://10.0.2.2';
+// const CHAT_HOST_URL = 'http://192.168.1.8:3000';
+// const CHAT_PUBLIC_URL = 'http://192.168.1.8:3000/public';
 
 const GOOGLE_CLOUD_WEB_API_KEY = 'AIzaSyCn_DIbDZ1j8etlxPea0bTNMUNqTssd4wg';
