@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
-import 'package:forwa_app/datasource/repository/otp_repo.dart';
 import 'package:forwa_app/helpers/email_helper.dart';
 import 'package:forwa_app/helpers/phone_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/auth/email_register_request.dart';
 import 'package:forwa_app/schema/auth/phone_register_request.dart';
-import 'package:forwa_app/schema/otp/firebase_otp_request.dart';
 import 'package:forwa_app/screens/base_controller/otp_controller.dart';
 import 'package:get/get.dart';
 
@@ -20,7 +18,6 @@ class RegisterScreenBinding extends Bindings {
 class RegisterScreenController extends OtpController {
 
   final AuthRepo _authRepo = Get.find();
-  final OtpRepo _otpRepo = Get.find();
 
   var result = ''.obs;
 
@@ -34,7 +31,7 @@ class RegisterScreenController extends OtpController {
     if(isValidEmail(method)){
       await emailRegister();
     } else {
-      await phoneVerify();
+      phoneVerify();
     }
 
   }
@@ -60,28 +57,17 @@ class RegisterScreenController extends OtpController {
     }
   }
 
-  Future phoneVerify() async {
+  void phoneVerify() {
     final phone = formatPhoneNumber(methodController.text);
-
-    final request = FirebaseOtpRequest(phone: phone);
-
     showLoadingDialog();
-    final response = await _otpRepo.sendSmsCode(request);
 
-    if(!response.isSuccess || response.data == null){
-      hideDialog();
-      //TODO: show error message
-      return;
-    }
-
-    final result = await showOtpDialog(phone: phone, sessionInfo: response.data!.sessionInfo);
-
-    hideDialog();
-    if(result == null || !result){
-      return;
-    }
-
-    await phoneRegister();
+    verifyOtp(
+      phone: phone,
+      onSuccess: () {
+        hideDialog();
+        phoneRegister();
+      }
+    );
   }
 
   Future phoneRegister() async {

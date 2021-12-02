@@ -1,22 +1,22 @@
 
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
-import 'package:forwa_app/datasource/repository/otp_repo.dart';
-import 'package:forwa_app/schema/otp/firebase_verify_otp_request.dart';
-import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class FirebaseOtpScreen extends StatefulWidget {
   final String phoneNumber;
-  final String sessionInfo;
+  final String verificationId;
+  final VoidCallback onSuccess;
 
   const FirebaseOtpScreen({
     Key? key,
     required this.phoneNumber,
-    required this.sessionInfo,
+    required this.verificationId,
+    required this.onSuccess,
   }) : super(key: key);
 
   @override
@@ -27,9 +27,9 @@ class FirebaseOtpScreen extends StatefulWidget {
 class _FirebaseOtpScreenState extends State<FirebaseOtpScreen> {
   var onTapRecognizer;
 
-  TextEditingController textEditingController = TextEditingController();
+  final auth = FirebaseAuth.instance;
 
-  final OtpRepo _otpRepo = Get.find();
+  TextEditingController textEditingController = TextEditingController();
 
   late StreamController<ErrorAnimationType> errorController;
 
@@ -49,13 +49,19 @@ class _FirebaseOtpScreenState extends State<FirebaseOtpScreen> {
   }
 
   Future<bool> _verifyOtp() async{
-    final request = FirebaseVerifyOtpRequest(sessionInfo: widget.sessionInfo, code: currentText);
-    final response = await _otpRepo.verifyOtp(request);
+    // Create a PhoneAuthCredential with the code
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+      verificationId: widget.verificationId,
+      smsCode: currentText
+    );
 
-    if(!response.isSuccess || response.data == null){
+    // Sign the user in (or link) with the credential
+    try{
+      await auth.signInWithCredential(credential);
+      return true;
+    } catch (e){
       return false;
     }
-    return true;
   }
 
   @override
@@ -77,7 +83,7 @@ class _FirebaseOtpScreenState extends State<FirebaseOtpScreen> {
                 padding: const EdgeInsets.symmetric(vertical: defaultPadding),
                 child: Text(
                   'Xác thực OTP',
-                  style: theme.textTheme.headline5,
+                  style: theme.textTheme.headline6,
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -150,7 +156,7 @@ class _FirebaseOtpScreenState extends State<FirebaseOtpScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 child: Text(
                   hasError ? 'Mã OTP không chính xác' : '',
-                  style: theme.textTheme.headline6?.copyWith(
+                  style: theme.textTheme.subtitle1?.copyWith(
                     color: Colors.red
                   ),
                 ),
@@ -169,13 +175,11 @@ class _FirebaseOtpScreenState extends State<FirebaseOtpScreen> {
                         hasError = true;
                       });
                     } else {
-                      setState(() {
-                        hasError = false;
-                      });
 
                       final result = await _verifyOtp();
                       if(result) {
-                        Navigator.pop(context, true);
+                        widget.onSuccess();
+                        Navigator.pop(context);
                       } else {
                         errorController.add(ErrorAnimationType.shake); // Triggering error shake animation
                         setState(() {
