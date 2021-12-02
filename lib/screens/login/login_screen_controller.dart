@@ -126,12 +126,24 @@ class LoginScreenController extends BaseController {
       // you are logged
       // final AccessToken accessToken = response.accessToken!;
       final data = await FacebookAuth.i.getUserData();
-      print(data.toString());
+      // print(data.toString());
+      // print(data['picture'].runtimeType);
+      // print(data['picture']['data'].runtimeType);
 
-      final facebookAccount = FacebookUser.fromJson(data);
-      final username = facebookAccount.name;
-      final email = facebookAccount.email;
-      final avatar = facebookAccount.picture?.data.url;
+      String? username;
+      String? email;
+      String? avatar;
+      try{
+        final facebookAccount = FacebookUser.fromJson(data);
+        username = facebookAccount.name;
+        email = facebookAccount.email;
+        avatar = facebookAccount.picture?.data.url;
+      } catch(e) {
+        username = data['name'];
+        email = data['email'];
+        avatar = data['picture']['data']['url'];
+      }
+
       // print('Start');
       // print(data.toString());
       // print('Finish');
