@@ -182,11 +182,11 @@ class LoginScreenController extends BaseController {
         AppleIDAuthorizationScopes.email,
         AppleIDAuthorizationScopes.fullName,
       ],
-      webAuthenticationOptions: WebAuthenticationOptions(
-        // TODO: Set the `clientId` and `redirectUri` arguments to the values you entered in the Apple Developer portal during the setup
-        clientId:APPLE_SERVICE_IDENTIFIER,
-        redirectUri:Uri.parse(APPLE_LOGIN_REDIRECT_URI),
-      ),
+      // webAuthenticationOptions: WebAuthenticationOptions(
+      //   // TODO: Set the `clientId` and `redirectUri` arguments to the values you entered in the Apple Developer portal during the setup
+      //   clientId:APPLE_SERVICE_IDENTIFIER,
+      //   redirectUri:Uri.parse(APPLE_LOGIN_REDIRECT_URI),
+      // ),
       // nonce: nonce,
     );
 
