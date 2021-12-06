@@ -1,6 +1,13 @@
+
+import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
 import 'package:forwa_app/helpers/email_helper.dart';
@@ -12,12 +19,14 @@ import 'package:forwa_app/schema/auth/email_login_request.dart';
 import 'package:forwa_app/schema/auth/login_response.dart';
 import 'package:forwa_app/schema/auth/phone_login_request.dart';
 import 'package:forwa_app/schema/auth/social_email_login_request.dart';
-import 'package:forwa_app/schema/user/user.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
+import 'package:http/http.dart' as http;
+import 'package:crypto/crypto.dart';
 
 class LoginScreenBinding extends Bindings {
   @override
@@ -126,9 +135,6 @@ class LoginScreenController extends BaseController {
       // you are logged
       // final AccessToken accessToken = response.accessToken!;
       final data = await FacebookAuth.i.getUserData();
-      // print(data.toString());
-      // print(data['picture'].runtimeType);
-      // print(data['picture']['data'].runtimeType);
 
       String? username;
       String? email;
@@ -143,15 +149,6 @@ class LoginScreenController extends BaseController {
         email = data['email'];
         avatar = data['picture']['data']['url'];
       }
-
-      // print('Start');
-      // print(data.toString());
-      // print('Finish');
-      //
-      // final username = data['name'];
-      // final email = data['email'];
-      // // final avatar = facebookAccount.picture?.data.url;
-      // final avatar = null;
 
       if(username == null){
         result.value = 'Đăng nhập Facebook thất bại';
@@ -168,6 +165,71 @@ class LoginScreenController extends BaseController {
       print(response.message);
     }
 
+  }
+
+  Future appleLogin() async {
+    // // To prevent replay attacks with the credential returned from Apple, we
+    // // include a nonce in the credential request. When signing in with
+    // // Firebase, the nonce in the id token returned by Apple, is expected to
+    // // match the sha256 hash of `rawNonce`.
+    // final rawNonce = generateNonce();
+    // final nonce = sha256ofString(rawNonce);
+
+    final credential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+      webAuthenticationOptions: WebAuthenticationOptions(
+        // TODO: Set the `clientId` and `redirectUri` arguments to the values you entered in the Apple Developer portal during the setup
+        clientId:APPLE_SERVICE_IDENTIFIER,
+        redirectUri:Uri.parse(APPLE_LOGIN_REDIRECT_URI),
+      ),
+      // nonce: nonce,
+    );
+
+    // // Create an `OAuthCredential` from the credential returned by Apple.
+    // final oauthCredential = OAuthProvider('apple.com').credential(
+    //   idToken: credential.identityToken,
+    //   rawNonce: rawNonce,
+    // );
+    //
+    // // Sign in the user with Firebase. If the nonce we generated earlier does
+    // // not match the nonce in `appleCredential.identityToken`, sign in will fail.
+    // final user = await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+    // print('Email: ${user.user?.email}');
+    // print('Phone: ${user.user?.phoneNumber}');
+    // print('Name: ${user.user?.displayName}');
+    // print('Uid: ${user.user?.uid}');
+
+    //
+    // // // This is the endpoint that will convert an authorization code obtained
+    // // // via Sign in with Apple into a session in your system
+    // // final signInWithAppleEndpoint = Uri(
+    // //   scheme: 'https',
+    // //   host: APPLE_LOGIN_HOST,
+    // //   path: APPLE_LOGIN_ENDPOINT,
+    // //   queryParameters: <String, String>{
+    // //     'code': credential.authorizationCode,
+    // //     if (credential.givenName != null)
+    // //       'firstName': credential.givenName!,
+    // //     if (credential.familyName != null)
+    // //       'lastName': credential.familyName!,
+    // //     'useBundleId': Platform.isIOS || Platform.isMacOS
+    // //         ? 'true'
+    // //         : 'false',
+    // //     if (credential.state != null) 'state': credential.state!,
+    // //   },
+    // // );
+    // //
+    // // final session = await http.Client().post(
+    // //   signInWithAppleEndpoint,
+    // // );
+    // //
+    // // // If we got this far, a session based on the Apple ID credential has been created in your system,
+    // // // and you can now set this as the app's session
+    // // // ignore: avoid_print
+    // // print(session);
   }
 
   Future _socialEmailLogin(String username, String email, String? avatar) async {
@@ -228,3 +290,20 @@ class LoginScreenController extends BaseController {
     return FirebaseToken(value: firebaseTokenValue, deviceName: deviceName);
   }
 }
+
+// /// Generates a cryptographically secure random nonce, to be included in a
+// /// credential request.
+// String generateNonce([int length = 32]) {
+//   const charset =
+//       '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+//   final random = Random.secure();
+//   return List.generate(length, (_) => charset[random.nextInt(charset.length)])
+//       .join();
+// }
+//
+// /// Returns the sha256 hash of [input] in hex notation.
+// String sha256ofString(String input) {
+//   final bytes = utf8.encode(input);
+//   final digest = sha256.convert(bytes);
+//   return digest.toString();
+// }

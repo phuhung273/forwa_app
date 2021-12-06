@@ -41,3 +41,11 @@ const CHAT_PUBLIC_URL = 'http://159.223.58.233/chat_public';
 // // const HOST_URL = 'http://10.0.2.2';
 // const CHAT_HOST_URL = 'http://192.168.1.8:3000';
 // const CHAT_PUBLIC_URL = 'http://192.168.1.8:3000/public';
+
+const APPLE_LOGIN_HOST = 'fringe-earthy-earwig.glitch.me';
+const APPLE_LOGIN_ENDPOINT = '/sign_in_with_apple';
+const APPLE_LOGIN_REDIRECT_URI = 'https://$APPLE_LOGIN_HOST/callbacks$APPLE_LOGIN_ENDPOINT';
+
+// const APPLE_LOGIN_REDIRECT_URI = 'https://forwa-90ef3.firebaseapp.com/__/auth/handler';
+
+const APPLE_SERVICE_IDENTIFIER = 'com.ezlaunch.forwaAppSiwa';

@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,6 +11,7 @@ import 'package:forwa_app/widgets/input_field.dart';
 import 'package:forwa_app/widgets/keyboard_friendly_body.dart';
 import 'package:forwa_app/widgets/password_field.dart';
 import 'package:get/get.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import 'login_screen_controller.dart';
 
@@ -115,6 +118,15 @@ class LoginScreen extends GetView<LoginScreenController> {
                           ),
                           onTap: controller.facebookLogin,
                         ),
+                        if(Platform.isIOS)
+                          SocialButton(
+                            text: 'Apple',
+                            icon: const FaIcon(
+                              FontAwesomeIcons.apple,
+                              color: Color(0xff555555),
+                            ),
+                            onTap: controller.appleLogin,
+                          ),
                       ],
                     )
                   ),
