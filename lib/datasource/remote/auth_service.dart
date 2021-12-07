@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/schema/api_response.dart';
+import 'package:forwa_app/schema/auth/apple_login_request.dart';
 import 'package:forwa_app/schema/auth/email_login_request.dart';
 import 'package:forwa_app/schema/auth/login_response.dart';
 import 'package:forwa_app/schema/auth/logout_request.dart';
@@ -32,6 +33,9 @@ abstract class AuthService {
 
   @POST('/login/social/email')
   Future<ApiResponse<LoginResponse>> socialEmailLogin(@Body() SocialEmailLoginRequest request);
+
+  @POST('/login/social/apple')
+  Future<ApiResponse<LoginResponse>> appleLogin(@Body() AppleLoginRequest request);
 
   @POST('/refreshToken')
   Future<ApiResponse<RefreshTokenResponse>> refreshToken(@Body() RefreshTokenRequest request);

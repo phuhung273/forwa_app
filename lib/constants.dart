@@ -33,14 +33,13 @@ final thinRoundedRectangleShape = RoundedRectangleBorder(
   borderRadius: thinRoundedRectangleBorderRadius,
 );
 
-const HOST_URL = 'http://159.223.58.233';
-const CHAT_HOST_URL = 'http://159.223.58.233';
-const CHAT_PUBLIC_URL = 'http://159.223.58.233/chat_public';
+// const HOST_URL = 'http://159.223.58.233';
+// const CHAT_HOST_URL = 'http://159.223.58.233';
+// const CHAT_PUBLIC_URL = 'http://159.223.58.233/chat_public';
 
-// const HOST_URL = 'http://192.168.1.8:8000';
-// // const HOST_URL = 'http://10.0.2.2';
-// const CHAT_HOST_URL = 'http://192.168.1.8:3000';
-// const CHAT_PUBLIC_URL = 'http://192.168.1.8:3000/public';
+const HOST_URL = 'http://192.168.1.8:8000';
+const CHAT_HOST_URL = 'http://192.168.1.8:3000';
+const CHAT_PUBLIC_URL = 'http://192.168.1.8:3000/public';
 
 // // Apple Signin for Android
 // const APPLE_LOGIN_HOST = 'fringe-earthy-earwig.glitch.me';
