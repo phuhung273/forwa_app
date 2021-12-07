@@ -191,8 +191,6 @@ PODS:
   - sqflite (0.0.2):
     - Flutter
     - FMDB (>= 2.7.5)
-  - the_apple_sign_in (1.0.0):
-    - Flutter
   - TOCropViewController (2.6.0)
 
 DEPENDENCIES:
@@ -213,7 +211,6 @@ DEPENDENCIES:
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
-  - the_apple_sign_in (from `.symlinks/plugins/the_apple_sign_in/ios`)
 
 SPEC REPOS:
   trunk:
@@ -276,8 +273,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sign_in_with_apple/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
-  the_apple_sign_in:
-    :path: ".symlinks/plugins/the_apple_sign_in/ios"
 
 CHECKOUT OPTIONS:
   FirebaseFirestore:
@@ -323,9 +318,8 @@ SPEC CHECKSUMS:
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
-  the_apple_sign_in: 2e78c83cdb09eba07bb16dcc1f3bc12fcdc8263d
   TOCropViewController: 3105367e808b7d3d886a74ff59bf4804e7d3ab38
 
-PODFILE CHECKSUM: 28fc19af4b1a89c595b6aa05098861867672274b
+PODFILE CHECKSUM: 5b54ec4c222265193754e4bd45c30b6e2b3e8c3f
 
 COCOAPODS: 1.11.2
