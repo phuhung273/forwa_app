@@ -170,77 +170,16 @@ class LoginScreenController extends BaseController {
   }
 
   Future appleLogin() async {
-    // // To prevent replay attacks with the credential returned from Apple, we
-    // // include a nonce in the credential request. When signing in with
-    // // Firebase, the nonce in the id token returned by Apple, is expected to
-    // // match the sha256 hash of `rawNonce`.
-    // final rawNonce = generateNonce();
-    // final nonce = sha256ofString(rawNonce);
 
     final credential = await SignInWithApple.getAppleIDCredential(
       scopes: [
         AppleIDAuthorizationScopes.email,
         AppleIDAuthorizationScopes.fullName,
       ],
-      // webAuthenticationOptions: WebAuthenticationOptions(
-      //   // TODO: Set the `clientId` and `redirectUri` arguments to the values you entered in the Apple Developer portal during the setup
-      //   clientId:APPLE_SERVICE_IDENTIFIER,
-      //   redirectUri:Uri.parse(APPLE_LOGIN_REDIRECT_URI),
-      // ),
-      // nonce: nonce,
     );
 
-    print(credential);
+    print(credential.userIdentifier);
 
-    // final AuthorizationResult result = await TheAppleSignIn.performRequests([
-    //   const AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
-    // ]);
-    //
-    // switch (result.status) {
-    //   case the_apple_sign_in.AuthorizationStatus.authorized:
-    //
-    //     print('Name: ${result.credential?.fullName?.familyName} ${result.credential?.fullName?.givenName}');
-    //     print('Email: ${result.credential?.email}');
-    //     print('Apple user id: ${result.credential?.user}');
-    //     break;
-    //
-    //   case the_apple_sign_in.AuthorizationStatus.error:
-    //     print('Sign in failed');
-    //     break;
-    //
-    //   case the_apple_sign_in.AuthorizationStatus.cancelled:
-    //     print('User cancelled');
-    //     break;
-    // }
-
-
-    // This is the endpoint that will convert an authorization code obtained
-    // via Sign in with Apple into a session in your system
-    final signInWithAppleEndpoint = Uri(
-      scheme: 'https',
-      host: APPLE_LOGIN_HOST,
-      path: APPLE_LOGIN_ENDPOINT,
-      queryParameters: <String, String>{
-        'code': credential.authorizationCode,
-        if (credential.givenName != null)
-          'firstName': credential.givenName!,
-        if (credential.familyName != null)
-          'lastName': credential.familyName!,
-        'useBundleId': Platform.isIOS || Platform.isMacOS
-            ? 'true'
-            : 'false',
-        if (credential.state != null) 'state': credential.state!,
-      },
-    );
-
-    final session = await http.Client().post(
-      signInWithAppleEndpoint,
-    );
-
-    // If we got this far, a session based on the Apple ID credential has been created in your system,
-    // and you can now set this as the app's session
-    // ignore: avoid_print
-    print(session);
   }
 
   Future _socialEmailLogin(String username, String email, String? avatar) async {
