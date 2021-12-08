@@ -217,7 +217,7 @@ class MyDrawer extends GetView<MainScreenController> {
                 ),
                 ListTile(
                   onTap: () {
-                    Get.to(
+                    Get.to(() =>
                       PolicyScreen(
                         onAgree: () => Get.back()
                       )

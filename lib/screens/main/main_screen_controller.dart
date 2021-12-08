@@ -82,9 +82,9 @@ class MainScreenController extends BaseController {
 
   void toGiveScreen(){
     if(_localStorage.getAgreeTerm() == null){
-      Get.to(
+      Get.to(() =>
         PolicyScreen(
-            onAgree: () => Get.toNamed(ROUTE_GIVE)
+          onAgree: () => Get.toNamed(ROUTE_GIVE)
         )
       );
     } else {
