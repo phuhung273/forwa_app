@@ -32,6 +32,7 @@ mixin ProductReportable{
     if(result == ACTION_REPORT){
       final type = await showConfirmationDialog<String>(
         context: context,
+        style: AdaptiveStyle.material,
         title: 'Báo cáo bài đăng',
         message: 'Vì sao bài đăng này không phù hợp với bạn?',
         okLabel: 'Gửi',
