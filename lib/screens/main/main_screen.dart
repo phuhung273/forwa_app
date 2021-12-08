@@ -11,6 +11,7 @@ import 'package:forwa_app/screens/chat/chat_screen.dart';
 import 'package:forwa_app/screens/home/home_screen.dart';
 import 'package:forwa_app/screens/my_givings/my_givings_creen.dart';
 import 'package:forwa_app/screens/my_receivings/my_receivings_screen.dart';
+import 'package:forwa_app/screens/policy/policy_screen.dart';
 import 'package:get/get.dart';
 
 import '../../constants.dart';
@@ -40,12 +41,14 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const MainScreenView();
+    return MainScreenView();
   }
 }
 
 class MainScreenView extends GetView<MainScreenController> {
-  const MainScreenView({Key? key}) : super(key: key);
+  MainScreenView({Key? key}) : super(key: key);
+
+  final LocalStorage _localStorage = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -67,17 +70,17 @@ class MainScreenView extends GetView<MainScreenController> {
           child: Obx(
             () => PageTransitionSwitcher(
               transitionBuilder: (child, primaryAnimation, secondaryAnimation)=>
-                  FadeThroughTransition(
-                    animation: primaryAnimation,
-                    secondaryAnimation: secondaryAnimation,
-                    child: child,
-                  ),
+                FadeThroughTransition(
+                  animation: primaryAnimation,
+                  secondaryAnimation: secondaryAnimation,
+                  child: child,
+                ),
               child:  _buildTab(controller.pageIndex.value),
             ),
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => Get.toNamed(ROUTE_GIVE),
+          onPressed: controller.toGiveScreen,
           child: const Icon(Icons.add),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -213,7 +216,13 @@ class MyDrawer extends GetView<MainScreenController> {
                   title: const Text('Thông Báo'),
                 ),
                 ListTile(
-                  onTap: () { },
+                  onTap: () {
+                    Get.to(
+                      PolicyScreen(
+                        onAgree: () => Get.back()
+                      )
+                    );
+                  },
                   leading: const Icon(Icons.gavel),
                   title: const Text('Điều Khoản'),
                 ),

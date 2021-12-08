@@ -3,7 +3,6 @@ import 'package:forwa_app/datasource/remote/review_service.dart';
 import 'package:forwa_app/datasource/repository/base_repo.dart';
 import 'package:forwa_app/schema/api_response.dart';
 import 'package:dio/dio.dart';
-import 'package:forwa_app/schema/review/create_review_request.dart';
 import 'package:forwa_app/schema/review/review.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/status/http_status.dart';

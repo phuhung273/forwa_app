@@ -268,11 +268,12 @@ class ReviewItem extends StatelessWidget {
     final name = review.fromUser?.name ?? 'Không tên';
     final words = name.split(' ');
     final shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
+    final imageUrl = review.firstImageUrl;
 
     return Row(
       children: [
         ExtendedImage.network(
-          review.productBaseImageUrl!,
+          '$HOST_URL$imageUrl',
           width: IMAGE_WIDTH,
           fit: BoxFit.cover,
         ),

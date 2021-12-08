@@ -2,8 +2,10 @@ import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
+import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/auth/logout_request.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
+import 'package:forwa_app/screens/policy/policy_screen.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -76,5 +78,17 @@ class MainScreenController extends BaseController {
     _localStorage.removeCredentials();
     drawerController.hideDrawer();
     refreshCredential();
+  }
+
+  void toGiveScreen(){
+    if(_localStorage.getAgreeTerm() == null){
+      Get.to(
+        PolicyScreen(
+            onAgree: () => Get.toNamed(ROUTE_GIVE)
+        )
+      );
+    } else {
+      Get.toNamed(ROUTE_GIVE);
+    }
   }
 }

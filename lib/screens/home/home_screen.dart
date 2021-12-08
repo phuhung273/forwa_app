@@ -1,8 +1,10 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
+import 'package:forwa_app/schema/report/product_report.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:forwa_app/widgets/rating.dart';
@@ -139,6 +141,7 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+
 const IMAGE_WIDTH = 140.0;
 
 class ProductCard extends GetView<HomeScreenController> {
@@ -179,7 +182,7 @@ class ProductCard extends GetView<HomeScreenController> {
                 bottom: 4.0,
               ),
               child: ExtendedImage.network(
-                imageUrl,
+                '$HOST_URL$imageUrl',
                 width: IMAGE_WIDTH,
                 fit: BoxFit.cover,
               ),
@@ -193,10 +196,22 @@ class ProductCard extends GetView<HomeScreenController> {
                   left: 12.0
                 ),
                 child: SizedBox(
-                  height: 150.0,
+                  height: 170.0,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                            child: const Icon(Icons.more_horiz),
+                            onTap: () => controller.showReportModal({
+                              PRODUCT_REPORT_PRODUCT_ID_PARAM: product.id,
+                              PRODUCT_REPORT_USER_ID_PARAM: product.user?.id
+                            }),
+                          )
+                        ],
+                      ),
                       ListTile(
                         minVerticalPadding: 0.0,
                         minLeadingWidth: 0.0,

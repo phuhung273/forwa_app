@@ -10,6 +10,7 @@ const DEVICENAME_KEY = 'DEVICENAME_KEY';
 const PHONE_KEY = 'PHONE_KEY';
 const CUSTOMER_NAME_KEY = 'CUSTOMER_NAME_KEY';
 const FIREBASE_TOKEN_KEY = 'FIREBASE_TOKEN_KEY';
+const AGREE_TERM_KEY = 'AGREE_TERM_KEY';
 
 class LocalStorage {
   final box = GetStorage();
@@ -84,6 +85,14 @@ class LocalStorage {
 
   String? getFirebaseToken() {
     return box.read(FIREBASE_TOKEN_KEY);
+  }
+
+  void saveAgreeTerm(String value){
+    box.write(AGREE_TERM_KEY, value);
+  }
+
+  String? getAgreeTerm() {
+    return box.read(AGREE_TERM_KEY);
   }
 
   void removeCredentials(){

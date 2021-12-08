@@ -5,6 +5,7 @@ import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
+import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:get/get.dart';
 
 import 'my_giving_screen_controller.dart';
@@ -12,6 +13,7 @@ import 'my_giving_screen_controller.dart';
 class MyGivingsScreen extends StatelessWidget {
 
   final MyGivingsScreenController _controller = Get.put(MyGivingsScreenController());
+  final MainScreenController _mainController = Get.find();
 
   MyGivingsScreen({Key? key}) : super(key: key);
 
@@ -57,7 +59,7 @@ class MyGivingsScreen extends StatelessWidget {
                               primary: secondaryColor,
                               onPrimary: Colors.white,
                             ),
-                            onPressed: () => Get.toNamed(ROUTE_GIVE),
+                            onPressed: _mainController.toGiveScreen,
                             child: const Text('Tải lên')
                           )
                         ],
@@ -134,7 +136,7 @@ class GivingItem extends StatelessWidget {
                 bottom: 8.0,
               ),
               child: ExtendedImage.network(
-                imageUrl,
+                '$HOST_URL$imageUrl',
                 width: IMAGE_WIDTH,
                 fit: BoxFit.cover,
               ),

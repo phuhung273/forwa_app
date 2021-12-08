@@ -329,7 +329,7 @@ class ImageSlider extends GetView<ProductScreenController> {
           borderRadius: BorderRadius.circular(16.0),
         ),
         child: ExtendedImage.network(
-          item,
+          '$HOST_URL$item',
           // width: size.width,
           fit: BoxFit.cover,
         ),

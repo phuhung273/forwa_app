@@ -2,15 +2,18 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:forwa_app/constants.dart';
+import 'package:forwa_app/datasource/local/hidden_product_db.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/remote/address_service.dart';
 import 'package:forwa_app/datasource/remote/auth_service.dart';
+import 'package:forwa_app/datasource/remote/product_report_service.dart';
 import 'package:forwa_app/datasource/remote/user_service.dart';
 import 'package:forwa_app/datasource/remote/order_service.dart';
 import 'package:forwa_app/datasource/remote/product_service.dart';
 import 'package:forwa_app/datasource/remote/review_service.dart';
 import 'package:forwa_app/datasource/repository/address_repo.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
+import 'package:forwa_app/datasource/repository/product_report_repo.dart';
 import 'package:forwa_app/datasource/repository/user_repo.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
@@ -32,6 +35,8 @@ Future configureDependencies() async {
   _configureApiClient();
   _congifureSocketIO();
 
+  Get.put(HiddenProductDB.instance);
+
   Get.put(AuthService(Get.find()));
   Get.put(AuthRepo());
   Get.put(ProductService(Get.find()));
@@ -44,6 +49,8 @@ Future configureDependencies() async {
   Get.put(AddressRepo());
   Get.put(ReviewService(Get.find()));
   Get.put(ReviewRepo());
+  Get.put(ProductReportService(Get.find()));
+  Get.put(ProductReportRepo());
 
   Get.put(GoogleSignIn());
   Get.put(LocationService());
