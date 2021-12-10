@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ${ScreenName} extends StatelessWidget {
+class ${ScreenName} extends GetView<${ScreenName}Controller> {
+
+  const ${ScreenName}({Key? key}) : super(key: key);
 
   final ${ScreenName}Controller _controller = Get.find();
 

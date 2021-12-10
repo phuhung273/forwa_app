@@ -4,8 +4,6 @@ import 'package:forwa_app/screens/introduction/intro_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
-import '../../constants.dart';
-
 const IMAGE_HEIGHT = 250.0;
 
 class IntroScreen extends GetView<IntroScreenController> {

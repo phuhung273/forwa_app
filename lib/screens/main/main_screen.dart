@@ -216,6 +216,11 @@ class MyDrawer extends GetView<MainScreenController> {
                   title: const Text('Thông Báo'),
                 ),
                 ListTile(
+                  onTap: () => Get.toNamed(ROUTE_SUPPORT),
+                  leading: const Icon(Icons.help),
+                  title: const Text('Hỗ trợ'),
+                ),
+                ListTile(
                   onTap: () {
                     Get.to(() =>
                       PolicyScreen(

@@ -27,12 +27,14 @@ class _PolicyScreenState extends State<PolicyScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Điều khoản'),
+          title: const Text('EULA'),
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(defaultPadding),
           child: Column(
             children: [
+              _buildPrimaryTitle('Thỏa thuận với người dùng cuối (EULA)'),
+              const Divider(),
 
               _buildPrimaryTitle('Nội dung, hình ảnh trên Forwa'),
               _buildListItem(

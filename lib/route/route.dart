@@ -26,6 +26,7 @@ import 'package:forwa_app/screens/register/register_screen.dart';
 import 'package:forwa_app/screens/register/register_screen_controller.dart';
 import 'package:forwa_app/screens/splash/splash_screen.dart';
 import 'package:forwa_app/screens/splash/splash_screen_controller.dart';
+import 'package:forwa_app/screens/support/support_screen.dart';
 import 'package:forwa_app/screens/take/take_screen.dart';
 import 'package:forwa_app/screens/take/take_screen_controller.dart';
 import 'package:forwa_app/screens/take_success/take_succcess_screen.dart';
@@ -48,6 +49,7 @@ const ROUTE_CHOOSE_RECEIVER = '/choose_receiver';
 const ROUTE_GIVE_SUCCESS = '/give_success';
 const ROUTE_TAKE_SUCCESS = '/take_success';
 const ROUTE_MESSAGE = '/message';
+const ROUTE_SUPPORT = '/support';
 
 var appRoute = [
   GetPage(name: ROUTE_SPLASH, page: () => SplashScreen(), binding: SplashScreenBinding()),
@@ -66,4 +68,5 @@ var appRoute = [
   GetPage(name: ROUTE_GIVE_SUCCESS, page: () => const GiveSuccessScreen(), binding: GiveSuccessBinding()),
   GetPage(name: ROUTE_TAKE_SUCCESS, page: () => const TakeSuccessScreen(), binding: TakeSuccessScreenBinding()),
   GetPage(name: ROUTE_MESSAGE, page: () => MessageScreen()),
+  GetPage(name: ROUTE_SUPPORT, page: () => const SupportScreen()),
 ];
