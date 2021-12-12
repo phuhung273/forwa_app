@@ -6,6 +6,7 @@ import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/auth/logout_request.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/policy/policy_screen.dart';
+import 'package:forwa_app/screens/policy/policy_upload_screen.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -81,10 +82,10 @@ class MainScreenController extends BaseController {
   }
 
   void toGiveScreen(){
-    if(_localStorage.getAgreeTerm() == null){
+    if(_localStorage.getAgreeUploadTerm() == null){
       Get.to(() =>
-        PolicyScreen(
-          onAgree: () => Get.toNamed(ROUTE_GIVE)
+        PolicyUploadScreen(
+          onAgree: () => Get.offNamed(ROUTE_GIVE)
         )
       );
     } else {

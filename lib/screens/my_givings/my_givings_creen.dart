@@ -5,6 +5,7 @@ import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
+import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:get/get.dart';
 
@@ -21,82 +22,88 @@ class MyGivingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return SafeArea(
-      child: Scaffold(
-        body: RefreshIndicator(
-          color: theme.colorScheme.secondary,
-          onRefresh: _controller.authorizedMain,
-          child: CustomScrollView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            slivers: [
-              SliverAppBar(
-                automaticallyImplyLeading: false,
-                title: Text(
-                  'Danh Sách Cho Đi',
-                  style: theme.textTheme.headline6?.copyWith(
-                    color: theme.colorScheme.secondary,
+    return WillPopScope(
+      onWillPop: () async {
+        _mainController.changeTab(HOME_SCREEN_INDEX);
+        return false;
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body: RefreshIndicator(
+            color: theme.colorScheme.secondary,
+            onRefresh: _controller.authorizedMain,
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              slivers: [
+                SliverAppBar(
+                  automaticallyImplyLeading: false,
+                  title: Text(
+                    'Danh Sách Cho Đi',
+                    style: theme.textTheme.headline6?.copyWith(
+                      color: theme.colorScheme.secondary,
+                    ),
                   ),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Obx(
-                            () => Text(
-                              'Bạn đã cho đi: ${_controller.products.length}',
-                              style: theme.textTheme.subtitle1,
-                            ),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: thinRoundedRectangleShape,
-                              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                              primary: secondaryColor,
-                              onPrimary: Colors.white,
-                            ),
-                            onPressed: _mainController.toGiveScreen,
-                            child: const Text('Tải lên')
-                          )
-                        ],
-                      ),
-                    ),
-                    const Divider(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                      child: Obx(
-                        () => ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: _controller.products.length,
-                          itemBuilder: (context, index) {
-                            final product = _controller.products[index];
-                            return InkWell(
-                              onTap: () => Get.toNamed(
-                                ROUTE_CHOOSE_RECEIVER,
-                                parameters: {
-                                  productIdParam: product.id.toString(),
-                                }
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Obx(
+                              () => Text(
+                                'Bạn đã cho đi: ${_controller.products.length}',
+                                style: theme.textTheme.subtitle1,
                               ),
-                              child: GivingItem(
-                                product: _controller.products[index]
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: thinRoundedRectangleShape,
+                                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                                primary: secondaryColor,
+                                onPrimary: Colors.white,
                               ),
-                            );
-                          },
+                              onPressed: _mainController.toGiveScreen,
+                              child: const Text('Tải lên')
+                            )
+                          ],
                         ),
                       ),
-                    )
-                  ],
-                ),
-              )
-            ],
+                      const Divider(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                        child: Obx(
+                          () => ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: _controller.products.length,
+                            itemBuilder: (context, index) {
+                              final product = _controller.products[index];
+                              return InkWell(
+                                onTap: () => Get.toNamed(
+                                  ROUTE_CHOOSE_RECEIVER,
+                                  parameters: {
+                                    productIdParam: product.id.toString(),
+                                  }
+                                ),
+                                child: GivingItem(
+                                  product: _controller.products[index]
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
-      )
+        )
+      ),
     );
   }
 }

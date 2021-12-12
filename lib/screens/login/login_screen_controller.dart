@@ -244,7 +244,9 @@ class LoginScreenController extends BaseController {
       _localStorage.saveUserID(data.userId);
       _localStorage.saveCustomerName(data.username);
       _mainController.refreshCredential();
-      Get.offAndToNamed(ROUTE_MAIN);
+
+      // Get.offAndToNamed(ROUTE_MAIN);
+      Get.back();
     }
   }
 

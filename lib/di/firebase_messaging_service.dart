@@ -71,4 +71,6 @@ class FirebaseMessagingService {
 
 Future firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling a background message ${message.messageId}');
+  // message.data
 }
+

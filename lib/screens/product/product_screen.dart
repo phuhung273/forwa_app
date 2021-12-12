@@ -145,13 +145,7 @@ class ProductRender extends GetView<ProductScreenController> {
       );
     }
     return ElevatedButton(
-      onPressed: () => Get.toNamed(
-        ROUTE_TAKE,
-        parameters: {
-          idParam: controller.id.toString(),
-          sellerNameParam: controller.sellerName.value,
-        }
-      ),
+      onPressed: controller.toTakeScreen,
       child: const Text('Tôi muốn nhận'),
     );
   }

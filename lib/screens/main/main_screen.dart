@@ -18,6 +18,7 @@ import '../../constants.dart';
 import 'main_screen_controller.dart';
 
 const CHAT_SCREEN_INDEX = 4;
+const HOME_SCREEN_INDEX = 0;
 
 class MainScreen extends StatefulWidget {
 

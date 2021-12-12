@@ -2,6 +2,8 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/schema/order/order.dart';
+import 'package:forwa_app/screens/main/main_screen.dart';
+import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:forwa_app/widgets/rating.dart';
 import 'package:forwa_app/widgets/secondary_action_container.dart';
 import 'package:get/get.dart';
@@ -11,6 +13,7 @@ import 'my_receivings_screen_controller.dart';
 class MyReceivingsScreen extends StatelessWidget {
 
   final MyReceivingsScreenController _controller = Get.put(MyReceivingsScreenController());
+  final MainScreenController _mainController = Get.find();
 
   MyReceivingsScreen({Key? key}) : super(key: key);
 
@@ -18,48 +21,54 @@ class MyReceivingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return SafeArea(
-      child: Scaffold(
-        body: RefreshIndicator(
-          color: theme.colorScheme.secondary,
-          onRefresh: _controller.authorizedMain,
-          child: CustomScrollView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            slivers: [
-              SliverAppBar(
-                automaticallyImplyLeading: false,
-                title: Text(
-                  'Danh Sách Nhận',
-                  style: theme.textTheme.headline6?.copyWith(
-                    color: theme.colorScheme.secondary,
-                  ),
-                ),
-              ),
-              const SliverToBoxAdapter(
-                child: Divider(),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: Obx(
-                    () => ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: _controller.orders.length,
-                      itemBuilder: (context, index) =>
-                        ReceivingCard(
-                          order: _controller.orders[index],
-                          onTakeSuccess: () => _controller.takeSuccess(index),
-                        ),
-                      separatorBuilder: (context, index) => const Divider(),
+    return WillPopScope(
+      onWillPop: () async {
+        _mainController.changeTab(HOME_SCREEN_INDEX);
+        return false;
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body: RefreshIndicator(
+            color: theme.colorScheme.secondary,
+            onRefresh: _controller.authorizedMain,
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              slivers: [
+                SliverAppBar(
+                  automaticallyImplyLeading: false,
+                  title: Text(
+                    'Danh Sách Nhận',
+                    style: theme.textTheme.headline6?.copyWith(
+                      color: theme.colorScheme.secondary,
                     ),
                   ),
                 ),
-              ),
-            ]
+                const SliverToBoxAdapter(
+                  child: Divider(),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Obx(
+                      () => ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: _controller.orders.length,
+                        itemBuilder: (context, index) =>
+                          ReceivingCard(
+                            order: _controller.orders[index],
+                            onTakeSuccess: () => _controller.takeSuccess(index),
+                          ),
+                        separatorBuilder: (context, index) => const Divider(),
+                      ),
+                    ),
+                  ),
+                ),
+              ]
+            ),
           ),
-        ),
-      )
+        )
+      ),
     );
   }
 }

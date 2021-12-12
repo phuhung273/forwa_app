@@ -34,6 +34,10 @@ class SplashScreenController extends GetxController {
 
     if(token != null) {
       print('Firebase token: $token');
+      final oldToken = _localStorage.getFirebaseToken();
+      if(token != oldToken){
+        _localStorage.removeCredentials();
+      }
       _localStorage.saveFirebaseToken(token);
     }
 

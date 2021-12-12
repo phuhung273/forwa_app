@@ -3,7 +3,9 @@ import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
+import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
+import 'package:forwa_app/screens/take/take_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
@@ -17,6 +19,8 @@ class ProductScreenBinding extends Bindings {
 }
 
 class ProductScreenController extends BaseController {
+
+  final LocalStorage _localStorage = Get.find();
 
   final LocationService _locationService = Get.find();
 
@@ -66,5 +70,20 @@ class ProductScreenController extends BaseController {
     createdAt.value = DateFormat.yMMMd().format(product.createdAt!);
     enabled.value = product.enabled!;
     location = product.location ?? product.address!.location;
+  }
+
+  void toTakeScreen(){
+    final userId = _localStorage.getUserID();
+    if(userId == null){
+      showLoginDialog();
+    } else {
+      Get.toNamed(
+        ROUTE_TAKE,
+        parameters: {
+          idParam: id.toString(),
+          sellerNameParam: sellerName.value,
+        }
+      );
+    }
   }
 }
