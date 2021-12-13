@@ -9,6 +9,8 @@ class InputField extends StatelessWidget {
   final TextEditingController controller;
   final Iterable<String>? autofillHints;
   final TextCapitalization textCapitalization;
+  final String? Function(String?)? validator;
+
   const InputField({
     Key? key,
     required this.hintText,
@@ -17,6 +19,7 @@ class InputField extends StatelessWidget {
     this.maxLines = 1,
     this.autofillHints,
     this.textCapitalization = TextCapitalization.sentences,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -30,7 +33,7 @@ class InputField extends StatelessWidget {
         ),
       ),
       child: TextFieldContainer(
-        child: TextField(
+        child: TextFormField(
           controller: controller,
           autofillHints: autofillHints,
           textCapitalization: textCapitalization,
@@ -41,6 +44,7 @@ class InputField extends StatelessWidget {
             hintText: hintText,
           ),
           maxLines: maxLines,
+          validator: validator,
         ),
       ),
     );

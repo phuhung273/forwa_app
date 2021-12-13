@@ -26,10 +26,10 @@ abstract class AuthService {
   Future<ApiResponse<LoginResponse>> phoneLogin(@Body() PhoneLoginRequest request);
 
   @POST('/register/email')
-  Future emailRegister(@Body() EmailRegisterRequest request);
+  Future<ApiResponse<String>> emailRegister(@Body() EmailRegisterRequest request);
 
   @POST('/register/phone')
-  Future phoneRegister(@Body() PhoneRegisterRequest request);
+  Future<ApiResponse<String>> phoneRegister(@Body() PhoneRegisterRequest request);
 
   @POST('/login/social/email')
   Future<ApiResponse<LoginResponse>> socialEmailLogin(@Body() SocialEmailLoginRequest request);

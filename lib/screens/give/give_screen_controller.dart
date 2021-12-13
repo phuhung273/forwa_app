@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/route/route.dart';
+import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/schema/product/product_add.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:get/get.dart';
@@ -94,6 +95,8 @@ class GiveScreenController extends BaseController {
     final response = await _productRepo.addProduct(products);
     hideDialog();
     if(!response.isSuccess || response.data == null){
+      final message = errorCodeMap[response.statusCode] ?? 'Lỗi không xác định';
+      showErrorDialog(message: message);
       return;
     }
 

@@ -1,7 +1,7 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:get/get.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class BaseController extends GetxController{
 
@@ -17,36 +17,100 @@ class BaseController extends GetxController{
     Get.back();
   }
 
-  // void showErrorDialog({
-  //   String title = 'Lỗi',
-  //   required String message,
-  //   String? textConfirm,
-  //   VoidCallback? onConfirm,
-  //   String? textCancel,
-  //   VoidCallback? onCancel,
-  // }){
-  //   Get.defaultDialog(
-  //     title: title,
-  //     titleStyle: const TextStyle(color: Colors.red),
-  //     middleText: message,
-  //     textConfirm: textConfirm,
-  //     onConfirm: onConfirm,
-  //     textCancel: textCancel,
-  //     onCancel: onCancel,
-  //   );
-  // }
+  Future showSuccessDialog({
+    String? title,
+    required String message,
+    String okLabel = 'Đóng',
+  }) async {
+    final context = Get.context;
+    if(context == null) return;
+
+    final theme = Theme.of(context);
+
+    return Alert(
+      context: context,
+      type: AlertType.success,
+      title: title,
+      desc: message,
+      style: AlertStyle(
+        descStyle: theme.textTheme.bodyText1!,
+      ),
+      buttons: [
+        DialogButton(
+          child: Text(
+            okLabel,
+            style: theme.textTheme.subtitle1?.copyWith(
+              color: Colors.white,
+            ),
+          ),
+          color: theme.colorScheme.secondary,
+          onPressed: () => Navigator.pop(context),
+        )
+      ],
+    ).show();
+  }
+
+  Future showErrorDialog({
+    String? title,
+    required String message,
+    String okLabel = 'Đóng',
+  }) async {
+    final context = Get.context;
+    if(context == null) return;
+
+    final theme = Theme.of(context);
+
+    return Alert(
+      context: context,
+      type: AlertType.error,
+      title: title,
+      desc: message,
+      style: AlertStyle(
+        descStyle: theme.textTheme.bodyText1!,
+      ),
+      buttons: [
+        DialogButton(
+          child: Text(
+            okLabel,
+            style: theme.textTheme.subtitle1?.copyWith(
+              color: Colors.white,
+            ),
+          ),
+          color: theme.colorScheme.secondary,
+          onPressed: () => Navigator.pop(context),
+        )
+      ],
+    ).show();
+  }
 
   Future showLoginDialog() async {
     final context = Get.context;
     if(context == null) return;
 
-    final result = await showOkAlertDialog(
-      context: context,
-      message: 'Đăng nhập để sử dụng chức năng',
-      okLabel: 'Đăng nhập',
-    );
+    final theme = Theme.of(context);
 
-    if(result == OkCancelResult.ok){
+    final result = await Alert(
+      context: context,
+      type: AlertType.info,
+      desc: 'Đăng nhập để sử dụng chức năng',
+      style: AlertStyle(
+        descStyle: theme.textTheme.bodyText1!,
+      ),
+      buttons: [
+        DialogButton(
+          child: Text(
+            'Đăng nhập',
+            style: theme.textTheme.subtitle1?.copyWith(
+              color: Colors.white,
+            ),
+          ),
+          color: theme.colorScheme.secondary,
+          onPressed: () => Navigator.pop(context, true),
+        )
+      ],
+    ).show();
+
+    if(result == true){
       Get.toNamed(ROUTE_LOGIN);
     }
   }

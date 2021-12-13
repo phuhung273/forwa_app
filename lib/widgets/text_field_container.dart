@@ -15,7 +15,7 @@ class TextFieldContainer extends StatelessWidget {
 
     return AppLevelActionContainer(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: defaultPadding * 2),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: defaultPadding),
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
         ),

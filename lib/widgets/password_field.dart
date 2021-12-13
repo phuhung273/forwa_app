@@ -4,9 +4,13 @@ import 'text_field_container.dart';
 
 class PasswordField extends StatefulWidget {
   final TextEditingController controller;
+  final String? Function(String?)? validator;
+  final String hintText;
   const PasswordField({
     Key? key,
     required this.controller,
+    this.validator,
+    this.hintText = 'Mật khẩu'
   }) : super(key: key);
 
   @override
@@ -33,11 +37,11 @@ class _PasswordFieldState extends State<PasswordField> {
         ),
       ),
       child: TextFieldContainer(
-        child: TextField(
+        child: TextFormField(
           obscureText: !_showPwd,
           controller: widget.controller,
           decoration: InputDecoration(
-            hintText: 'Password',
+            hintText: widget.hintText,
             icon: const Icon(
               Icons.lock,
             ),
@@ -48,6 +52,7 @@ class _PasswordFieldState extends State<PasswordField> {
               ),
             ),
           ),
+          validator: widget.validator,
         ),
       ),
     );

@@ -12,9 +12,24 @@ import 'package:forwa_app/schema/auth/refresh_token_request.dart';
 import 'package:forwa_app/schema/auth/refresh_token_response.dart';
 import 'package:forwa_app/schema/auth/email_register_request.dart';
 import 'package:forwa_app/schema/auth/social_email_login_request.dart';
+import 'package:forwa_app/screens/register/register_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get_connect/http/src/status/http_status.dart';
+
+const errorCodeMap = {
+  'USER_001': 'Email chưa kích hoạt',
+  'USER_002': 'Tài khoản/mật khẩu không đúng',
+  'USER_003': 'Xác nhận lại mật khẩu',
+  'USER_004': 'Email đã tồn tại',
+  'USER_005': 'Email sai định dạng',
+  'USER_006': 'Số điện thoại đã tồn tại',
+};
+
+const successMessageMap = {
+  RegisterMethod.EMAIL: 'Đăng ký thành công, vui lòng kích hoạt email để đăng nhập',
+  RegisterMethod.PHONE: 'Đăng ký thành công',
+};
 
 class AuthRepo extends BaseRepo{
   final AuthService _service = Get.find();
@@ -100,9 +115,7 @@ class AuthRepo extends BaseRepo{
   }
 
   Future<ApiResponse<String>> emailRegister(EmailRegisterRequest request) async {
-    return _service.emailRegister(request).then((value){
-      return ApiResponse<String>(data: 'success');
-    }).catchError((Object obj) {
+    return _service.emailRegister(request).catchError((Object obj) {
       // non-200 error goes here.
       switch (obj.runtimeType) {
         case DioError:
@@ -122,9 +135,7 @@ class AuthRepo extends BaseRepo{
   }
 
   Future<ApiResponse<String>> phoneRegister(PhoneRegisterRequest request) async {
-    return _service.phoneRegister(request).then((value){
-      return ApiResponse<String>(data: 'success');
-    }).catchError((Object obj) {
+    return _service.phoneRegister(request).catchError((Object obj) {
       // non-200 error goes here.
       switch (obj.runtimeType) {
         case DioError:

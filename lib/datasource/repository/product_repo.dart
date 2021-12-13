@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/remote/product_service.dart';
@@ -13,6 +15,11 @@ import 'package:get/get_connect/http/src/status/http_status.dart';
 import 'package:mime/mime.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+
+
+const errorCodeMap = {
+  'PRODUCT_001': 'Người dùng chưa có địa chỉ'
+};
 
 class ProductRepo extends BaseRepo {
   final ProductService _service = Get.find();
@@ -125,8 +132,8 @@ class ProductRepo extends BaseRepo {
 
     try {
       final streamedResponse = await imageUploadRequest.send();
-      await http.Response.fromStream(streamedResponse);
-      return ApiResponse<String>(data: 'success');
+      final response = await http.Response.fromStream(streamedResponse);
+      return ApiResponse.fromJson(jsonDecode(response.body), (json) => 'success');
     } catch (error) {
       print(error);
       return ApiResponse<String>.fromError(error: error.toString());

@@ -12,12 +12,16 @@ class ApiResponse<T> {
   @JsonKey(name: 'success')
   bool isSuccess;
 
+  @JsonKey(name: 'status_code')
+  String? statusCode;
+
   @JsonKey(name: 'data')
   T? data;
 
   ApiResponse({
     this.message,
     this.isSuccess = true,
+    this.statusCode,
     this.data,
   });
 

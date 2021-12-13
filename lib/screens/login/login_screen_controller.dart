@@ -233,21 +233,24 @@ class LoginScreenController extends BaseController {
       }
   ) {
     if(!response.isSuccess){
-      result.value = response.message!;
-    } else {
-      final data = response.data;
-
-      if(avatar != null) _localStorage.saveAvatarUrl(avatar);
-      if(emailOrPhone != null) _localStorage.saveUsername(emailOrPhone);
-
-      _localStorage.saveAccessToken(data!.accessToken);
-      _localStorage.saveUserID(data.userId);
-      _localStorage.saveCustomerName(data.username);
-      _mainController.refreshCredential();
-
-      // Get.offAndToNamed(ROUTE_MAIN);
-      Get.back();
+      final message = errorCodeMap[response.statusCode] ?? 'Lỗi không xác định';
+      result.value = message;
+      showErrorDialog(message: message);
+      return;
     }
+
+    final data = response.data;
+
+    if(avatar != null) _localStorage.saveAvatarUrl(avatar);
+    if(emailOrPhone != null) _localStorage.saveUsername(emailOrPhone);
+
+    _localStorage.saveAccessToken(data!.accessToken);
+    _localStorage.saveUserID(data.userId);
+    _localStorage.saveCustomerName(data.username);
+    _mainController.refreshCredential();
+
+    // Get.offAndToNamed(ROUTE_MAIN);
+    Get.back();
   }
 
   Future<FirebaseToken?> _prepareFirebaseToken() async{
