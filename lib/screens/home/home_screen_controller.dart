@@ -50,12 +50,12 @@ class HomeScreenController extends RefreshableController with Reportable{
 
     _locationService.here().then((value) => here = value);
 
-    // _getHiddenProductIds();
+    // await _getHiddenProductIds();
   }
 
   @override
   Future main() async {
-    _getHiddenProductIds();
+    await _getHiddenProductIds();
     final request = ProductListRequest(hiddenUserIds: _hiddenUserIds);
     final response = await _productRepo.getProducts(request);
 
@@ -97,9 +97,10 @@ class HomeScreenController extends RefreshableController with Reportable{
       return;
     }
 
-    _hiddenUserDB.insert(report.toUserId);
+    _hiddenUserDB.insert(report.toUserId).then((record){
+      _hiddenUserIds.add(report.toUserId);
+    });
     products.removeWhere((element) => element.user?.id == report.toUserId);
-    _hiddenUserIds.add(report.toUserId);
   }
 
   Future _getHiddenProductIds() async {
