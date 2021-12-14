@@ -2,10 +2,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:forwa_app/constants.dart';
-import 'package:forwa_app/route/route.dart';
-import 'package:forwa_app/screens/take/take_screen_controller.dart';
 import 'package:forwa_app/widgets/app_container.dart';
 import 'package:forwa_app/widgets/headless_table.dart';
 import 'package:forwa_app/widgets/rating.dart';
@@ -72,6 +71,25 @@ class ProductRender extends GetView<ProductScreenController> {
                 borderRadius: BorderRadius.circular(16.0),
               ),
               child: const SellerInfoSection()
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: (){
+                    Clipboard.setData(ClipboardData(text: 'http://forwa.co?id=${controller.id}'))
+                      .then(
+                        (_) => ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Đã lưu vào khay nhớ'))
+                      )
+                    );
+                  },
+                  child: const Text('Chia sẻ'),
+                )
+              ],
             ),
           ),
           AppContainer(

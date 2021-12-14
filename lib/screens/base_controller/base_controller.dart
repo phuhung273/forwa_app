@@ -6,10 +6,12 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 class BaseController extends GetxController{
 
   void showLoadingDialog(){
-    Get.dialog(
-      const Center(child: CircularProgressIndicator()),
-      barrierDismissible: false,
-    );
+    if(Get.isDialogOpen == false){
+      Get.dialog(
+        const Center(child: CircularProgressIndicator()),
+        barrierDismissible: false,
+      );
+    }
   }
 
   void hideDialog(){

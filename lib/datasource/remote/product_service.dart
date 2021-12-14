@@ -13,7 +13,7 @@ part 'product_service.g.dart';
 abstract class ProductService {
   factory ProductService(Dio dio, {String baseUrl}) = _ProductService;
 
-  @POST('/products')
+  @POST('/products/list')
   Future<ProductListResponse> getProducts(@Body() ProductListRequest request);
 
   // @POST('/products')

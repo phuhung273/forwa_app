@@ -71,7 +71,7 @@ class AddressCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     final addressMark = address.isDefault == null || address.isDefault == false
-        ? 'Địa chỉ khác'
+        ? 'Địa chỉ phụ'
         : 'Địa chỉ mặc định';
 
     return ExpandableNotifier(

@@ -8,6 +8,7 @@ import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/schema/product/product_add.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
+import 'package:forwa_app/screens/home/home_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:time_range/time_range.dart';
 import 'package:uuid/uuid.dart';
@@ -31,6 +32,8 @@ class GiveScreenController extends BaseController {
   final LocalStorage _localStorage = Get.find();
 
   final ProductRepo _productRepo = Get.find();
+
+  final HomeScreenController _homeController = Get.find();
 
   final uuid = const Uuid();
 
@@ -99,6 +102,8 @@ class GiveScreenController extends BaseController {
       showErrorDialog(message: message);
       return;
     }
+
+    
 
     Get.back();
   }
