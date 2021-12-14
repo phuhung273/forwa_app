@@ -143,6 +143,8 @@ class HomeScreen extends StatelessWidget {
 
 
 const IMAGE_WIDTH = 140.0;
+const REPORT_PRODUCT_ID = 'product_id';
+const REPORT_USER_ID = 'user_id';
 
 class ProductCard extends GetView<HomeScreenController> {
   final Product product;
@@ -206,8 +208,8 @@ class ProductCard extends GetView<HomeScreenController> {
                           InkWell(
                             child: const Icon(Icons.more_horiz),
                             onTap: () => controller.showReportModal({
-                              PRODUCT_REPORT_PRODUCT_ID_PARAM: product.id,
-                              PRODUCT_REPORT_USER_ID_PARAM: product.user?.id
+                              REPORT_PRODUCT_ID: product.id,
+                              REPORT_USER_ID: product.user?.id
                             }),
                           )
                         ],

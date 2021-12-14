@@ -1,10 +1,14 @@
 import 'package:forwa_app/datasource/local/hidden_product_db.dart';
+import 'package:forwa_app/datasource/local/hidden_user_db.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/datasource/repository/product_report_repo.dart';
+import 'package:forwa_app/datasource/repository/user_report_repo.dart';
 import 'package:forwa_app/di/location_service.dart';
-import 'package:forwa_app/mixins/product_reportable.dart';
+import 'package:forwa_app/mixins/reportable.dart';
 import 'package:forwa_app/schema/product/product.dart';
+import 'package:forwa_app/schema/product/product_list_request.dart';
 import 'package:forwa_app/schema/report/product_report.dart';
+import 'package:forwa_app/schema/report/user_report.dart';
 import 'package:forwa_app/screens/base_controller/refreshable_controller.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
@@ -17,19 +21,24 @@ class HomeScreenBinding extends Bindings {
   }
 }
 
-class HomeScreenController extends RefreshableController with ProductReportable{
+class HomeScreenController extends RefreshableController with Reportable{
 
   final ProductRepo _productRepo = Get.find();
 
   final ProductReportRepo _productReportRepo = Get.find();
 
+  final UserReportRepo _userReportRepo = Get.find();
+
   final LocationService _locationService = Get.find();
 
   final HiddenProductDB _hiddenProductDB = Get.find();
 
+  final HiddenUserDB _hiddenUserDB = Get.find();
+
   final products = List<Product>.empty().obs;
 
   var _hiddenProductIds = List<int>.empty();
+  var _hiddenUserIds = List<int>.empty();
 
   final Distance distance = Get.find();
 
@@ -41,14 +50,14 @@ class HomeScreenController extends RefreshableController with ProductReportable{
 
     _locationService.here().then((value) => here = value);
 
-    _getHiddenProductIds();
+    // _getHiddenProductIds();
   }
 
   @override
   Future main() async {
     _getHiddenProductIds();
-
-    final response = await _productRepo.getProducts();
+    final request = ProductListRequest(hiddenUserIds: _hiddenUserIds);
+    final response = await _productRepo.getProducts(request);
 
     if(!response.isSuccess || response.data == null){
       return;
@@ -59,7 +68,7 @@ class HomeScreenController extends RefreshableController with ProductReportable{
   }
 
   @override
-  Future report(data) async {
+  Future reportProduct(data) async {
     final report = ProductReport.fromJson(data);
 
     showLoadingDialog();
@@ -71,13 +80,31 @@ class HomeScreenController extends RefreshableController with ProductReportable{
       return;
     }
 
-    products.removeWhere((element) => element.id == data['product_id']);
-    // TODO: also save in local storage to not show again
-    _hiddenProductDB.insert(data['product_id']);
+    _hiddenProductDB.insert(report.productId);
+    products.removeWhere((element) => element.id == report.productId);
   }
 
-  void _getHiddenProductIds(){
+  @override
+  Future reportUser(data) async {
+    final report = UserReport.fromJson(data);
+
+    showLoadingDialog();
+
+    final response = await _userReportRepo.create(report);
+
+    hideDialog();
+    if(!response.isSuccess || response.data == null){
+      return;
+    }
+
+    _hiddenUserDB.insert(report.toUserId);
+    products.removeWhere((element) => element.user?.id == report.toUserId);
+    _hiddenUserIds.add(report.toUserId);
+  }
+
+  Future _getHiddenProductIds() async {
     _hiddenProductDB.getAll().then((value) => _hiddenProductIds = value);
+    _hiddenUserIds = await _hiddenUserDB.getAll();
   }
 
 }

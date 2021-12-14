@@ -8,6 +8,7 @@ import 'package:forwa_app/datasource/repository/base_repo.dart';
 import 'package:forwa_app/schema/api_response.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/schema/product/product_add.dart';
+import 'package:forwa_app/schema/product/product_list_request.dart';
 import 'package:forwa_app/schema/product/product_list_response.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
@@ -26,10 +27,8 @@ class ProductRepo extends BaseRepo {
 
   final LocalStorage _localStorage = Get.find();
 
-  Future<ApiResponse<ProductListResponse>> getProducts({
-    int pageSize = 10,
-  }) async {
-    return _service.getProducts().then((value){
+  Future<ApiResponse<ProductListResponse>> getProducts(ProductListRequest request) async {
+    return _service.getProducts(request).then((value){
       return ApiResponse<ProductListResponse>(data: value);
     }).catchError((Object obj) {
       // non-200 error goes here.

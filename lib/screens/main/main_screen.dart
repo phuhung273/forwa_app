@@ -232,19 +232,6 @@ class MyDrawer extends GetView<MainScreenController> {
                   leading: const Icon(Icons.gavel),
                   title: const Text('Điều Khoản'),
                 ),
-                ListTile(
-                  onTap: controller.logout,
-                  leading: const Icon(Icons.logout),
-                  title: const Text('Đăng Xuất'),
-                ),
-                // ElevatedButton(
-                //   onPressed: controller.logout,
-                //   child: const Text('Đăng Xuất'),
-                //   style: ElevatedButton.styleFrom(
-                //     primary: Colors.white,
-                //     onPrimary: Colors.black,
-                //   ),
-                // )
                 const SizedBox(height: defaultSpacing),
               ],
             ),
