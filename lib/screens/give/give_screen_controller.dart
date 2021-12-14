@@ -103,8 +103,8 @@ class GiveScreenController extends BaseController {
       return;
     }
 
-    
-
+    await showSuccessDialog(message: 'Thêm sản phẩm thành công');
+    _homeController.products.insertAll(0, response.data?.items as Iterable<Product>);
     Get.back();
   }
 }

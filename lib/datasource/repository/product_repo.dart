@@ -94,7 +94,7 @@ class ProductRepo extends BaseRepo {
   }
 
 
-  Future<ApiResponse<String>> addProduct(List<ProductAdd> products) async {
+  Future<ApiResponse<ProductListResponse>> addProduct(List<ProductAdd> products) async {
     final uri = Uri.parse('$HOST_URL/api/products');
 
     // Intilize the multipart request
@@ -132,10 +132,19 @@ class ProductRepo extends BaseRepo {
     try {
       final streamedResponse = await imageUploadRequest.send();
       final response = await http.Response.fromStream(streamedResponse);
-      return ApiResponse.fromJson(jsonDecode(response.body), (json) => 'success');
+      // print('Response: ${response.body}');
+      return ApiResponse<ProductListResponse>.fromJson(
+        jsonDecode(response.body),
+        (json) {
+          final items = json as List<dynamic>;
+          return ProductListResponse(
+            items: items.map((e) => Product.fromJson(e)).toList()
+          );
+        }
+      );
     } catch (error) {
       print(error);
-      return ApiResponse<String>.fromError(error: error.toString());
+      return ApiResponse<ProductListResponse>.fromError(error: error.toString());
     }
   }
 }

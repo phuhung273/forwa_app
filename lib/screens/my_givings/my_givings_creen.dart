@@ -58,16 +58,16 @@ class MyGivingsScreen extends StatelessWidget {
                                 style: theme.textTheme.subtitle1,
                               ),
                             ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: thinRoundedRectangleShape,
-                                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                                primary: secondaryColor,
-                                onPrimary: Colors.white,
-                              ),
-                              onPressed: _mainController.toGiveScreen,
-                              child: const Text('Tải lên')
-                            )
+                            // ElevatedButton(
+                            //   style: ElevatedButton.styleFrom(
+                            //     shape: thinRoundedRectangleShape,
+                            //     padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                            //     primary: secondaryColor,
+                            //     onPrimary: Colors.white,
+                            //   ),
+                            //   onPressed: _mainController.toGiveScreen,
+                            //   child: const Text('Tải lên')
+                            // )
                           ],
                         ),
                       ),
