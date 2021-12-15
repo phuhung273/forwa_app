@@ -58,7 +58,7 @@ class ChatScreen extends StatelessWidget {
 
   Widget _buildRecentMessages() {
     return Obx(
-          () => SliverList(
+      () => SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
           final userId = _controller.users.keys.elementAt(index);
           final chatSocketUser = _controller.users[userId];
@@ -98,5 +98,6 @@ class ChatScreen extends StatelessWidget {
 
   void _goToMessageScreen(int id){
     Get.toNamed(ROUTE_MESSAGE, arguments: id);
+    _controller.readMessage(id);
   }
 }

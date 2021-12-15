@@ -73,7 +73,7 @@ class MessageScreen extends GetView<ChatScreenController> {
               name: _localStorage.getCustomerName(),
               uid: _localStorage.getUserID().toString(),
             ),
-            inputDecoration: const InputDecoration.collapsed(hintText: "Add message here..."),
+            inputDecoration: const InputDecoration.collapsed(hintText: 'Add message here...'),
             messageTimeBuilder: _buildTime,
             dateBuilder: _buildDate,
             messageDecorationBuilder: _buildMessageDecoration,
@@ -100,7 +100,7 @@ class MessageScreen extends GetView<ChatScreenController> {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if(image != null){
       final bytes = File(image.path).readAsBytesSync();
-      final base64Image =  "data:image/png;base64,${base64Encode(bytes)}";
+      final base64Image =  'data:image/png;base64,${base64Encode(bytes)}';
       controller.sendImageMessage(base64Image, _destinationID);
     }
   }

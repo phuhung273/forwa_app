@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:forwa_app/datasource/repository/chat_repo.dart';
 import 'package:get/get.dart';
 
@@ -19,4 +21,6 @@ class ChatController extends GetxController {
       _increase(response.data?.count ?? 0);
     });
   }
+
+  void decrease(int value) => unreadMessageCount.value = max(unreadMessageCount.value - value, 0);
 }

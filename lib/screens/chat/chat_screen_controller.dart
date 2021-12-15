@@ -2,13 +2,17 @@ import 'package:dash_chat/dash_chat.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
+import 'package:forwa_app/di/chat_service.dart';
 import 'package:forwa_app/schema/chat/chat_handshake_auth.dart';
 import 'package:forwa_app/schema/chat/chat_session_response.dart';
 import 'package:forwa_app/schema/chat/chat_socket_message.dart';
 import 'package:forwa_app/schema/chat/chat_socket_user.dart';
 import 'package:forwa_app/schema/chat/chat_user_disconnected_response.dart';
 import 'package:forwa_app/schema/chat/chat_user_list_response.dart';
+import 'package:forwa_app/schema/chat/read_socket_message.dart';
+import 'package:forwa_app/schema/chat/read_socket_message_response.dart';
 import 'package:forwa_app/screens/base_controller/authorized_controller.dart';
+import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -23,6 +27,8 @@ class ChatScreenController extends AuthorizedController {
   final Socket _socket = Get.find();
 
   final LocalStorage _localStorage = Get.find();
+
+  final ChatController _chatController = Get.find();
 
   final users = <int, ChatSocketUser>{}.obs;
 
@@ -50,13 +56,13 @@ class ChatScreenController extends AuthorizedController {
 
     _socket.disconnect().connect();
 
-    _socket.on('session', (data){
+    _socket.on(CHANNEL_SESSION, (data){
       final response = ChatSessionResponse.fromJson(data as Map<String, dynamic>);
 
       _localStorage.saveChatSessionID(response.sessionID);
     });
 
-    _socket.on('users', (data) async {
+    _socket.on(CHANNEL_USERS, (data) async {
       final response = ChatUserListResponse.fromJson(data as Map<String, dynamic>);
 
       for(final user in response.users){
@@ -65,19 +71,19 @@ class ChatScreenController extends AuthorizedController {
 
     });
 
-    _socket.on('user connected', (data){
+    _socket.on(CHANNEL_USER_CONNECTED, (data){
       final response = ChatSocketUser.fromJson(data as Map<String, dynamic>);
       users[response.userID]?.connected = 1;
       users.refresh();
     });
 
-    _socket.on('user disconnected', (data){
+    _socket.on(CHANNEL_USER_DISCONNECTED, (data){
       final response = ChatUserDisconnectedResponse.fromJson(data as Map<String, dynamic>);
       users[response.userID]?.connected = 0;
       users.refresh();
     });
 
-    _socket.on('private message', (data) async {
+    _socket.on(CHANNEL_PRIVATE_MESSAGE, (data) async {
       final response = ChatSocketMessage.fromJson(data as Map<String, dynamic>);
       final newMessage = ChatMessage(
         id: response.id,
@@ -112,7 +118,7 @@ class ChatScreenController extends AuthorizedController {
       type: EnumToString.convertToString(MessageType.STRING),
     );
 
-    _socket.emitWithAck('private message', newSocketMessage, ack: (data) {
+    _socket.emitWithAck(CHANNEL_PRIVATE_MESSAGE, newSocketMessage, ack: (data) {
       if(data != null){
         final response = ChatSocketMessage.fromJson(data as Map<String, dynamic>);
 
@@ -130,7 +136,7 @@ class ChatScreenController extends AuthorizedController {
       type: EnumToString.convertToString(MessageType.IMAGE),
     );
 
-    _socket.emitWithAck('private message', newSocketMessage, ack: (data) {
+    _socket.emitWithAck(CHANNEL_PRIVATE_MESSAGE, newSocketMessage, ack: (data) {
       if(data != null){
         final response = ChatSocketMessage.fromJson(data as Map<String, dynamic>);
         final newMessage = ChatMessage(
@@ -146,10 +152,20 @@ class ChatScreenController extends AuthorizedController {
     });
   }
 
-  Future _sendMessage(ChatSocketMessage socketMessage, ChatMessage chatMessage, int toID) async {
+  Future _sendMessage(ChatSocketMessage socketMessage, ChatMessage chatMessage, int toId) async {
 
-      users[toID]?.messages?.add(socketMessage);
+      users[toId]?.messages?.add(socketMessage);
       users.refresh();
+  }
+
+  void readMessage(int fromId){
+    final message = ReadSocketMessage(fromId: fromId);
+    _socket.emitWithAck(CHANNEL_READ_MESSAGE, message, ack: (data) {
+      if(data != null){
+        final response = ReadSocketMessageResponse.fromJson(data as Map<String, dynamic>);
+        _chatController.decrease(response.count);
+      }
+    });
   }
 
   @override
