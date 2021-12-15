@@ -1,10 +1,14 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:forwa_app/di/notification_service.dart';
+import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:get/get.dart';
+
+const MESSAGE_TYPE_CHAT = 'chat';
 
 class FirebaseMessagingService {
 
   final NotificationService _notificationService = Get.find();
+  final ChatController _chatController = Get.find();
 
   void init() {
     _setup();
@@ -23,6 +27,15 @@ class FirebaseMessagingService {
           title: notification.title,
           body: notification.body,
         );
+      }
+
+      final data = message.data;
+      switch(data['type']){
+        case MESSAGE_TYPE_CHAT:
+          _chatController.unreadMessageCount.value++;
+          break;
+        default:
+          break;
       }
     });
   }

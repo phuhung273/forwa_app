@@ -42,14 +42,12 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MainScreenView();
+    return const MainScreenView();
   }
 }
 
 class MainScreenView extends GetView<MainScreenController> {
-  MainScreenView({Key? key}) : super(key: key);
-
-  final LocalStorage _localStorage = Get.find();
+  const MainScreenView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +64,9 @@ class MainScreenView extends GetView<MainScreenController> {
       childDecoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(16)),
       ),
-      child: Scaffold(
-        body: SafeArea(
-          child: Obx(
+      child: SafeArea(
+        child: Scaffold(
+          body: Obx(
             () => PageTransitionSwitcher(
               transitionBuilder: (child, primaryAnimation, secondaryAnimation)=>
                 FadeThroughTransition(
@@ -79,13 +77,13 @@ class MainScreenView extends GetView<MainScreenController> {
               child:  _buildTab(controller.pageIndex.value),
             ),
           ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: controller.toGiveScreen,
+            child: const Icon(Icons.add),
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          bottomNavigationBar: const MyBottomNavigationBar(),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: controller.toGiveScreen,
-          child: const Icon(Icons.add),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: const MyBottomNavigationBar(),
       ),
       drawer: MyDrawer(),
     );

@@ -1,11 +1,9 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
-import 'package:forwa_app/schema/report/product_report.dart';
-import 'package:forwa_app/screens/main/main_screen.dart';
+import 'package:forwa_app/screens/components/appbar_chat_action.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:forwa_app/widgets/rating.dart';
 import 'package:get/get.dart';
@@ -49,21 +47,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             actions: [
-              Container(
-                margin: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.textsms,
-                    color: theme.colorScheme.secondary,
-                  ),
-                  iconSize: 20.0,
-                  onPressed: () => _mainController.changeTab(CHAT_SCREEN_INDEX),
-                ),
-              )
+              AppBarChatAction()
             ],
           ),
           SliverToBoxAdapter(
@@ -75,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                 // borderRadius: roundedRectangleBorderRadius,
               ),
               child: Text(
-                'Chào buổi sáng, người lạ!',
+                'Chào buổi sáng, ${_mainController.fullname.isNotEmpty ? _mainController.fullname : 'người lạ'}!',
                 style: theme.textTheme.subtitle1?.copyWith(
                   color: theme.colorScheme.secondary,
                 ),
@@ -140,7 +124,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-
 
 const IMAGE_WIDTH = 140.0;
 const REPORT_PRODUCT_ID = 'product_id';

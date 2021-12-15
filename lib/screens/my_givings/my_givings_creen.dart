@@ -37,12 +37,39 @@ class MyGivingsScreen extends StatelessWidget {
               slivers: [
                 SliverAppBar(
                   automaticallyImplyLeading: false,
-                  title: Text(
-                    'Danh Sách Cho Đi',
-                    style: theme.textTheme.headline6?.copyWith(
-                      color: theme.colorScheme.secondary,
+                  floating: true,
+                  leading: Container(
+                    margin: const EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.menu,
+                        color: theme.colorScheme.secondary,
+                      ),
+                      iconSize: 20.0,
+                      onPressed: () => _mainController.openDrawer(),
                     ),
                   ),
+                  actions: [
+                    Container(
+                      margin: const EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.textsms,
+                          color: theme.colorScheme.secondary,
+                        ),
+                        iconSize: 20.0,
+                        onPressed: () => _mainController.changeTab(CHAT_SCREEN_INDEX),
+                      ),
+                    )
+                  ],
                 ),
                 SliverToBoxAdapter(
                   child: Column(

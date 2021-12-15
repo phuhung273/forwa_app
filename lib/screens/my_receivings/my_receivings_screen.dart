@@ -36,32 +36,69 @@ class MyReceivingsScreen extends StatelessWidget {
               slivers: [
                 SliverAppBar(
                   automaticallyImplyLeading: false,
-                  title: Text(
-                    'Danh Sách Nhận',
-                    style: theme.textTheme.headline6?.copyWith(
-                      color: theme.colorScheme.secondary,
+                  floating: true,
+                  leading: Container(
+                    margin: const EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.menu,
+                        color: theme.colorScheme.secondary,
+                      ),
+                      iconSize: 20.0,
+                      onPressed: () => _mainController.openDrawer(),
                     ),
                   ),
-                ),
-                const SliverToBoxAdapter(
-                  child: Divider(),
+                  actions: [
+                    Container(
+                      margin: const EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.textsms,
+                          color: theme.colorScheme.secondary,
+                        ),
+                        iconSize: 20.0,
+                        onPressed: () => _mainController.changeTab(CHAT_SCREEN_INDEX),
+                      ),
+                    )
+                  ],
                 ),
                 SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Obx(
-                      () => ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _controller.orders.length,
-                        itemBuilder: (context, index) =>
-                          ReceivingCard(
-                            order: _controller.orders[index],
-                            onTakeSuccess: () => _controller.takeSuccess(index),
-                          ),
-                        separatorBuilder: (context, index) => const Divider(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Text(
+                          'Danh sách nhận',
+                          style: theme.textTheme.subtitle1,
+                        ),
                       ),
-                    ),
+                      const Divider(),
+                      Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Obx(
+                          () => ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: _controller.orders.length,
+                            itemBuilder: (context, index) =>
+                                ReceivingCard(
+                                  order: _controller.orders[index],
+                                  onTakeSuccess: () => _controller.takeSuccess(index),
+                                ),
+                            separatorBuilder: (context, index) => const Divider(),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ]

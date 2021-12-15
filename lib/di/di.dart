@@ -7,6 +7,7 @@ import 'package:forwa_app/datasource/local/hidden_user_db.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/remote/address_service.dart';
 import 'package:forwa_app/datasource/remote/auth_service.dart';
+import 'package:forwa_app/datasource/remote/chat_api_service.dart';
 import 'package:forwa_app/datasource/remote/product_report_service.dart';
 import 'package:forwa_app/datasource/remote/user_report_service.dart';
 import 'package:forwa_app/datasource/remote/user_service.dart';
@@ -15,6 +16,7 @@ import 'package:forwa_app/datasource/remote/product_service.dart';
 import 'package:forwa_app/datasource/remote/review_service.dart';
 import 'package:forwa_app/datasource/repository/address_repo.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
+import 'package:forwa_app/datasource/repository/chat_repo.dart';
 import 'package:forwa_app/datasource/repository/product_report_repo.dart';
 import 'package:forwa_app/datasource/repository/user_repo.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart';
@@ -24,6 +26,7 @@ import 'package:forwa_app/datasource/repository/user_report_repo.dart';
 import 'package:forwa_app/di/firebase_messaging_service.dart';
 import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
+import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -57,6 +60,10 @@ Future configureDependencies() async {
   Get.put(ProductReportRepo());
   Get.put(UserReportService(Get.find()));
   Get.put(UserReportRepo());
+  Get.put(ChatApiService(Get.find()));
+  Get.put(ChatRepo());
+
+  Get.put(ChatController());
 
   Get.put(GoogleSignIn());
   Get.put(LocationService());
@@ -64,6 +71,7 @@ Future configureDependencies() async {
   Get.put(FlutterLocalNotificationsPlugin());
   Get.put(NotificationService());
   Get.put(FirebaseMessagingService());
+
 }
 
 void _congifureSocketIO() {

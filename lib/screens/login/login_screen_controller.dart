@@ -16,6 +16,7 @@ import 'package:forwa_app/schema/auth/login_response.dart';
 import 'package:forwa_app/schema/auth/phone_login_request.dart';
 import 'package:forwa_app/schema/auth/social_email_login_request.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
+import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -32,7 +33,10 @@ class LoginScreenBinding extends Bindings {
 class LoginScreenController extends BaseController {
 
   final AuthRepo _authRepo = Get.find();
+
   final MainScreenController _mainController = Get.find();
+
+  final ChatController _chatController = Get.find();
 
   final LocalStorage _localStorage = Get.find();
 
@@ -249,6 +253,7 @@ class LoginScreenController extends BaseController {
     _localStorage.saveCustomerName(data.username);
     _mainController.refreshCredential();
 
+    _chatController.fetch();
     // Get.offAndToNamed(ROUTE_MAIN);
     Get.back();
   }
