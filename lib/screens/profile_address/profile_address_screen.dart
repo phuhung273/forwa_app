@@ -112,7 +112,7 @@ class AddressCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: defaultPadding),
                 child: Text(
-                  address.city,
+                  address.city!,
                   softWrap: true,
                   overflow: TextOverflow.fade,
                   style: theme.textTheme.bodyText1,
@@ -130,7 +130,7 @@ class AddressCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: defaultPadding),
                 child: Text(
-                  address.phone,
+                  address.phone!,
                   softWrap: true,
                   overflow: TextOverflow.fade,
                   style: theme.textTheme.bodyText1,

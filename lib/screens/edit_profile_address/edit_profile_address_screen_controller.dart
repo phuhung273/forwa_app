@@ -48,10 +48,9 @@ class EditProfileAddressController extends BaseController {
     }
 
     List<Location> locations = await locationFromAddress(streetController.text + wardController.text + districtController.text + cityController.text);
-    for(final location in locations){
-      print('${location.latitude} - ${location.longitude}');
-    }
     final location = locations.first;
+    List<Location> wardLocations = await locationFromAddress(wardController.text + districtController.text + cityController.text);
+    final wardLocation = wardLocations.first;
 
     final address = Address(
       street: streetController.text,
@@ -63,6 +62,8 @@ class EditProfileAddressController extends BaseController {
       isDefault: true,
       latitude: location.latitude.toString(),
       longitude: location.longitude.toString(),
+      wardLatitude: wardLocation.latitude.toString(),
+      wardLongitude: wardLocation.longitude.toString(),
     );
 
     showLoadingDialog();

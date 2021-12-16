@@ -45,6 +45,7 @@ class ProductScreenController extends BaseController {
   final int id = Get.arguments;
 
   LatLng? location;
+  LatLng? wardLocation;
 
   @override
   Future onReady() async {
@@ -69,7 +70,8 @@ class ProductScreenController extends BaseController {
     pickupTime.value = product.pickupTime!;
     createdAt.value = DateFormat.yMMMd().format(product.createdAt!);
     enabled.value = product.enabled!;
-    location = product.location ?? product.address!.location;
+    location = product.address?.location;
+    wardLocation = product.address?.wardLocation;
   }
 
   void toTakeScreen(){

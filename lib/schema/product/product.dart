@@ -30,6 +30,12 @@ class Product{
   @JsonKey(name: 'longitude')
   String? longitude;
 
+  @JsonKey(name: 'ward_latitude')
+  String? wardLatitude;
+
+  @JsonKey(name: 'ward_longitude')
+  String? wardLongitude;
+
   @JsonKey(name: 'images')
   List<Image> images;
 
@@ -81,5 +87,10 @@ class Product{
   LatLng? get location {
     if(latitude == null && longitude == null) return null;
     return LatLng(double.tryParse(latitude!)!, double.tryParse(longitude!)!);
+  }
+
+  LatLng? get wardLocation {
+    if(wardLatitude == null && wardLongitude == null) return null;
+    return LatLng(double.tryParse(wardLatitude!)!, double.tryParse(wardLongitude!)!);
   }
 }

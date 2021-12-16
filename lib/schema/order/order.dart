@@ -2,6 +2,7 @@ import 'package:forwa_app/schema/user/user.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:latlong2/latlong.dart';
 
 part 'order.g.dart';
 
@@ -57,4 +58,6 @@ class Order {
   OrderStatus? get statusType{
     return EnumToString.fromString(OrderStatus.values, status.toUpperCase());
   }
+
+  LatLng? get location => product?.location;
 }

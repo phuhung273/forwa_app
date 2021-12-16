@@ -7,6 +7,7 @@ import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:forwa_app/widgets/rating.dart';
 import 'package:forwa_app/widgets/secondary_action_container.dart';
 import 'package:get/get.dart';
+import 'package:latlong2/latlong.dart';
 
 import 'my_receivings_screen_controller.dart';
 
@@ -112,7 +113,7 @@ class MyReceivingsScreen extends StatelessWidget {
 
 const IMAGE_WIDTH = 150.0;
 
-class ReceivingCard extends StatelessWidget {
+class ReceivingCard extends GetView<MyReceivingsScreenController> {
   final Order order;
   final VoidCallback onTakeSuccess;
   const ReceivingCard({
@@ -129,86 +130,6 @@ class ReceivingCard extends StatelessWidget {
     final List<String> words = name.split(' ');
     final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
     final imageUrl = order.firstImageUrl;
-
-    // return Row(
-    //   children: [
-    //     ExtendedImage.network(
-    //       '$HOST_URL/$imageUrl',
-    //       width: IMAGE_WIDTH,
-    //       fit: BoxFit.cover,
-    //     ),
-    //     Expanded(
-    //       child: Padding(
-    //         padding: const EdgeInsets.all(defaultPadding),
-    //         child: Column(
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             ListTile(
-    //               minVerticalPadding: 0.0,
-    //               minLeadingWidth: 0.0,
-    //               horizontalTitleGap: 8.0,
-    //               contentPadding: EdgeInsets.zero,
-    //               leading: CircleAvatar(
-    //                 child: Text(
-    //                   shortWords.map((e) => e[0]).join(),
-    //                   style: theme.textTheme.headline6!.copyWith(
-    //                     color: Colors.white,
-    //                   ),
-    //                 ),
-    //               ),
-    //               title: Text(
-    //                 shortWords.join(' '),
-    //                 style: theme.textTheme.bodyText1,
-    //                 // overflow: TextOverflow.ellipsis,
-    //               ),
-    //               // subtitle: ,
-    //             ),
-    //             Padding(
-    //               padding: const EdgeInsets.symmetric(vertical: defaultPadding),
-    //               child: Text(
-    //                 item!.name,
-    //                 style: theme.textTheme.subtitle1,
-    //               ),
-    //             ),
-    //             Padding(
-    //               padding: const EdgeInsets.only(bottom: 8.0),
-    //               child: Text(
-    //                 'Khoảng cách: 3.5 km',
-    //               ),
-    //             ),
-    //             Padding(
-    //               padding: const EdgeInsets.only(bottom: 8.0),
-    //               child: StatusChip(status: order.statusType!),
-    //             ),
-    //             if(order.statusType == OrderStatus.SELECTED)
-    //               Center(
-    //                 child: SecondaryActionContainer(
-    //                   child: ElevatedButton.icon(
-    //                     icon: const Icon(Icons.send),
-    //                     onPressed: () { },
-    //                     label: const Text('Nhắn tin'),
-    //                   )
-    //                 ),
-    //               ),
-    //             if(order.statusType == OrderStatus.SELECTED)
-    //               Center(
-    //                 child: SecondaryActionContainer(
-    //                   child: ElevatedButton.icon(
-    //                     style: ElevatedButton.styleFrom(
-    //                       primary: Colors.green,
-    //                     ),
-    //                     icon: const Icon(Icons.done),
-    //                     onPressed: onTakeSuccess,
-    //                     label: const Text('Hoàn thành'),
-    //                   )
-    //                 ),
-    //               ),
-    //           ],
-    //         ),
-    //       ),
-    //     )
-    //   ],
-    // );
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
@@ -283,7 +204,7 @@ class ReceivingCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: Text(
-                        'Cách 3.5km',
+                        'Cách ${_buildDistance()}km',
                         style: theme.textTheme.bodyText1?.copyWith(
                           color: theme.colorScheme.secondary
                         ),
@@ -324,6 +245,15 @@ class ReceivingCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _buildDistance() {
+    final here = controller.here;
+    return here != null && order.location != null
+        ? (controller.distance.as(LengthUnit.Meter,
+        LatLng(here.latitude!, here.longitude!), order.location!) / 1000)
+        .toStringAsFixed(1)
+        : '';
   }
 }
 

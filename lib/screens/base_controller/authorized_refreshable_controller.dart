@@ -13,7 +13,7 @@ abstract class AuthorizedRefreshableController extends BaseController{
   bool isAuthorized();
 
   @override
-  Future onReady() async {
+  void onReady() async {
     super.onReady();
 
     if(!isAuthorized()){

@@ -1,7 +1,9 @@
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:forwa_app/widgets/app_level_action_container.dart';
 import 'package:forwa_app/widgets/body_with_persistent_bottom.dart';
+import 'package:forwa_app/widgets/date_picker_input_field.dart';
 import 'package:forwa_app/widgets/image_gallery_picker.dart';
 import 'package:forwa_app/widgets/input_field.dart';
 import 'package:get/get.dart';
@@ -95,7 +97,31 @@ class GiveScreen extends GetView<GiveScreenController> {
                     initialRange: initialPickupTime,
                     onRangeCompleted: (range) => controller.time = range,
                   ),
-                )
+                ),
+                AppLevelActionContainer(
+                  child: ExpandablePanel(
+                    theme: const ExpandableThemeData(
+                      tapBodyToExpand: true,
+                      tapBodyToCollapse: true,
+                      hasIcon: true,
+                    ),
+                    header: Text(
+                      'Thông tin thêm',
+                      style: theme.textTheme.subtitle1,
+                    ),
+                    collapsed: const SizedBox(),
+                    expanded: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DatePickerInputField(
+                          hintText: 'Ngày hết hạn',
+                          icon: Icons.event,
+                          onChange: (date) => controller.dueDate = date,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

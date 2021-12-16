@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dash_chat/dash_chat.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
@@ -39,6 +40,7 @@ class GiveScreenController extends BaseController {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  String? _dueDate;
   String? _pickupTime;
   int? _userId;
 
@@ -47,6 +49,11 @@ class GiveScreenController extends BaseController {
   set time(TimeRangeResult? range){
     if(range == null) return;
     _setPickupTime(range);
+  }
+
+  set dueDate(DateTime? date){
+    if(date == null) return;
+    _dueDate = DateFormat('yyyy-MM-dd').format(date);
   }
 
   void _setPickupTime(TimeRangeResult range){

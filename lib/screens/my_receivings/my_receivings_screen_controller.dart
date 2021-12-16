@@ -1,10 +1,13 @@
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart';
+import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/base_controller/authorized_refreshable_controller.dart';
 import 'package:forwa_app/screens/take_success/take_success_screen_controller.dart';
 import 'package:get/get.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 
 class MyReceivingsScreenBinding extends Bindings {
   @override
@@ -19,15 +22,27 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController {
 
   final OrderRepo _orderRepo = Get.find();
 
+  final LocationService _locationService = Get.find();
+
+  final Distance distance = Get.find();
+
   int? _customerId;
 
   final orders = List<Order>.empty().obs;
+
+  LocationData? here;
 
   @override
   void onInit() {
     super.onInit();
 
     _customerId = _localStorage.getUserID();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    _locationService.here().then((value) => here = value);
   }
 
   @override

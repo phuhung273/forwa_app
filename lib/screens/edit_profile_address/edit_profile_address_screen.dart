@@ -39,6 +39,7 @@ class EditProfileAddressScreen extends GetView<EditProfileAddressController> {
                     hintText: 'Đường',
                     autofillHints: const [AutofillHints.streetAddressLevel1],
                     controller: controller.streetController,
+                    textCapitalization: TextCapitalization.words,
                     validator: ValidationBuilder(requiredMessage: 'Ví dụ: 1 Lê Duẩn')
                         .build(),
                   ),
@@ -46,6 +47,7 @@ class EditProfileAddressScreen extends GetView<EditProfileAddressController> {
                     hintText: 'Phường/Xã',
                     autofillHints: const [AutofillHints.streetAddressLevel2],
                     controller: controller.wardController,
+                    textCapitalization: TextCapitalization.words,
                     validator: ValidationBuilder(requiredMessage: 'Ví dụ: Bến Nghé, Phường 1')
                         .build(),
                   ),
@@ -53,6 +55,7 @@ class EditProfileAddressScreen extends GetView<EditProfileAddressController> {
                     hintText: 'Quận/Huyện',
                     autofillHints: const [AutofillHints.streetAddressLevel3],
                     controller: controller.districtController,
+                    textCapitalization: TextCapitalization.words,
                     validator: ValidationBuilder(requiredMessage: 'Ví dụ: Gò Vấp, Quận 1')
                         .build(),
                   ),
@@ -60,6 +63,7 @@ class EditProfileAddressScreen extends GetView<EditProfileAddressController> {
                     hintText: 'Thành phố/Tỉnh',
                     autofillHints: const [AutofillHints.addressCity],
                     controller: controller.cityController,
+                    textCapitalization: TextCapitalization.words,
                     validator: ValidationBuilder(requiredMessage: 'Vui lòng nhập thành phố/tỉnh')
                         .build(),
                   ),

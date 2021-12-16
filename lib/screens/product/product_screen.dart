@@ -312,15 +312,23 @@ class ProductPrimaryInfoSection extends GetView<ProductScreenController> {
             striped: false,
             matchBackground: true,
             data: {
-              'Cách đây': '3.5km',
+              'Cách đây': '${_buildDistance()} km',
               'Ngày hết hạn': '30/11/2021',
-              'Ngày tới lấy': 'Thứ 2 - Thứ 6',
               'Giờ có thể lấy': controller.pickupTime.value,
             },
           )
         ],
       ),
     );
+  }
+
+  String _buildDistance() {
+    final here = controller.here;
+    return here != null && controller.location != null
+        ? (controller.distance.as(LengthUnit.Meter,
+        LatLng(here.latitude!, here.longitude!), controller.location!) / 1000)
+        .toStringAsFixed(1)
+        : '';
   }
 }
 
@@ -427,7 +435,7 @@ class PickupSection extends GetView<ProductScreenController> {
               ],
             ),
           ),
-          PickupLocation(location: controller.location!)
+          PickupLocation(location: controller.wardLocation!)
         ],
       ),
     );
