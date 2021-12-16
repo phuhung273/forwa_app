@@ -8,7 +8,7 @@ class ChatController extends GetxController {
 
   final unreadMessageCount = 0.obs;
 
-  void _increase(int value) => unreadMessageCount.value += value;
+  void increase(int value) => unreadMessageCount.value += value;
 
   void reset() => unreadMessageCount.value = 0;
 
@@ -18,7 +18,7 @@ class ChatController extends GetxController {
         return;
       }
 
-      _increase(response.data?.count ?? 0);
+      increase(response.data?.count ?? 0);
     });
   }
 

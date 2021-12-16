@@ -3,14 +3,15 @@ import 'package:forwa_app/schema/chat/chat.dart';
 import 'package:flutter/material.dart';
 
 class ChatCard extends StatefulWidget {
+
+  final Chat chat;
+  final VoidCallback press;
+
   const ChatCard({
     Key? key,
     required this.chat,
     required this.press,
   }) : super(key: key);
-
-  final Chat chat;
-  final VoidCallback press;
 
   @override
   _ChatCardState createState() => _ChatCardState();
@@ -74,23 +75,28 @@ class _ChatCardState extends State<ChatCard> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _chat.name,
-                      style: theme.textTheme.subtitle1,
-                    ),
-                    const SizedBox(height: 4.0),
-                    Opacity(
-                      opacity: 0.64,
-                      child: Text(
+                child: Opacity(
+                  opacity: _chat.isHighlight ? 1.0 : 0.5,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _chat.name,
+                        style: theme.textTheme.subtitle1?.copyWith(
+                          fontWeight: _chat.isHighlight ? FontWeight.w700 : null
+                        ),
+                      ),
+                      const SizedBox(height: 4.0),
+                      Text(
                         _chat.lastMessage,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodyText1?.copyWith(
+                            fontWeight: _chat.isHighlight ? FontWeight.w700 : null
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

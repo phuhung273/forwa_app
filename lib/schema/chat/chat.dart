@@ -10,6 +10,7 @@ class Chat {
   final String image;
   final String time;
   final bool isActive;
+  final bool isHighlight;
 
   Chat({
     required this.name,
@@ -17,6 +18,7 @@ class Chat {
     required this.image,
     required this.time,
     required this.isActive,
+    required this.isHighlight,
   });
 
   factory Chat.fromJson(Map<String, dynamic> json) => _$ChatFromJson(json);

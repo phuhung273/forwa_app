@@ -7,6 +7,7 @@ const FIELD_USERID = 'userID';
 const FIELD_USERNAME = 'username';
 const FIELD_CONNECTED = 'connected';
 const FIELD_MESSAGES = 'messages';
+const FIELD_HAS_UNREAD_MESSAGES = 'hasUnreadMessages';
 
 @JsonSerializable()
 class ChatSocketUser {
@@ -23,11 +24,15 @@ class ChatSocketUser {
   @JsonKey(name: FIELD_MESSAGES)
   List<ChatSocketMessage>? messages;
 
+  @JsonKey(name: FIELD_HAS_UNREAD_MESSAGES)
+  bool? hasUnreadMessages;
+
   ChatSocketUser({
     required this.userID,
     required this.username,
     this.connected,
     this.messages,
+    this.hasUnreadMessages,
   });
 
   factory ChatSocketUser.fromJson(Map<String, dynamic> json) =>

@@ -32,6 +32,7 @@ class AppBarChatAction extends GetView<ChatController> {
                     color: theme.colorScheme.onSecondary
                 ),
               ),
+              animationType: BadgeAnimationType.scale,
               position: BadgePosition.topStart(),
               child: _buildInnerIcon(),
             )

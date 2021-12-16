@@ -12,6 +12,7 @@ import 'package:forwa_app/schema/chat/chat_user_list_response.dart';
 import 'package:forwa_app/schema/chat/read_socket_message.dart';
 import 'package:forwa_app/schema/chat/read_socket_message_response.dart';
 import 'package:forwa_app/screens/base_controller/authorized_controller.dart';
+import 'package:forwa_app/screens/base_controller/authorized_refreshable_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -23,7 +24,7 @@ class ChatScreenBinding extends Bindings {
   }
 }
 
-class ChatScreenController extends AuthorizedController {
+class ChatScreenController extends AuthorizedRefreshableController {
   final Socket _socket = Get.find();
 
   final LocalStorage _localStorage = Get.find();
@@ -45,8 +46,9 @@ class ChatScreenController extends AuthorizedController {
   }
 
   @override
-  Future onReady() async {
-    super.onReady();
+  Future main() async {
+
+    showLoadingDialog();
 
     _socket.auth = ChatHandshakeAuth(
       username: _username!,
@@ -54,7 +56,8 @@ class ChatScreenController extends AuthorizedController {
       token: _token!,
     ).toJson();
 
-    _socket.disconnect().connect();
+    _socket.close().clearListeners();
+    _socket.connect();
 
     _socket.on(CHANNEL_SESSION, (data){
       final response = ChatSessionResponse.fromJson(data as Map<String, dynamic>);
@@ -69,6 +72,7 @@ class ChatScreenController extends AuthorizedController {
         users[user.userID] = user;
       }
 
+      hideDialog();
     });
 
     _socket.on(CHANNEL_USER_CONNECTED, (data){
@@ -100,8 +104,10 @@ class ChatScreenController extends AuthorizedController {
         newMessage.image = '';
       }
 
-        users[response.from]?.messages?.add(response);
-        users.refresh();
+      _chatController.increase(1);
+      users[response.from]?.messages?.add(response);
+      users[response.from]?.hasUnreadMessages = true;
+      users.refresh();
     });
 
   }
@@ -166,12 +172,14 @@ class ChatScreenController extends AuthorizedController {
         _chatController.decrease(response.count);
       }
     });
+
+    users[fromId]?.hasUnreadMessages = false;
+    users.refresh();
   }
 
   @override
   void onClose() {
     super.onClose();
-    _socket.disconnect();
     _socket.dispose();
   }
 

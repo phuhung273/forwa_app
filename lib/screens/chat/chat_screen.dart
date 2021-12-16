@@ -16,43 +16,48 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
 
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          floating: true,
-          title: const Text('Tin nhắn'),
-          leading: IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: (){},
+    return RefreshIndicator(
+      onRefresh: _controller.main,
+      color: theme.colorScheme.secondary,
+      child: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            floating: true,
+            title: const Text('Tin nhắn'),
+            leading: IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: (){},
+            ),
           ),
-        ),
-        SliverToBoxAdapter(
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[600],
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: const Text(
-                      'Tin nhắn gần đây',
-                      style: TextStyle(
-                          color: Colors.white
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[600],
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      child: const Text(
+                        'Tin nhắn gần đây',
+                        style: TextStyle(
+                            color: Colors.white
+                        ),
                       ),
                     ),
-                  ),
-                ]
-              ),
-            ]
+                  ]
+                ),
+              ]
+            ),
           ),
-        ),
-        _buildRecentMessages()
-      ],
+          _buildRecentMessages()
+        ],
+      ),
     );
   }
 
@@ -60,21 +65,22 @@ class ChatScreen extends StatelessWidget {
     return Obx(
       () => SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
-          final userId = _controller.users.keys.elementAt(index);
-          final chatSocketUser = _controller.users[userId];
+            final userId = _controller.users.keys.elementAt(index);
+            final chatSocketUser = _controller.users[userId];
 
-          return ChatCard(
-            key: UniqueKey(),
-            chat: Chat(
-              name: chatSocketUser!.username,
-              isActive: chatSocketUser.connected == 1,
-              image: '',
-              time: '',
-              lastMessage: _getLastMessage(chatSocketUser.messages),
-            ),
-            press: () => _goToMessageScreen(chatSocketUser.userID),
-          );
-        },
+            return ChatCard(
+              key: UniqueKey(),
+              chat: Chat(
+                name: chatSocketUser!.username,
+                isActive: chatSocketUser.connected == 1,
+                image: '',
+                time: '',
+                lastMessage: _getLastMessage(chatSocketUser.messages),
+                isHighlight: chatSocketUser.hasUnreadMessages ?? false
+              ),
+              press: () => _goToMessageScreen(chatSocketUser.userID),
+            );
+          },
           childCount: _controller.users.length,
         ),
       ),
