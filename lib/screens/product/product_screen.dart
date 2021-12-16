@@ -298,7 +298,7 @@ class ProductPrimaryInfoSection extends GetView<ProductScreenController> {
                     ),
                   ),
                   Text(
-                    '26/11/2021',
+                    controller.createdAt.value,
                     style: theme.textTheme.bodyText1?.copyWith(
                         color: Colors.grey[600]
                     ),
@@ -313,7 +313,7 @@ class ProductPrimaryInfoSection extends GetView<ProductScreenController> {
             matchBackground: true,
             data: {
               'Cách đây': '${_buildDistance()} km',
-              'Ngày hết hạn': '30/11/2021',
+              'Ngày hết hạn': controller.dueDate.value,
               'Giờ có thể lấy': controller.pickupTime.value,
             },
           )

@@ -112,6 +112,12 @@ class ProductRepo extends BaseRepo {
         '$fieldPrefix[pickup_time]' : product.pickupTime,
       });
 
+      if(product.dueDate != null){
+        imageUploadRequest.fields.addAll({
+          '$fieldPrefix[due_date]' : product.dueDate!,
+        });
+      }
+
       for(var j = 0; j < product.images.length; j++){
         final image = product.images[j];
         final mimeTypeData = lookupMimeType(image.path, headerBytes: [0xFF, 0xD8])!.split('/');

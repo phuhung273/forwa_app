@@ -53,7 +53,7 @@ class GiveScreenController extends BaseController {
 
   set dueDate(DateTime? date){
     if(date == null) return;
-    _dueDate = DateFormat('yyyy-MM-dd').format(date);
+    _dueDate = DateFormat.yMMMd().format(date);
   }
 
   void _setPickupTime(TimeRangeResult range){
@@ -98,6 +98,7 @@ class GiveScreenController extends BaseController {
         quantity: DEFAULT_PRODUCT_ADD_QUANTITY,
         pickupTime: _pickupTime!,
         images: _imageData,
+        dueDate: _dueDate,
       )
     ];
 

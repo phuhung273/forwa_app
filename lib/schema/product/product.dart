@@ -93,4 +93,9 @@ class Product{
     if(wardLatitude == null && wardLongitude == null) return null;
     return LatLng(double.tryParse(wardLatitude!)!, double.tryParse(wardLongitude!)!);
   }
+
+  DateTime? get dueDate {
+    if(detail?.dueDate == null) return null;
+    return DateTime.parse(detail!.dueDate!);
+  }
 }

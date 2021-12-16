@@ -14,10 +14,14 @@ class ProductDetail {
   @JsonKey(name: 'pickup_time')
   String pickupTime;
 
+  @JsonKey(name: 'due_date')
+  String? dueDate;
+
   ProductDetail({
     required this.quantity,
     required this.description,
     required this.pickupTime,
+    this.dueDate,
   });
 
   factory ProductDetail.fromJson(Map<String, dynamic> json) =>

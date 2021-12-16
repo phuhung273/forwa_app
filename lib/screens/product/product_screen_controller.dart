@@ -36,6 +36,7 @@ class ProductScreenController extends BaseController {
   final description = ''.obs;
   final createdAt = ''.obs;
   final pickupTime = ''.obs;
+  final dueDate = ''.obs;
   final enabled = false.obs;
   LocationData? here;
 
@@ -68,10 +69,13 @@ class ProductScreenController extends BaseController {
     sellerName.value = product.sellerName!;
     description.value = product.description!;
     pickupTime.value = product.pickupTime!;
-    createdAt.value = DateFormat.yMMMd().format(product.createdAt!);
+    createdAt.value = DateFormat('dd-MM-yyyy').format(product.createdAt!);
     enabled.value = product.enabled!;
     location = product.address?.location;
     wardLocation = product.address?.wardLocation;
+    dueDate.value = product.dueDate != null
+        ? DateFormat('dd-MM-yyyy').format(product.dueDate!)
+        : '';
   }
 
   void toTakeScreen(){

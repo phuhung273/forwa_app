@@ -6,6 +6,7 @@ class ProductAdd {
   String description;
   int quantity;
   String pickupTime;
+  String? dueDate;
   List<File> images;
 
   ProductAdd({
@@ -14,6 +15,7 @@ class ProductAdd {
     required this.quantity,
     required this.description,
     required this.pickupTime,
+    this.dueDate,
     required this.images,
   });
 }
