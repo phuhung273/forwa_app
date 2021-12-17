@@ -1,9 +1,11 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
+import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
+import 'package:forwa_app/screens/public_profile/public_profile_screen_controller.dart';
 import 'package:forwa_app/widgets/rating.dart';
 import 'package:forwa_app/widgets/secondary_action_container.dart';
 import 'package:get/get.dart';
@@ -174,6 +176,12 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
                       horizontalTitleGap: 8.0,
                       contentPadding: EdgeInsets.zero,
                       dense: true,
+                      onTap: () => Get.toNamed(
+                          ROUTE_PUBLIC_PROFILE,
+                          parameters: {
+                            userIdParam: order.product!.user!.id.toString()
+                          }
+                      ),
                       leading: CircleAvatar(
                         radius: 16.0,
                         backgroundColor: theme.colorScheme.secondary,

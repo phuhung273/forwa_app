@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:forwa_app/constants.dart';
+import 'package:forwa_app/route/route.dart';
+import 'package:forwa_app/screens/public_profile/public_profile_screen_controller.dart';
 import 'package:forwa_app/widgets/app_container.dart';
 import 'package:forwa_app/widgets/headless_table.dart';
 import 'package:forwa_app/widgets/rating.dart';
@@ -195,6 +197,12 @@ class SellerInfoSection extends GetView<ProductScreenController> {
         minVerticalPadding: 0.0,
         minLeadingWidth: 0.0,
         contentPadding: EdgeInsets.zero,
+        onTap: () => Get.toNamed(
+          ROUTE_PUBLIC_PROFILE,
+          parameters: {
+            userIdParam: controller.userId.toString()
+          }
+        ),
         leading: CircleAvatar(
           radius: 24.0,
           backgroundColor: theme.colorScheme.secondary,

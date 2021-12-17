@@ -1,10 +1,12 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
+import 'package:forwa_app/mixins/reportable.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/components/appbar_chat_action.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
+import 'package:forwa_app/screens/public_profile/public_profile_screen_controller.dart';
 import 'package:forwa_app/widgets/rating.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
@@ -105,11 +107,8 @@ class HomeScreen extends StatelessWidget {
                       itemCount: _controller.products.length,
                       itemBuilder: (context, index) {
                         final product = _controller.products[index];
-                        return InkWell(
-                          onTap: () => Get.toNamed(ROUTE_PRODUCT, arguments: product.id),
-                          child: ProductCard(
-                            product: product,
-                          )
+                        return ProductCard(
+                          product: product,
                         );
                       }
                     ),
@@ -153,23 +152,26 @@ class ProductCard extends GetView<HomeScreenController> {
         elevation: 4.0,
         child: Row(
           children: [
-            Container(
-              height: IMAGE_WIDTH,
-              width: IMAGE_WIDTH,
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                borderRadius: roundedRectangleBorderRadius
-              ),
-              margin: const EdgeInsets.only(
-                right: 0.0,
-                left: 8.0,
-                top: 4.0,
-                bottom: 4.0,
-              ),
-              child: ExtendedImage.network(
-                '$HOST_URL$imageUrl',
+            InkWell(
+              onTap: () => Get.toNamed(ROUTE_PRODUCT, arguments: product.id),
+              child: Container(
+                height: IMAGE_WIDTH,
                 width: IMAGE_WIDTH,
-                fit: BoxFit.cover,
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  borderRadius: roundedRectangleBorderRadius
+                ),
+                margin: const EdgeInsets.only(
+                  right: 0.0,
+                  left: 8.0,
+                  top: 4.0,
+                  bottom: 4.0,
+                ),
+                child: ExtendedImage.network(
+                  '$HOST_URL$imageUrl',
+                  width: IMAGE_WIDTH,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Expanded(
@@ -190,10 +192,16 @@ class ProductCard extends GetView<HomeScreenController> {
                         children: [
                           InkWell(
                             child: const Icon(Icons.more_horiz),
-                            onTap: () => controller.showReportModal({
-                              REPORT_PRODUCT_ID: product.id,
-                              REPORT_USER_ID: product.user?.id
-                            }),
+                            onTap: () => controller.showReportModal(
+                              {
+                                REPORT_PRODUCT_ID: product.id,
+                                REPORT_USER_ID: product.user?.id
+                              },
+                              [
+                                ReportType.USER,
+                                ReportType.PRODUCT
+                              ]
+                            ),
                           )
                         ],
                       ),
@@ -203,6 +211,12 @@ class ProductCard extends GetView<HomeScreenController> {
                         horizontalTitleGap: 8.0,
                         contentPadding: EdgeInsets.zero,
                         dense: true,
+                        onTap: () => Get.toNamed(
+                          ROUTE_PUBLIC_PROFILE,
+                          parameters: {
+                          userIdParam: product.user!.id.toString()
+                          }
+                        ),
                         leading: CircleAvatar(
                           radius: 16.0,
                           backgroundColor: theme.colorScheme.secondary,

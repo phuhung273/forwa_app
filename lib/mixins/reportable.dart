@@ -10,12 +10,17 @@ import 'package:get/get.dart';
 const ACTION_REPORT_PRODUCT = 'report_product';
 const ACTION_REPORT_USER = 'report_user';
 
+enum ReportType{
+  PRODUCT,
+  USER,
+}
+
 mixin Reportable{
 
   Future reportProduct(Map<String, dynamic> data);
   Future reportUser(Map<String, dynamic> data);
 
-  showReportModal(Map<String, dynamic> data) async {
+  showReportModal(Map<String, dynamic> data, List<ReportType> reportTypes) async {
     final context = Get.context;
     if(context == null) return;
 
@@ -25,16 +30,18 @@ mixin Reportable{
       context: context,
       style: AdaptiveStyle.material,
       actions: [
-        const SheetAction(
-          icon: Icons.person_off,
-          label: 'Báo cáo người dùng',
-          key: ACTION_REPORT_USER,
-        ),
-        const SheetAction(
-          icon: Icons.report,
-          label: 'Báo cáo sản phẩm',
-          key: ACTION_REPORT_PRODUCT,
-        ),
+        if(reportTypes.contains(ReportType.USER))
+          const SheetAction(
+            icon: Icons.person_off,
+            label: 'Báo cáo người dùng',
+            key: ACTION_REPORT_USER,
+          ),
+        if(reportTypes.contains(ReportType.PRODUCT))
+          const SheetAction(
+            icon: Icons.report,
+            label: 'Báo cáo sản phẩm',
+            key: ACTION_REPORT_PRODUCT,
+          ),
       ],
     );
 

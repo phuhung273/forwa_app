@@ -44,6 +44,7 @@ class ProductScreenController extends BaseController {
   int get page => current.value;
 
   final int id = Get.arguments;
+  late int? userId;
 
   LatLng? location;
   LatLng? wardLocation;
@@ -76,6 +77,7 @@ class ProductScreenController extends BaseController {
     dueDate.value = product.dueDate != null
         ? DateFormat('dd-MM-yyyy').format(product.dueDate!)
         : '';
+    userId = product.user?.id;
   }
 
   void toTakeScreen(){
