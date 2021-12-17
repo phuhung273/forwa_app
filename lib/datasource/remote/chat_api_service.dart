@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 
 part 'chat_api_service.g.dart';
 
-@RestApi(baseUrl: '$CHAT_HOST_URL')
+@RestApi(baseUrl: '$CHAT_API_URL')
 abstract class ChatApiService {
   factory ChatApiService(Dio dio, {String baseUrl}) = _ChatApiService;
 

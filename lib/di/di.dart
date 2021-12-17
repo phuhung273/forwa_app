@@ -100,9 +100,13 @@ void _configureApiClient(){
 
         final LocalStorage localStorage = Get.find();
 
-        final accessToken = localStorage.getAccessToken() ?? '';
+        final accessToken = localStorage.getAccessToken();
         // Do something before request is sent
-        options.headers['Authorization'] = 'Bearer $accessToken';
+
+        if(accessToken != null){
+          options.headers['Authorization'] = 'Bearer $accessToken';
+        }
+
         options.headers['Accept'] = 'application/json';
         options.headers['Content-Type'] = 'application/json';
         return handler.next(options);
