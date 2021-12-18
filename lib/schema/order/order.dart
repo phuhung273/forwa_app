@@ -53,7 +53,7 @@ class Order {
 
   String? get sellerName => product?.user?.name;
 
-  String? get firstImageUrl => product?.images.first.url;
+  String? get firstImageUrl => product?.images?.first.url;
 
   OrderStatus? get statusType{
     return EnumToString.fromString(OrderStatus.values, status.toUpperCase());

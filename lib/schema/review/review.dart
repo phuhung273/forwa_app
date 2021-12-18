@@ -42,7 +42,7 @@ class Review {
 
   Map<String, dynamic> toJson() => _$ReviewToJson(this);
 
-  String? get firstImageUrl => order?.product?.images.first.url;
+  String? get firstImageUrl => order?.product?.images?.first.url;
 
   String? get productName => order?.product?.name;
 

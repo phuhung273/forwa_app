@@ -58,7 +58,7 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController {
       return;
     }
 
-    orders.assignAll(response.data!.items ?? []);
+    orders.assignAll(response.data ?? []);
   }
 
   Future takeSuccess(int index) async {

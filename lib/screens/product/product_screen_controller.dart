@@ -65,7 +65,7 @@ class ProductScreenController extends BaseController {
     }
     final product = response.data!;
 
-    images.assignAll(product.images.map((e) => resolveUrl(e.url)));
+    images.assignAll(product.images!.map((e) => resolveUrl(e.url)));
     name.value = product.name;
     sellerName.value = product.sellerName!;
     description.value = product.description!;

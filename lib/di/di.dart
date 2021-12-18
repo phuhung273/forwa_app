@@ -6,6 +6,7 @@ import 'package:forwa_app/datasource/local/hidden_product_db.dart';
 import 'package:forwa_app/datasource/local/hidden_user_db.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/remote/address_service.dart';
+import 'package:forwa_app/datasource/remote/app_notification_service.dart';
 import 'package:forwa_app/datasource/remote/auth_service.dart';
 import 'package:forwa_app/datasource/remote/chat_api_service.dart';
 import 'package:forwa_app/datasource/remote/product_report_service.dart';
@@ -15,6 +16,7 @@ import 'package:forwa_app/datasource/remote/order_service.dart';
 import 'package:forwa_app/datasource/remote/product_service.dart';
 import 'package:forwa_app/datasource/remote/review_service.dart';
 import 'package:forwa_app/datasource/repository/address_repo.dart';
+import 'package:forwa_app/datasource/repository/app_notification_repo.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
 import 'package:forwa_app/datasource/repository/chat_repo.dart';
 import 'package:forwa_app/datasource/repository/product_report_repo.dart';
@@ -39,7 +41,7 @@ Future configureDependencies() async {
   Get.put(LocalStorage());
 
   _configureApiClient();
-  _congifureSocketIO();
+  _configureSocketIO();
 
   Get.put(HiddenProductDB.instance);
   Get.put(HiddenUserDB.instance);
@@ -62,6 +64,8 @@ Future configureDependencies() async {
   Get.put(UserReportRepo());
   Get.put(ChatApiService(Get.find()));
   Get.put(ChatRepo());
+  Get.put(AppNotificationService(Get.find()));
+  Get.put(AppNotificationRepo());
 
   Get.put(ChatController());
 
@@ -74,7 +78,7 @@ Future configureDependencies() async {
 
 }
 
-void _congifureSocketIO() {
+void _configureSocketIO() {
   final Socket socket = io(CHAT_HOST_URL,
       OptionBuilder()
           .setTransports(['websocket'])

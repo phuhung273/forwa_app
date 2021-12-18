@@ -116,7 +116,7 @@ class MyGivingsScreen extends StatelessWidget {
                                   }
                                 ),
                                 child: GivingItem(
-                                  product: _controller.products[index]
+                                  product: product
                                 ),
                               );
                             },

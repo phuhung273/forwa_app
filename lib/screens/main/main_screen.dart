@@ -11,6 +11,7 @@ import 'package:forwa_app/screens/chat/chat_screen.dart';
 import 'package:forwa_app/screens/home/home_screen.dart';
 import 'package:forwa_app/screens/my_givings/my_givings_creen.dart';
 import 'package:forwa_app/screens/my_receivings/my_receivings_screen.dart';
+import 'package:forwa_app/screens/notification/notification_screen.dart';
 import 'package:forwa_app/screens/policy/policy_screen.dart';
 import 'package:get/get.dart';
 
@@ -19,6 +20,8 @@ import 'main_screen_controller.dart';
 
 const CHAT_SCREEN_INDEX = 4;
 const HOME_SCREEN_INDEX = 0;
+const MY_GIVINGS_SCREEN_INDEX = 1;
+const MY_RECEIVINGS_SCREEN_INDEX = 2;
 
 class MainScreen extends StatefulWidget {
 
@@ -91,17 +94,17 @@ class MainScreenView extends GetView<MainScreenController> {
 
   Widget _buildTab(int index){
     switch(index){
-      case 0:
+      case HOME_SCREEN_INDEX:
         return HomeScreen();
 
-      case 1:
+      case MY_GIVINGS_SCREEN_INDEX:
         return MyGivingsScreen();
 
-      case 2:
+      case MY_RECEIVINGS_SCREEN_INDEX:
         return MyReceivingsScreen();
 
       case 3:
-        return HomeScreen();
+        return NotificationScreen();
 
       case CHAT_SCREEN_INDEX:
         return ChatScreen();

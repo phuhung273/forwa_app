@@ -37,7 +37,7 @@ class Product{
   String? wardLongitude;
 
   @JsonKey(name: 'images')
-  List<Image> images;
+  List<Image>? images;
 
   @JsonKey(name: 'user')
   User? user;
@@ -59,7 +59,7 @@ class Product{
     required this.name,
     required this.sku,
     this.createdAt,
-    required this.images,
+    this.images,
     this.latitude,
     this.longitude,
     this.user,
@@ -74,7 +74,7 @@ class Product{
 
   Map<String, dynamic> toJson() => _$ProductToJson(this);
 
-  String get firstImageUrl => images.first.url;
+  String? get firstImageUrl => images?.first.url;
 
   int? get quantity => detail?.quantity;
 

@@ -118,7 +118,10 @@ const IMAGE_WIDTH = 150.0;
 class ReceivingCard extends GetView<MyReceivingsScreenController> {
   final Order order;
   final VoidCallback onTakeSuccess;
-  const ReceivingCard({
+
+  final MainScreenController _mainController = Get.find();
+
+  ReceivingCard({
     Key? key,
     required this.order,
     required this.onTakeSuccess,
@@ -227,7 +230,7 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
                         child: SecondaryActionContainer(
                           child: ElevatedButton.icon(
                             icon: const Icon(Icons.textsms),
-                            onPressed: () { },
+                            onPressed: () => _mainController.changeTab(CHAT_SCREEN_INDEX),
                             label: const Text('Nhắn tin'),
                           )
                         ),

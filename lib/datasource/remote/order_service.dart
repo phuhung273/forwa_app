@@ -1,5 +1,6 @@
+import 'package:forwa_app/schema/api_response.dart';
 import 'package:forwa_app/schema/order/create_order_request.dart';
-import 'package:forwa_app/schema/order/list_order_response.dart';
+import 'package:forwa_app/schema/order/order.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
@@ -15,7 +16,7 @@ abstract class OrderService {
   Future<String> createOrder(@Body() CreateOrderRequest request);
 
   @GET('/me')
-  Future<ListOrderResponse> getMyOrders();
+  Future<ApiResponse<List<Order>>> getMyOrders();
 
   @POST('/status/{orderId}')
   Future<String> selectOrder(
