@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/address_repo.dart';
+import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/address/address.dart';
 import 'package:forwa_app/screens/base_controller/address_controller.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
+import 'package:forwa_app/screens/base_controller/give_address_controller.dart';
 import 'package:forwa_app/screens/profile_address/profile_address_screen_controller.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
@@ -15,13 +17,16 @@ class EditProfileAddressBinding extends Bindings {
   }
 }
 
+const previousRouteParam = 'previous_route';
+
 class EditProfileAddressController extends BaseController {
 
   final LocalStorage _localStorage = Get.find();
 
   final AddressRepo _addressRepo = Get.find();
 
-  final ProfileAddressScreenController _profileAddressController = Get.find();
+  late ProfileAddressScreenController _profileAddressController;
+  late GiveAddressController _giveAddressController;
 
   final streetController = TextEditingController();
   final wardController = TextEditingController();
@@ -30,6 +35,7 @@ class EditProfileAddressController extends BaseController {
   final phoneController = TextEditingController();
 
   String? _name;
+  String? _previousRoute;
 
   final AddressController _addressController = Get.find();
 
@@ -56,9 +62,17 @@ class EditProfileAddressController extends BaseController {
     super.onInit();
 
     _name = _localStorage.getCustomerName();
+    _previousRoute = Get.parameters[previousRouteParam];
 
-    if(_name == null){
-      return;
+    switch(_previousRoute){
+      case ROUTE_PROFILE_ADDRESS:
+        _profileAddressController = Get.find();
+        break;
+      case ROUTE_GIVE:
+        _giveAddressController = Get.find();
+        break;
+      default:
+        break;
     }
   }
 
@@ -73,7 +87,7 @@ class EditProfileAddressController extends BaseController {
   }
 
   Future save() async {
-    if(_name == null){
+    if(_name == null || _previousRoute == null){
       // TODO: add error text
       return;
     }
@@ -108,13 +122,23 @@ class EditProfileAddressController extends BaseController {
 
     await showSuccessDialog(message: 'Thêm địa chỉ thành công');
 
-    if(isDefault.value){
-      for (final element in _profileAddressController.addresses) {
-        element.isDefault = false;
-      }
-      _profileAddressController.addresses.insert(0, address);
-    } else {
-      _profileAddressController.addresses.add(address);
+    switch(_previousRoute){
+      case ROUTE_PROFILE_ADDRESS:
+        if(isDefault.value){
+          for (final element in _profileAddressController.addresses) {
+            element.isDefault = false;
+          }
+          _profileAddressController.addresses.insert(0, address);
+        } else {
+          _profileAddressController.addresses.add(address);
+        }
+        break;
+
+      case ROUTE_GIVE:
+
+        break;
+      default:
+        break;
     }
 
     Get.back();

@@ -1,14 +1,16 @@
 import 'dart:io';
 
 import 'package:dash_chat/dash_chat.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
+import 'package:forwa_app/datasource/repository/address_repo.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/route/route.dart';
+import 'package:forwa_app/schema/address/address.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/schema/product/product_add.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
+import 'package:forwa_app/screens/base_controller/give_address_controller.dart';
 import 'package:forwa_app/screens/home/home_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:time_range/time_range.dart';
@@ -35,6 +37,9 @@ class GiveScreenController extends BaseController {
   final ProductRepo _productRepo = Get.find();
 
   final HomeScreenController _homeController = Get.find();
+  final GiveAddressController _giveAddressController = Get.find();
+
+  final AddressRepo _addressRepo = Get.find();
 
   final uuid = const Uuid();
 
@@ -69,9 +74,19 @@ class GiveScreenController extends BaseController {
 
 
   @override
-  void onReady() {
+  void onReady() async {
     super.onReady();
     if(_userId == null) Get.offAndToNamed(ROUTE_LOGIN);
+  }
+
+  Future<bool> fetchDefaultAddress() async {
+    final response = await _addressRepo.getMyDefaultAddress();
+    if(!response.isSuccess || response.data == null){
+      return false;
+    }
+
+    _giveAddressController.address = response.data!;
+    return true;
   }
 
   void addImage(File file){

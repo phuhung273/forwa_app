@@ -14,5 +14,8 @@ abstract class AddressService {
   Future<ApiResponse<Address>> saveAddress(@Body() Address address);
 
   @GET('/address/me')
-  Future<ApiResponse<List<Address>>> getMyAddreses();
+  Future<ApiResponse<List<Address>>> getMyAddresses();
+
+  @GET('/address/default')
+  Future<ApiResponse<Address>> getMyDefaultAddress();
 }

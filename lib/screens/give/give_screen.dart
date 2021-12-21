@@ -1,6 +1,10 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:form_validator/form_validator.dart';
+import 'package:forwa_app/route/route.dart';
+import 'package:forwa_app/schema/address/address.dart';
+import 'package:forwa_app/screens/base_controller/give_address_controller.dart';
+import 'package:forwa_app/screens/edit_profile_address/edit_profile_address_screen_controller.dart';
 import 'package:forwa_app/widgets/app_level_action_container.dart';
 import 'package:forwa_app/widgets/body_with_persistent_bottom.dart';
 import 'package:forwa_app/widgets/date_picker_input_field.dart';
@@ -9,6 +13,7 @@ import 'package:forwa_app/widgets/input_field.dart';
 import 'package:get/get.dart';
 import 'package:time_range/time_range.dart';
 
+import '../../constants.dart';
 import 'give_screen_controller.dart';
 
 class GiveScreen extends GetView<GiveScreenController> {
@@ -33,12 +38,7 @@ class GiveScreen extends GetView<GiveScreenController> {
         appBar: AppBar(
           title: Text(
             'Tải lên',
-            style: theme.textTheme.headline6?.copyWith(
-              color: theme.colorScheme.secondary,
-            ),
-          ),
-          iconTheme: IconThemeData(
-            color: theme.colorScheme.secondary,
+            style: theme.textTheme.headline6
           ),
         ),
         body: BodyWithPersistentBottom(
@@ -72,6 +72,7 @@ class GiveScreen extends GetView<GiveScreenController> {
                 //   icon: Icons.schedule,
                 //   controller: controller.address1Controller,
                 // ),
+                const Divider(),
                 AppLevelActionContainer(
                   child: TimeRange(
                     fromTitle: Text(
@@ -82,7 +83,6 @@ class GiveScreen extends GetView<GiveScreenController> {
                       'Tới',
                       style: theme.textTheme.subtitle1,
                     ),
-                    titlePadding: 20,
                     textStyle: theme.textTheme.bodyText1,
                     activeTextStyle: theme.textTheme.bodyText1?.copyWith(
                       fontWeight: FontWeight.w600,
@@ -98,6 +98,28 @@ class GiveScreen extends GetView<GiveScreenController> {
                     onRangeCompleted: (range) => controller.time = range,
                   ),
                 ),
+                const Divider(),
+                FutureBuilder<bool>(
+                  future: controller.fetchDefaultAddress(),
+                  builder: (context, snapshot){
+                    if(!snapshot.hasData){
+                      return SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: theme.colorScheme.secondary,
+                          strokeWidth: 2.0,
+                        ),
+                      );
+                    }
+
+                    return const AppLevelActionContainer(
+                        child: AddressExpandablePanel()
+                    );
+
+                  }
+                ),
+                const Divider(),
                 AppLevelActionContainer(
                   child: ExpandablePanel(
                     theme: const ExpandableThemeData(
@@ -136,4 +158,113 @@ class GiveScreen extends GetView<GiveScreenController> {
     );
   }
 }
+
+class AddressExpandablePanel extends GetView<GiveAddressController> {
+  const AddressExpandablePanel({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Obx(
+      () {
+        if(controller.street.isEmpty){
+          return TextButton.icon(
+              label: const Text('Vui lòng thêm địa chỉ'),
+              onPressed: () => Get.toNamed(
+                  ROUTE_EDIT_PROFILE_ADDRESS,
+                  parameters: {
+                    previousRouteParam: Get.currentRoute,
+                  }
+              ),
+              icon: const Icon(Icons.add)
+          );
+        }
+
+        final header = '${controller.street} ${controller.ward} ${controller.district} ${controller.city}';
+
+        return ExpandableNotifier(
+          child: ScrollOnExpand(
+            scrollOnExpand: true,
+            scrollOnCollapse: false,
+            child: ExpandablePanel(
+              theme: const ExpandableThemeData(
+                tapBodyToExpand: true,
+                tapBodyToCollapse: true,
+                hasIcon: true,
+              ),
+              header: Text(
+                'Địa chỉ',
+                style: theme.textTheme.subtitle1,
+              ),
+              collapsed: Text(
+                header,
+                softWrap: true,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodyText1,
+              ),
+              expanded: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: defaultPadding),
+                    child: Text(
+                      header,
+                      softWrap: true,
+                      overflow: TextOverflow.fade,
+                      style: theme.textTheme.bodyText1,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: defaultPadding),
+                    child: Text(
+                      controller.city.value,
+                      softWrap: true,
+                      overflow: TextOverflow.fade,
+                      style: theme.textTheme.bodyText1,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: defaultPadding),
+                    child: Text(
+                      controller.name.value,
+                      softWrap: true,
+                      overflow: TextOverflow.fade,
+                      style: theme.textTheme.bodyText1,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: defaultPadding),
+                    child: Text(
+                      controller.phone.value,
+                      softWrap: true,
+                      overflow: TextOverflow.fade,
+                      style: theme.textTheme.bodyText1,
+                    ),
+                  ),
+                ],
+              ),
+              builder: (_, collapsed, expanded) {
+                return Padding(
+                  padding: const EdgeInsets.only(
+                    left: defaultPadding,
+                    right: defaultPadding,
+                    bottom: defaultPadding,
+                  ),
+                  child: Expandable(
+                    collapsed: collapsed,
+                    expanded: expanded,
+                    theme: const ExpandableThemeData(crossFadePoint: 0),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
 
