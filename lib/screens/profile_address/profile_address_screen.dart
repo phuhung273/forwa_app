@@ -22,37 +22,36 @@ class ProfileAddressScreen extends GetView<ProfileAddressScreenController> {
         appBar: AppBar(
           title: Text(
             'Quản lý địa chỉ',
-            style: theme.textTheme.headline6?.copyWith(
-              color: theme.colorScheme.secondary,
-            ),
+            style: theme.textTheme.headline6
           ),
           iconTheme: IconThemeData(
             color: theme.colorScheme.secondary,
           ),
         ),
-        body: Column(
-          children: [
-            AppContainer(
-              child: Obx(
-                () => ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: controller.addresses.length,
-                  itemBuilder: (context, index) => AddressCard(
-                    address: controller.addresses[index],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              AppContainer(
+                child: Obx(
+                  () => ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: controller.addresses.length,
+                    itemBuilder: (context, index) => AddressCard(
+                      address: controller.addresses[index],
+                    ),
+                    separatorBuilder: (context, index) => const Divider(),
                   ),
-                  separatorBuilder: (context, index) => const Divider(),
                 ),
               ),
-            ),
-            if(controller.addresses.length < 2)
               AppLevelActionContainer(
                 child: ElevatedButton(
                   onPressed: () => Get.toNamed(ROUTE_EDIT_PROFILE_ADDRESS),
                   child: const Text('Thêm địa chỉ'),
                 )
               )
-          ],
+            ],
+          ),
         ),
       )
     );

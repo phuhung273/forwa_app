@@ -152,5 +152,18 @@ class ProductRepo extends BaseRepo {
       print(error);
       return ApiResponse<ProductListResponse>.fromError(error: error.toString());
     }
+
+    // final streamedResponse = await imageUploadRequest.send();
+    // final response = await http.Response.fromStream(streamedResponse);
+    // print('Response: ${response.body}');
+    // return ApiResponse<ProductListResponse>.fromJson(
+    //     jsonDecode(response.body),
+    //         (json) {
+    //       final items = json as List<dynamic>;
+    //       return ProductListResponse(
+    //           items: items.map((e) => Product.fromJson(e)).toList()
+    //       );
+    //     }
+    // );
   }
 }

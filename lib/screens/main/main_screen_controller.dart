@@ -4,6 +4,7 @@ import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/auth/logout_request.dart';
+import 'package:forwa_app/screens/base_controller/address_controller.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/policy/policy_upload_screen.dart';
@@ -14,6 +15,7 @@ class MainScreenBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => MainScreenController());
+    Get.put(AddressController());
   }
 }
 

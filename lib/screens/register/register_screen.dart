@@ -109,12 +109,9 @@ class RegisterScreen extends GetView<RegisterScreenController> {
 
 extension CustomValidationBuilder on ValidationBuilder {
   static final _numeric = RegExp(r'^-?[0-9]+$');
-
-  static final RegExp _emailRegExp = RegExp(
-      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9\-\_]+(\.[a-zA-Z]+)*$");
-  static final RegExp _nonDigitsExp = RegExp(r'[^\d]');
-  static final RegExp _anyLetter = RegExp(r'[A-Za-z]');
-  static final RegExp _phoneRegExp = RegExp(r'^\d{7,15}$');
+  static final _nonDigitsExp = RegExp(r'[^\d]');
+  static final _anyLetter = RegExp(r'[A-Za-z]');
+  static final _phoneRegExp = RegExp(r'^\d{7,15}$');
 
   emailOrPhone({String? phoneMessage, String? emailMessage}) => add((v) {
 

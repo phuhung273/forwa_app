@@ -11,7 +11,6 @@ import 'package:forwa_app/schema/chat/chat_user_disconnected_response.dart';
 import 'package:forwa_app/schema/chat/chat_user_list_response.dart';
 import 'package:forwa_app/schema/chat/read_socket_message.dart';
 import 'package:forwa_app/schema/chat/read_socket_message_response.dart';
-import 'package:forwa_app/screens/base_controller/authorized_controller.dart';
 import 'package:forwa_app/screens/base_controller/authorized_refreshable_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:get/get.dart';
