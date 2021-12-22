@@ -1,4 +1,5 @@
 
+import 'package:forwa_app/screens/address_select/address_select_screen.dart';
 import 'package:forwa_app/screens/chat/message_screen.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
@@ -41,6 +42,7 @@ const ROUTE_PROFILE = '/profile';
 const ROUTE_PUBLIC_PROFILE = '/public_profile';
 const ROUTE_PROFILE_ADDRESS = '/profile_address';
 const ROUTE_EDIT_PROFILE_ADDRESS = '/edit_profile_address';
+const ROUTE_SELECT_ADDRESS = '/select_address';
 const ROUTE_MAIN = '/main';
 const ROUTE_PRODUCT = '/product';
 const ROUTE_GIVE = '/give';
@@ -69,4 +71,5 @@ var appRoute = [
   GetPage(name: ROUTE_TAKE_SUCCESS, page: () => const TakeSuccessScreen(), binding: TakeSuccessScreenBinding()),
   GetPage(name: ROUTE_MESSAGE, page: () => MessageScreen()),
   GetPage(name: ROUTE_SUPPORT, page: () => const SupportScreen()),
+  GetPage(name: ROUTE_SELECT_ADDRESS, page: () => const AddressSelectScreen()),
 ];

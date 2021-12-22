@@ -32,12 +32,7 @@ class ProductScreen extends GetView<ProductScreenController> {
                 floating: true,
                 title: Text(
                   'Thông tin món đồ',
-                  style: theme.textTheme.headline6?.copyWith(
-                    color: theme.colorScheme.secondary,
-                  ),
-                ),
-                iconTheme: IconThemeData(
-                  color: theme.colorScheme.secondary,
+                  style: theme.textTheme.headline6
                 ),
               ),
               if(controller.name.isNotEmpty)

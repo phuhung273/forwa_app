@@ -3,9 +3,9 @@ import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/address_repo.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/address/address.dart';
+import 'package:forwa_app/screens/address_select/address_select_screen_controller.dart';
 import 'package:forwa_app/screens/base_controller/address_controller.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
-import 'package:forwa_app/screens/base_controller/give_address_controller.dart';
 import 'package:forwa_app/screens/profile_address/profile_address_screen_controller.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
@@ -26,7 +26,7 @@ class EditProfileAddressController extends BaseController {
   final AddressRepo _addressRepo = Get.find();
 
   late ProfileAddressScreenController _profileAddressController;
-  late GiveAddressController _giveAddressController;
+  late AddressSelectScreenController _addressSelectController;
 
   final streetController = TextEditingController();
   final wardController = TextEditingController();
@@ -69,7 +69,8 @@ class EditProfileAddressController extends BaseController {
         _profileAddressController = Get.find();
         break;
       case ROUTE_GIVE:
-        _giveAddressController = Get.find();
+      case ROUTE_SELECT_ADDRESS:
+        _addressSelectController = Get.find();
         break;
       default:
         break;
@@ -98,7 +99,7 @@ class EditProfileAddressController extends BaseController {
     List<Location> wardLocations = await locationFromAddress(wardController.text + districtController.text + cityController.text);
     final wardLocation = wardLocations.first;
 
-    final address = Address(
+    final addressRequest = Address(
       street: streetController.text,
       ward: wardController.text,
       district: districtController.text,
@@ -112,7 +113,7 @@ class EditProfileAddressController extends BaseController {
       wardLongitude: wardLocation.longitude.toString(),
     );
 
-    final response = await _addressRepo.saveAddress(address);
+    final response = await _addressRepo.saveAddress(addressRequest);
     hideDialog();
 
     if(!response.isSuccess || response.data == null){
@@ -122,20 +123,24 @@ class EditProfileAddressController extends BaseController {
 
     await showSuccessDialog(message: 'Thêm địa chỉ thành công');
 
+    final address = response.data!;
+
     switch(_previousRoute){
       case ROUTE_PROFILE_ADDRESS:
         if(isDefault.value){
-          for (final element in _profileAddressController.addresses) {
-            element.isDefault = false;
-          }
-          _profileAddressController.addresses.insert(0, address);
+          _profileAddressController.addDefaultAddress(address);
         } else {
-          _profileAddressController.addresses.add(address);
+          _profileAddressController.addAddress(address);
         }
         break;
 
       case ROUTE_GIVE:
-
+      case ROUTE_SELECT_ADDRESS:
+        if(isDefault.value){
+          _addressSelectController.addDefaultAddress(address);
+        } else {
+          _addressSelectController.addAddress(address);
+        }
         break;
       default:
         break;

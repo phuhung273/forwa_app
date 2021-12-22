@@ -110,6 +110,7 @@ class ProductRepo extends BaseRepo {
         '$fieldPrefix[quantity]' : product.quantity.toString(),
         '$fieldPrefix[description]' : product.description,
         '$fieldPrefix[pickup_time]' : product.pickupTime,
+        '$fieldPrefix[address_id]' : product.addressId.toString(),
       });
 
       if(product.dueDate != null){

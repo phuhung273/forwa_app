@@ -31,4 +31,15 @@ class ProfileAddressScreenController extends BaseController {
 
     addresses.assignAll(response.data!);
   }
+
+  addDefaultAddress(Address address){
+    for (final element in addresses) {
+      element.isDefault = false;
+    }
+    addresses.insert(0, address);
+  }
+
+  addAddress(Address address){
+    addresses.add(address);
+  }
 }

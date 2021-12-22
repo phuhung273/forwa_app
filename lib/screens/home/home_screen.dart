@@ -60,10 +60,12 @@ class HomeScreen extends StatelessWidget {
                 color: Colors.grey[100],
                 // borderRadius: roundedRectangleBorderRadius,
               ),
-              child: Text(
-                'Chào buổi sáng, ${_mainController.fullname.isNotEmpty ? _mainController.fullname : 'người lạ'}!',
-                style: theme.textTheme.subtitle1?.copyWith(
-                  color: theme.colorScheme.secondary,
+              child: Obx(
+                () => Text(
+                  'Chào buổi sáng, ${_mainController.fullname.isNotEmpty ? _mainController.fullname : 'người lạ'}!',
+                  style: theme.textTheme.subtitle1?.copyWith(
+                    color: theme.colorScheme.secondary,
+                  ),
                 ),
               ),
             ),

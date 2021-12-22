@@ -15,7 +15,4 @@ abstract class AddressService {
 
   @GET('/address/me')
   Future<ApiResponse<List<Address>>> getMyAddresses();
-
-  @GET('/address/default')
-  Future<ApiResponse<Address>> getMyDefaultAddress();
 }

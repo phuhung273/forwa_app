@@ -7,7 +7,6 @@ import 'package:forwa_app/schema/auth/logout_request.dart';
 import 'package:forwa_app/screens/base_controller/address_controller.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
-import 'package:forwa_app/screens/base_controller/give_address_controller.dart';
 import 'package:forwa_app/screens/policy/policy_upload_screen.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -17,7 +16,6 @@ class MainScreenBinding extends Bindings {
   void dependencies() {
     Get.lazyPut(() => MainScreenController());
     Get.put(AddressController());
-    Get.put(GiveAddressController());
   }
 }
 

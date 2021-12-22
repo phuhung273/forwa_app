@@ -4,9 +4,11 @@ import '../constants.dart';
 
 class AppLevelActionContainer extends StatelessWidget {
   final Widget child;
+  final Clip clipBehavior;
   const AppLevelActionContainer({
     Key? key,
     required this.child,
+    this.clipBehavior = Clip.hardEdge,
   }) : super(key: key);
 
   @override
@@ -16,7 +18,7 @@ class AppLevelActionContainer extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       width: size.width * 0.8,
-      clipBehavior: Clip.hardEdge,
+      clipBehavior: clipBehavior,
       decoration: BoxDecoration(
           borderRadius: roundedRectangleBorderRadius
       ),

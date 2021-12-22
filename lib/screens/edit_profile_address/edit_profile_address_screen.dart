@@ -119,7 +119,7 @@ class EditProfileAddressScreen extends GetView<EditProfileAddressController> {
                           ),
                           Expanded(
                             child: Text(
-                              'Địa chỉ mặc định',
+                              'Chọn làm địa chỉ mặc định',
                               style: theme.textTheme.subtitle1,
                             ),
                           )
