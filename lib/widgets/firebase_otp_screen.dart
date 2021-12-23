@@ -5,18 +5,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
+import 'package:forwa_app/route/route.dart';
+import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class FirebaseOtpScreen extends StatefulWidget {
   final String phoneNumber;
   final String verificationId;
   final VoidCallback onSuccess;
+  final String previousRoute;
 
   const FirebaseOtpScreen({
     Key? key,
     required this.phoneNumber,
     required this.verificationId,
     required this.onSuccess,
+    required this.previousRoute,
   }) : super(key: key);
 
   @override
@@ -178,8 +182,18 @@ class _FirebaseOtpScreenState extends State<FirebaseOtpScreen> {
 
                       final result = await _verifyOtp();
                       if(result) {
-                        widget.onSuccess();
-                        Navigator.pop(context);
+                        switch(widget.previousRoute){
+                          case ROUTE_REGISTER:
+                            widget.onSuccess();
+                            Navigator.pop(context);
+                            break;
+                          case ROUTE_PASSWORD_FORGOT:
+                            Navigator.pop(context);
+                            widget.onSuccess();
+                            break;
+                          default:
+                            break;
+                        }
                       } else {
                         errorController.add(ErrorAnimationType.shake); // Triggering error shake animation
                         setState(() {

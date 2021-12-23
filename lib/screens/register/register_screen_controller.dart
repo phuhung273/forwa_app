@@ -74,7 +74,8 @@ class RegisterScreenController extends OtpController {
       onSuccess: () {
         hideDialog();
         phoneRegister();
-      }
+      },
+      previousRoute: ROUTE_REGISTER
     );
   }
 

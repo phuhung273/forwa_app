@@ -1,7 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'firebase_token.dart';
-
 part 'email_login_request.g.dart';
 
 @JsonSerializable()

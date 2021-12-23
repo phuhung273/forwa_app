@@ -59,6 +59,6 @@ class TakeScreenController extends BaseController {
 
     // TODO: show success popup
 
-    Get.offNamedUntil(ROUTE_MAIN, (route) => route.settings.name == ROUTE_MAIN);
+    Get.until((route) => route.settings.name == ROUTE_MAIN);
   }
 }

@@ -12,7 +12,6 @@ import 'package:forwa_app/widgets/input_field.dart';
 import 'package:forwa_app/widgets/keyboard_friendly_body.dart';
 import 'package:forwa_app/widgets/password_field.dart';
 import 'package:get/get.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import 'login_screen_controller.dart';
 
@@ -35,44 +34,55 @@ class LoginScreen extends GetView<LoginScreenController> {
     return SafeArea(
       child: Scaffold(
         body: KeyboardFriendlyBody(
-          child: Padding(
-            padding: const EdgeInsets.all(defaultPadding),
-            child: Form(
-              key: _formKey,
-              child: AutofillGroup(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Obx(() => Text(controller.result.value, style: theme.textTheme.subtitle1)),
-                    const SizedBox(height: defaultSpacing * 5),
-                    InputField(
-                      hintText: 'Email hoặc Số điện thoại',
-                      icon: Icons.person,
-                      controller: controller.usernameController,
-                      textCapitalization: TextCapitalization.none,
-                      validator: ValidationBuilder(requiredMessage: 'Vui lòng nhập tài khoản')
-                        .build(),
-                    ),
-                    PasswordField(
-                      controller: controller.passwordController,
-                      validator: ValidationBuilder(requiredMessage: 'Vui lòng nhập mật khẩu')
-                        .build()
-                    ),
-                    AppLevelActionContainer(
-                      child: ElevatedButton(
-                        onPressed: _validate,
-                        child: Text(
-                          'Đăng Nhập',
-                          style: theme.textTheme.button!.copyWith(
-                            letterSpacing: 1.1,
-                          ),
+          padding: const EdgeInsets.all(defaultPadding),
+          child: Form(
+            key: _formKey,
+            child: AutofillGroup(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Obx(() => Text(controller.result.value, style: theme.textTheme.subtitle1)),
+                  const SizedBox(height: defaultSpacing * 5),
+                  InputField(
+                    hintText: 'Email hoặc Số điện thoại',
+                    icon: Icons.person,
+                    controller: controller.usernameController,
+                    textCapitalization: TextCapitalization.none,
+                    validator: ValidationBuilder(requiredMessage: 'Vui lòng nhập tài khoản')
+                      .build(),
+                  ),
+                  PasswordField(
+                    controller: controller.passwordController,
+                    validator: ValidationBuilder(requiredMessage: 'Vui lòng nhập mật khẩu')
+                      .build()
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Get.toNamed(ROUTE_PASSWORD_FORGOT),
+                        child: const Text(
+                          'Quên mật khẩu?',
+                        )
+                      ),
+                    ],
+                  ),
+                  AppLevelActionContainer(
+                    child: ElevatedButton(
+                      onPressed: _validate,
+                      child: Text(
+                        'Đăng Nhập',
+                        style: theme.textTheme.button!.copyWith(
+                          letterSpacing: 1.1,
                         ),
                       ),
                     ),
-                    const Divider(),
-                    RichText(
+                  ),
+                  TextButton(
+                    onPressed: () => Get.toNamed(ROUTE_REGISTER),
+                    child: RichText(
                       text: TextSpan(
-                          text: 'Chưa có tài khoản? ',
+                        text: 'Chưa có tài khoản? ',
                         style: theme.textTheme.subtitle1,
                         children: [
                           TextSpan(
@@ -80,72 +90,69 @@ class LoginScreen extends GetView<LoginScreenController> {
                             style: TextStyle(
                               color: theme.colorScheme.secondary,
                             ),
-                            recognizer: TapGestureRecognizer()..onTap = ()
-                              => Get.toNamed(ROUTE_REGISTER)
-                            ,
                           ),
                         ]
                       ),
-                    ),
-                    AppLevelActionContainer(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Divider(
-                              thickness: 2.0,
-                              color: theme.colorScheme.surface,
-                            )
+                    )
+                  ),
+                  AppLevelActionContainer(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Divider(
+                            thickness: 2.0,
+                            color: theme.colorScheme.surface,
+                          )
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(defaultPadding),
+                          child: Text(
+                            'Hoặc',
+                            style: theme.textTheme.bodyText1,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(defaultPadding),
-                            child: Text(
-                              'Hoặc',
-                              style: theme.textTheme.bodyText1,
-                            ),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            thickness: 2.0,
+                            color: theme.colorScheme.surface,
+                          )
+                        ),
+                      ],
+                    )
+                  ),
+                  AppLevelActionContainer(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SocialButton(
+                          text: 'Google',
+                          icon: const FaIcon(
+                            FontAwesomeIcons.google,
+                            color: Color(0xffDF4A32),
                           ),
-                          Expanded(
-                            child: Divider(
-                              thickness: 2.0,
-                              color: theme.colorScheme.surface,
-                            )
+                          onTap: controller.googleLogin,
+                        ),
+                        SocialButton(
+                          text: 'Facebook',
+                          icon: const FaIcon(
+                            FontAwesomeIcons.facebook,
+                            color: Color(0xff39579A),
                           ),
-                        ],
-                      )
-                    ),
-                    AppLevelActionContainer(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
+                          onTap: controller.facebookLogin,
+                        ),
+                        if(Platform.isIOS)
                           SocialButton(
-                            text: 'Google',
+                            text: 'Apple',
                             icon: const FaIcon(
-                              FontAwesomeIcons.google,
-                              color: Color(0xffDF4A32),
+                              FontAwesomeIcons.apple,
+                              color: Color(0xff555555),
                             ),
-                            onTap: controller.googleLogin,
+                            onTap: controller.appleLogin,
                           ),
-                          SocialButton(
-                            text: 'Facebook',
-                            icon: const FaIcon(
-                              FontAwesomeIcons.facebook,
-                              color: Color(0xff39579A),
-                            ),
-                            onTap: controller.facebookLogin,
-                          ),
-                          if(Platform.isIOS)
-                            SocialButton(
-                              text: 'Apple',
-                              icon: const FaIcon(
-                                FontAwesomeIcons.apple,
-                                color: Color(0xff555555),
-                              ),
-                              onTap: controller.appleLogin,
-                            ),
-                        ],
-                      )
-                    ),
-                  ],
-                ),
+                      ],
+                    )
+                  ),
+                ],
               ),
             ),
           ),

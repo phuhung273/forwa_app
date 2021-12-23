@@ -6,7 +6,6 @@ import 'package:forwa_app/schema/report/user_report.dart';
 import 'package:forwa_app/schema/review/review.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/home/home_screen_controller.dart';
-import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:get/get.dart';
 
 class PublicProfileScreenBinding extends Bindings {

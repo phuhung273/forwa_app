@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forwa_app/widgets/app_container.dart';
-import 'package:forwa_app/widgets/app_level_action_container.dart';
 import 'package:forwa_app/widgets/body_with_persistent_bottom.dart';
 import 'package:forwa_app/widgets/rating.dart';
-import 'package:forwa_app/widgets/section_divider.dart';
-import 'package:forwa_app/widgets/text_field_container.dart';
 import 'package:get/get.dart';
 
 import 'take_screen_controller.dart';

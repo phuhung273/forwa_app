@@ -15,6 +15,10 @@ import 'package:forwa_app/screens/login/login_screen.dart';
 import 'package:forwa_app/screens/login/login_screen_controller.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
+import 'package:forwa_app/screens/password_forgot/password_forgot_screen.dart';
+import 'package:forwa_app/screens/password_forgot/password_forgot_screen_controller.dart';
+import 'package:forwa_app/screens/password_reset/password_reset_screen.dart';
+import 'package:forwa_app/screens/password_reset/password_reset_screen_controller.dart';
 import 'package:forwa_app/screens/product/product_screen.dart';
 import 'package:forwa_app/screens/product/product_screen_controller.dart';
 import 'package:forwa_app/screens/profile/profile_screen.dart';
@@ -38,6 +42,8 @@ const ROUTE_SPLASH = '/splash';
 const ROUTE_INTRODUCTION = '/introduction';
 const ROUTE_LOGIN = '/login';
 const ROUTE_REGISTER = '/register';
+const ROUTE_PASSWORD_FORGOT = '/password_forgot';
+const ROUTE_PASSWORD_RESET = '/password_reset';
 const ROUTE_PROFILE = '/profile';
 const ROUTE_PUBLIC_PROFILE = '/public_profile';
 const ROUTE_PROFILE_ADDRESS = '/profile_address';
@@ -59,6 +65,8 @@ var appRoute = [
   GetPage(name: ROUTE_MAIN, page: () => const MainScreen(), binding: MainScreenBinding()),
   GetPage(name: ROUTE_LOGIN, page: () => LoginScreen(), binding: LoginScreenBinding()),
   GetPage(name: ROUTE_REGISTER, page: () => RegisterScreen(), binding: RegisterScreenBinding()),
+  GetPage(name: ROUTE_PASSWORD_FORGOT, page: () => PasswordForgotScreen(), binding: PasswordForgotScreenBinding()),
+  GetPage(name: ROUTE_PASSWORD_RESET, page: () => PasswordResetScreen(), binding: PasswordResetScreenBinding()),
   GetPage(name: ROUTE_PRODUCT, page: () => const ProductScreen(), binding: ProductScreenBinding()),
   GetPage(name: ROUTE_GIVE, page: () => GiveScreen(), binding: GiveScreenBinding()),
   GetPage(name: ROUTE_TAKE, page: () => const TakeScreen(), binding: TakeScreenBinding()),

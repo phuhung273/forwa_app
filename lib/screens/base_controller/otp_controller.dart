@@ -10,6 +10,7 @@ class OtpController extends BaseController {
   Future verifyOtp({
     required String phone,
     required VoidCallback onSuccess,
+    required String previousRoute,
   }) {
     return FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: phone,
@@ -20,7 +21,8 @@ class OtpController extends BaseController {
           pageBuilder: (context, animation, secondaryAnimation) => FirebaseOtpScreen(
             phoneNumber: phone,
             verificationId: verificationId,
-            onSuccess: onSuccess
+            onSuccess: onSuccess,
+            previousRoute: previousRoute,
           )
         );
       },
