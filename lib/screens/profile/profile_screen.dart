@@ -1,10 +1,9 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:forwa_app/widgets/app_level_action_container.dart';
-import 'package:forwa_app/widgets/input_field.dart';
-import 'package:forwa_app/widgets/keyboard_friendly_body.dart';
 import 'package:get/get.dart';
 
 import 'profile_screen_controller.dart';
@@ -21,45 +20,42 @@ class ProfileScreen extends GetView<ProfileScreenController> {
 
     return SafeArea(
       child: Scaffold(
-        body: KeyboardFriendlyBody(
+        appBar: AppBar(
+          title: const Text('Tài khoản'),
+        ),
+        body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: defaultPadding),
           child: Column(
             children: [
               const ProfilePic(),
               const Divider(),
-              InputField(
-                hintText: 'Your Name',
-                icon: Icons.person,
-                controller: controller.nameController,
+              Obx(
+                () => Text(
+                  controller.fullname.value,
+                  style: theme.textTheme.headline6,
+                ),
               ),
-              InputField(
-                hintText: 'Your Email',
-                icon: Icons.email,
-                controller: controller.emailController,
-                textCapitalization: TextCapitalization.none,
-              ),
-              InputField(
-                hintText: 'Your Phone',
-                icon: Icons.smartphone,
-                controller: controller.phoneController,
-              ),
-              AppLevelActionContainer(
-                child: ElevatedButton.icon(
-                  onPressed: () {  },
-                  icon: const Icon(Icons.save),
-                  label: const Text('Lưu thay đổi'),
-                )
+              const Divider(),
+              ProfileAction(
+                icon: Icons.account_circle,
+                text: 'Hồ sơ',
+                onTap: () => Get.toNamed(ROUTE_PROFILE_EDIT),
               ),
               ProfileAction(
                 icon: Icons.home,
                 text: 'Địa chỉ',
                 onTap: () => Get.toNamed(ROUTE_PROFILE_ADDRESS),
               ),
-              // ProfileAction(
-              //   icon: Icons.lock,
-              //   text: 'Đổi mật khẩu',
-              //   onTap: () { },
-              // ),
+              ProfileAction(
+                icon: Icons.email,
+                text: 'Cập nhật email',
+                onTap: () { },
+              ),
+              ProfileAction(
+                icon: Icons.smartphone,
+                text: 'Cập nhật số điện thoại',
+                onTap: () { },
+              ),
               ProfileAction(
                 icon: Icons.logout,
                 text: 'Đăng xuất',
@@ -99,9 +95,7 @@ class ProfileAction extends StatelessWidget {
         ),
         title: Text(
           text,
-          style: theme.textTheme.headline6?.copyWith(
-            color: Colors.grey,
-          ),
+          style: theme.textTheme.subtitle1
         ),
         trailing: const Icon(Icons.arrow_forward_ios),
         onTap: onTap,
@@ -110,8 +104,9 @@ class ProfileAction extends StatelessWidget {
   }
 }
 
+const IMAGE_SIZE = 115.0;
 
-class ProfilePic extends StatelessWidget {
+class ProfilePic extends GetView<ProfileScreenController> {
   const ProfilePic({
     Key? key,
   }) : super(key: key);
@@ -119,46 +114,35 @@ class ProfilePic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final List<String> words = 'Tran Pham Phu Hung'.split(' ');
-    final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
 
     return SizedBox(
-      height: 115,
-      width: 115,
-      child: Stack(
-        fit: StackFit.expand,
-        clipBehavior: Clip.none,
-        children: [
-          CircleAvatar(
-            child: Text(
-              shortWords.map((e) => e[0]).join(),
-              style: theme.textTheme.headline6!.copyWith(
-                color: Colors.white,
-              ),
-            ),
-            backgroundColor: theme.colorScheme.secondary,
-          ),
-          Positioned(
-            right: -16,
-            bottom: 0,
-            child: SizedBox(
-              height: 46,
-              width: 46,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    side: const BorderSide(color: Colors.white),
-                  ),
-                  primary: Colors.grey,
-                  backgroundColor: const Color(0xFFF5F6F9),
+      height: IMAGE_SIZE,
+      width: IMAGE_SIZE,
+      child: Obx(
+        () {
+          if(controller.avatar.isEmpty){
+
+            final List<String> words = controller.fullname.split(' ');
+            final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
+
+            return CircleAvatar(
+              radius: IMAGE_SIZE,
+              child: Text(
+                shortWords.map((e) => e[0]).join(),
+                style: theme.textTheme.headline6!.copyWith(
+                  color: Colors.white,
                 ),
-                onPressed: () {},
-                child: const Icon(Icons.photo_camera),
               ),
-            ),
-          )
-        ],
+              backgroundColor: theme.colorScheme.secondary,
+            );
+          }
+
+          return ExtendedImage.network(
+            controller.avatar.value,
+            fit: BoxFit.cover,
+            shape: BoxShape.circle,
+          );
+        }
       ),
     );
   }

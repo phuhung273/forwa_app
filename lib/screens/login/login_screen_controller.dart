@@ -77,7 +77,7 @@ class LoginScreenController extends BaseController {
     final response = await _authRepo.emailLogin(request);
 
     hideDialog();
-    _processLoginResponse(response, emailOrPhone: email);
+    _processLoginResponse(response);
 
   }
 
@@ -102,7 +102,7 @@ class LoginScreenController extends BaseController {
     final response = await _authRepo.phoneLogin(request);
 
     hideDialog();
-    _processLoginResponse(response, emailOrPhone: phone);
+    _processLoginResponse(response);
 
   }
 
@@ -225,13 +225,12 @@ class LoginScreenController extends BaseController {
 
     hideDialog();
 
-    _processLoginResponse(response, emailOrPhone: email, avatar: avatar);
+    _processLoginResponse(response, avatar: avatar);
   }
 
   void _processLoginResponse(
       ApiResponse<LoginResponse> response,
       {
-        String? emailOrPhone,
         String? avatar
       }
   ) {
@@ -245,7 +244,6 @@ class LoginScreenController extends BaseController {
     final data = response.data;
 
     if(avatar != null) _localStorage.saveAvatarUrl(avatar);
-    if(emailOrPhone != null) _localStorage.saveUsername(emailOrPhone);
 
     _localStorage.saveAccessToken(data!.accessToken);
     _localStorage.saveUserID(data.userId);
@@ -253,7 +251,6 @@ class LoginScreenController extends BaseController {
     _mainController.refreshCredential();
 
     _chatController.fetch();
-    // Get.offAndToNamed(ROUTE_MAIN);
     Get.back();
   }
 

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:get/get.dart';
 
@@ -13,20 +12,18 @@ class ProfileScreenController extends GetxController {
 
   final LocalStorage _localStorage = Get.find();
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
+  final fullname = ''.obs;
+  final avatar = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
 
-    final name = _localStorage.getCustomerName() ?? '';
-    final email = _localStorage.getUsername() ?? '';
-    final phone = _localStorage.getPhone() ?? '';
+    refreshCredential();
+  }
 
-    nameController.text = name;
-    emailController.text = email;
-    phoneController.text = phone;
+  void refreshCredential(){
+    avatar.value = _localStorage.getAvatarUrl() ?? '';
+    fullname.value = _localStorage.getCustomerName() ?? '';
   }
 }

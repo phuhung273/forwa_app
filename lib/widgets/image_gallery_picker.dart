@@ -1,10 +1,8 @@
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:badges/badges.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:forwa_app/mixins/image_pick.dart';
 
 const BOX_WIDTH = 150.0;
 const METHOD_GALLERY = 'gallery';
@@ -23,8 +21,7 @@ class ImageGalleryPicker extends StatefulWidget {
   _ImageGalleryPickerState createState() => _ImageGalleryPickerState();
 }
 
-class _ImageGalleryPickerState extends State<ImageGalleryPicker> {
-  final ImagePicker _picker = ImagePicker();
+class _ImageGalleryPickerState extends State<ImageGalleryPicker> with ImagePick {
   final List<File> _files = [];
 
   @override
@@ -51,34 +48,7 @@ class _ImageGalleryPickerState extends State<ImageGalleryPicker> {
 
   Widget _buildAddMoreBtn(){
     return InkWell(
-      onTap: () async {
-        final result = await showModalActionSheet<String>(
-          context: context,
-          style: AdaptiveStyle.material,
-          actions: [
-            const SheetAction(
-              icon: Icons.photo_camera,
-              label: 'Chụp hình',
-              key: METHOD_CAMERA,
-            ),
-            const SheetAction(
-              icon: Icons.collections,
-              label: 'Chọn từ thư viện',
-              key: METHOD_GALLERY,
-              isDefaultAction: true,
-            ),
-          ],
-        );
-
-        XFile? image;
-        if(result == METHOD_GALLERY){
-          image = await _picker.pickImage(source: ImageSource.gallery);
-        } else if (result == METHOD_CAMERA){
-          image = await _picker.pickImage(source: ImageSource.camera);
-        }
-
-        _cropAndAdd(image);
-      },
+      onTap: _addFile,
       child: ItemBox(
         child: Container(
           decoration: const BoxDecoration(
@@ -93,39 +63,14 @@ class _ImageGalleryPickerState extends State<ImageGalleryPicker> {
     );
   }
 
-  Future _cropAndAdd(XFile? image) async{
+  Future _addFile() async{
+    final image = await pickAndCrop();
     if(image == null) return;
 
-    final croppedFile = await ImageCropper.cropImage(
-        sourcePath: image.path,
-        aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square,
-        ],
-        androidUiSettings: const AndroidUiSettings(
-          toolbarTitle: 'Cắt ảnh',
-          toolbarColor: Colors.deepOrange,
-          toolbarWidgetColor: Colors.white,
-          initAspectRatio: CropAspectRatioPreset.square,
-          lockAspectRatio: true,
-          hideBottomControls: true,
-        ),
-        iosUiSettings: const IOSUiSettings(
-          minimumAspectRatio: 1.0,
-          aspectRatioLockEnabled: true,
-          resetAspectRatioEnabled: false,
-          aspectRatioLockDimensionSwapEnabled: true,
-          aspectRatioPickerButtonHidden: true,
-          rotateButtonsHidden: true,
-          rotateClockwiseButtonHidden: true,
-        )
-    );
-
-    if(croppedFile == null) return;
     setState(() {
-      _files.add(croppedFile);
+      _files.add(image);
     });
-    widget.onPick?.call(croppedFile);
+    widget.onPick?.call(image);
   }
 }
 

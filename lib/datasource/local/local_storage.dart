@@ -4,10 +4,8 @@ import 'package:get_storage/get_storage.dart';
 const CHAT_SESSIONID_KEY = 'CHAT_SESSIONID_KEY';
 const ACCESSTOKEN_KEY = 'ACCESSTOKEN_KEY';
 const USERID_KEY = 'USERID_KEY';
-const USERNAME_KEY = 'USERNAME_KEY';
 const AVATAR_URL_KEY = 'AVATAR_URL_KEY';
 const DEVICENAME_KEY = 'DEVICENAME_KEY';
-const PHONE_KEY = 'PHONE_KEY';
 const CUSTOMER_NAME_KEY = 'CUSTOMER_NAME_KEY';
 const FIREBASE_TOKEN_KEY = 'FIREBASE_TOKEN_KEY';
 const AGREE_TERM_KEY = 'AGREE_TERM_KEY';
@@ -32,14 +30,6 @@ class LocalStorage {
     return box.read(ACCESSTOKEN_KEY);
   }
 
-  void saveUsername(String value){
-    box.write(USERNAME_KEY, value);
-  }
-
-  String? getUsername() {
-    return box.read(USERNAME_KEY);
-  }
-
   void saveUserID(int value){
     box.write(USERID_KEY, value);
   }
@@ -62,14 +52,6 @@ class LocalStorage {
 
   String? getAvatarUrl() {
     return box.read(AVATAR_URL_KEY);
-  }
-
-  void savePhone(String value){
-    box.write(PHONE_KEY, value);
-  }
-
-  String? getPhone() {
-    return box.read(PHONE_KEY);
   }
 
   void saveCustomerName(String value){
@@ -105,11 +87,9 @@ class LocalStorage {
   }
 
   void removeCredentials(){
-    box.remove(USERNAME_KEY);
     box.remove(USERID_KEY);
     box.remove(ACCESSTOKEN_KEY);
     box.remove(AVATAR_URL_KEY);
-    box.remove(PHONE_KEY);
     box.remove(CUSTOMER_NAME_KEY);
   }
 

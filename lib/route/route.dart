@@ -25,6 +25,8 @@ import 'package:forwa_app/screens/profile/profile_screen.dart';
 import 'package:forwa_app/screens/profile/profile_screen_controller.dart';
 import 'package:forwa_app/screens/profile_address/profile_address_screen.dart';
 import 'package:forwa_app/screens/profile_address/profile_address_screen_controller.dart';
+import 'package:forwa_app/screens/profile_edit/profile_edit_screen.dart';
+import 'package:forwa_app/screens/profile_edit/profile_edit_screen_controller.dart';
 import 'package:forwa_app/screens/public_profile/public_profile_screen.dart';
 import 'package:forwa_app/screens/public_profile/public_profile_screen_controller.dart';
 import 'package:forwa_app/screens/register/register_screen.dart';
@@ -47,6 +49,7 @@ const ROUTE_PASSWORD_RESET = '/password_reset';
 const ROUTE_PROFILE = '/profile';
 const ROUTE_PUBLIC_PROFILE = '/public_profile';
 const ROUTE_PROFILE_ADDRESS = '/profile_address';
+const ROUTE_PROFILE_EDIT = '/profile_edit';
 const ROUTE_EDIT_PROFILE_ADDRESS = '/edit_profile_address';
 const ROUTE_SELECT_ADDRESS = '/select_address';
 const ROUTE_MAIN = '/main';
@@ -71,6 +74,7 @@ var appRoute = [
   GetPage(name: ROUTE_GIVE, page: () => GiveScreen(), binding: GiveScreenBinding()),
   GetPage(name: ROUTE_TAKE, page: () => const TakeScreen(), binding: TakeScreenBinding()),
   GetPage(name: ROUTE_PROFILE, page: () => ProfileScreen(), binding: ProfileScreenBinding()),
+  GetPage(name: ROUTE_PROFILE_EDIT, page: () => const ProfileEditScreen(), binding: ProfileEditScreenBinding()),
   GetPage(name: ROUTE_PUBLIC_PROFILE, page: () => const PublicProfileScreen(), binding: PublicProfileScreenBinding()),
   GetPage(name: ROUTE_PROFILE_ADDRESS, page: () => const ProfileAddressScreen(), binding: ProfileAddressBinding()),
   GetPage(name: ROUTE_EDIT_PROFILE_ADDRESS, page: () => EditProfileAddressScreen(), binding: EditProfileAddressBinding()),
