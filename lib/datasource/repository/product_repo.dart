@@ -19,7 +19,8 @@ import 'package:http_parser/http_parser.dart';
 
 
 const errorCodeMap = {
-  'ADDRESS_009': 'Người dùng chưa có địa chỉ'
+  'ADDRESS_009': 'Người dùng chưa có địa chỉ',
+  'PRODUCT_001': 'Thiếu hình ảnh'
 };
 
 class ProductRepo extends BaseRepo {
@@ -166,5 +167,25 @@ class ProductRepo extends BaseRepo {
     //       );
     //     }
     // );
+  }
+
+  Future<ApiResponse<Product>> finishProduct(int id) async {
+    return _service.finishProduct(id).catchError((Object obj) {
+      // non-200 error goes here.
+      switch (obj.runtimeType) {
+        case DioError:
+          final res = (obj as DioError).response;
+          if(res == null || res.statusCode == HttpStatus.internalServerError) return ApiResponse<Product>.fromError();
+
+          final data = getErrorData(res);
+          final error = data['message'] ?? res.statusMessage;
+          print(error);
+          return ApiResponse<Product>.fromError(error: data['message'] ?? 'Lỗi không xác định');
+        default:
+          final error = obj.toString();
+          print(error);
+          return ApiResponse<Product>.fromError(error: error);
+      }
+    });
   }
 }

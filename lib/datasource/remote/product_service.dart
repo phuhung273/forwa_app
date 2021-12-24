@@ -24,4 +24,7 @@ abstract class ProductService {
 
   @GET('/user/showMyGiving')
   Future<ProductListResponse> getMyProducts();
+
+  @POST('/products/{id}/finish')
+  Future<ApiResponse<Product>> finishProduct(@Path('id') int id);
 }

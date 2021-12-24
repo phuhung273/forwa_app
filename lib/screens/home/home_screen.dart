@@ -61,12 +61,16 @@ class HomeScreen extends StatelessWidget {
                 // borderRadius: roundedRectangleBorderRadius,
               ),
               child: Obx(
-                () => Text(
-                  'Chào buổi sáng, ${_mainController.fullname.isNotEmpty ? _mainController.fullname : 'người lạ'}!',
-                  style: theme.textTheme.subtitle1?.copyWith(
-                    color: theme.colorScheme.secondary,
-                  ),
-                ),
+                () {
+                  final hour = _controller.now.hour;
+
+                  return Text(
+                    _buildGreeting(hour),
+                    style: theme.textTheme.subtitle1?.copyWith(
+                      color: theme.colorScheme.secondary,
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -123,6 +127,17 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  _buildGreeting(int hour){
+    var greeting = 'Chào buổi sáng,';
+    if(hour >= 11 && hour < 18){
+      greeting = 'Xin chào';
+    } else if(hour >= 18){
+      greeting = 'Buổi tối ấm cúng,';
+    }
+
+    return '$greeting ${_mainController.fullname.isNotEmpty ? _mainController.fullname : 'người lạ'}!';
   }
 }
 
@@ -264,7 +279,7 @@ class ProductCard extends GetView<HomeScreenController> {
                             right: 4.0,
                           ),
                           child: Text(
-                            'Mới lên',
+                            _buildTime(product),
                             textAlign: TextAlign.end,
                             style: theme.textTheme.bodyText1?.copyWith(
                                 // color: theme.colorScheme.secondaryVariant
@@ -292,5 +307,17 @@ class ProductCard extends GetView<HomeScreenController> {
         LatLng(here.latitude!, here.longitude!), product.location!) / 1000)
         .toStringAsFixed(1)
         : '';
+  }
+
+  String _buildTime(Product item){
+    final resultDuration = controller.now.difference(item.createdAt!);
+
+    if (resultDuration.inDays < 2) {
+      return 'Mới lên';
+    } else if (resultDuration.inDays < 30) {
+      return '${resultDuration.inDays} ngày trước';
+    }
+
+    return '${(resultDuration.inDays/30).floor()} tháng trước';
   }
 }

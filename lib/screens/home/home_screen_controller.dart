@@ -44,6 +44,8 @@ class HomeScreenController extends RefreshableController with Reportable{
 
   LocationData? here;
 
+  DateTime now = DateTime.now();
+
   @override
   Future onReady() async {
     super.onReady();
@@ -55,6 +57,7 @@ class HomeScreenController extends RefreshableController with Reportable{
 
   @override
   Future main() async {
+    now = DateTime.now();
     await _getHiddenProductIds();
     final request = ProductListRequest(hiddenUserIds: _hiddenUserIds);
     final response = await _productRepo.getProducts(request);

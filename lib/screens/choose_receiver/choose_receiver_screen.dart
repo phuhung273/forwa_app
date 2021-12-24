@@ -3,6 +3,7 @@ import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/public_profile/public_profile_screen_controller.dart';
+import 'package:forwa_app/widgets/app_level_action_container.dart';
 import 'package:forwa_app/widgets/rating.dart';
 import 'package:forwa_app/widgets/secondary_action_container.dart';
 import 'package:get/get.dart';
@@ -20,32 +21,39 @@ class ChooseReceiverScreen extends GetView<ChooseReceiverScreenController> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             'Chọn người nhận',
-            style: theme.textTheme.headline6?.copyWith(
-              color: theme.colorScheme.secondary,
-            ),
-          ),
-          iconTheme: IconThemeData(
-            color: theme.colorScheme.secondary,
           ),
         ),
-        body: Padding(
+        body: SingleChildScrollView(
           padding: const EdgeInsets.all(defaultPadding),
-          child: Obx(
-            () => ListView.separated(
-              itemCount: controller.orders.length,
-              itemBuilder: (context, index) {
-                final order = controller.orders[index];
+          child: Column(
+            children: [
+              Obx(
+                () => ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: controller.orders.length,
+                  itemBuilder: (context, index) {
+                    final order = controller.orders[index];
 
-                return ReceiverCard(
-                  order: order,
-                  onPick: () => controller.pickReceiver(order.id),
-                  onSuccess: () => controller.toSuccess(index),
-                );
-              },
-              separatorBuilder: (context, index) => const Divider(),
-            ),
+                    return ReceiverCard(
+                      order: order,
+                      onPick: () => controller.pickReceiver(order.id),
+                      onSuccess: () => controller.orderToSuccess(index),
+                    );
+                  },
+                  separatorBuilder: (context, index) => const Divider(),
+                ),
+              ),
+              const Divider(),
+              AppLevelActionContainer(
+                child: ElevatedButton(
+                  onPressed: controller.productToSuccess,
+                  child: const Text('Hoàn thành'),
+                )
+              )
+            ],
           ),
         ),
       ),
@@ -160,7 +168,7 @@ class ReceiverCard extends StatelessWidget {
       case OrderStatus.PROCESSING:
         return 'Chọn';
       case OrderStatus.SELECTED:
-        return 'Hoàn thành';
+        return 'Đánh giá';
       case OrderStatus.FINISH:
         return 'Đã giao';
       default:

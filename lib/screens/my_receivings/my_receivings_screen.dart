@@ -244,7 +244,7 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
                             ),
                             icon: const Icon(Icons.done),
                             onPressed: onTakeSuccess,
-                            label: const Text('Hoàn thành'),
+                            label: const Text('Đánh giá'),
                           )
                         ),
                       ),

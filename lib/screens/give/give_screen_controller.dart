@@ -86,12 +86,13 @@ class GiveScreenController extends BaseController {
   }
 
   Future submit() async {
-    if(_imageData.isEmpty){
-      // TODO: set error message
-      return;
-    }
 
     if(_userId == null) Get.offAndToNamed(ROUTE_LOGIN);
+
+    if(_imageData.isEmpty){
+      showErrorDialog(message: errorCodeMap['PRODUCT_001']!);
+      return;
+    }
 
     final products = [
       ProductAdd(
