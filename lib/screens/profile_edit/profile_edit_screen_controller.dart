@@ -88,6 +88,6 @@ class ProfileEditScreenController extends BaseController {
 
   setFileAvatar(File image){
     avatar = image;
-    useFileAvatar.value = true;
+    useFileAvatar.trigger(true);
   }
 }

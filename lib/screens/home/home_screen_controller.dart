@@ -59,7 +59,18 @@ class HomeScreenController extends RefreshableController with Reportable{
   Future main() async {
     now = DateTime.now();
     await _getHiddenProductIds();
-    final request = ProductListRequest(hiddenUserIds: _hiddenUserIds);
+    here = await _locationService.here();
+
+    if(here == null || here?.latitude == null || here?.longitude == null){
+      return;
+    }
+
+    final request = ProductListRequest(
+      hiddenUserIds: _hiddenUserIds,
+      latitude: here!.latitude!,
+      longitude: here!.longitude!,
+    );
+
     final response = await _productRepo.getProducts(request);
 
     if(!response.isSuccess || response.data == null){
