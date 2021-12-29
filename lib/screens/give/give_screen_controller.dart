@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dash_chat/dash_chat.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';

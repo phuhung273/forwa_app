@@ -2,6 +2,7 @@ import 'package:forwa_app/datasource/repository/review_repo.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/review/review.dart';
 import 'package:forwa_app/screens/base_controller/rating_controller.dart';
+import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 
@@ -19,6 +20,8 @@ const orderIdParam = 'order_id';
 class GiveSuccessScreenController extends RatingController {
 
   final ReviewRepo _reviewRepo = Get.find();
+
+  final ChooseReceiverScreenController _chooseReceiverController = Get.find();
 
   String? customerName;
   int? toId;
@@ -44,7 +47,7 @@ class GiveSuccessScreenController extends RatingController {
   }
 
   void submit() {
-    Get.offAndToNamed(ROUTE_MAIN);
+    Get.back();
   }
 
   @override
@@ -57,13 +60,13 @@ class GiveSuccessScreenController extends RatingController {
     );
 
     showLoadingDialog();
-    final response = await _reviewRepo.createReview(review);
+    final response = await _reviewRepo.createSellerReview(review);
     hideDialog();
 
     if(!response.isSuccess || response.data == null){
       return;
     }
 
-    hideDialog();
+    _chooseReceiverController.setSuccessReviewId(orderId!, response.data!.id!);
   }
 }

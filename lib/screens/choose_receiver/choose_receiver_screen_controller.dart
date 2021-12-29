@@ -4,6 +4,7 @@ import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
+import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/give_success/give_success_screen_controller.dart';
 import 'package:forwa_app/screens/my_givings/my_giving_screen_controller.dart';
@@ -28,6 +29,7 @@ class ChooseReceiverScreenController extends BaseController {
   final OrderRepo _orderRepo = Get.find();
 
   int? _productId;
+  final finish = true.obs;
 
   final orders = List<Order>.empty().obs;
 
@@ -38,6 +40,7 @@ class ChooseReceiverScreenController extends BaseController {
 
     final product = _myGivingsScreenController.products.firstWhere((element) => element.id == _productId);
     orders.assignAll(product.orders ?? []);
+    finish.value = product.status == ProductStatus.FINISH;
   }
 
   Future pickReceiver(int orderId) async {
@@ -122,7 +125,7 @@ class ChooseReceiverScreenController extends BaseController {
       ),
       buttons: [
         DialogButton(
-          child: Text(
+          child: const Text(
             'Hủy',
           ),
           onPressed: () => Get.back(),
@@ -148,10 +151,21 @@ class ChooseReceiverScreenController extends BaseController {
 
     hideDialog();
     if(!response.isSuccess || response.data == null){
+      final message = errorCodeMap[response.statusCode] ?? 'Lỗi không xác định';
+      showErrorDialog(message: message);
       return;
     }
 
     await showSuccessDialog(message: 'Thành công');
     Get.back();
+  }
+
+  void setSuccessReviewId(int orderId, int reviewId){
+    final index = orders.indexWhere((element) => element.id == orderId);
+
+    if(index > -1){
+      orders[index].sellerReviewId = reviewId;
+      orders.refresh();
+    }
   }
 }

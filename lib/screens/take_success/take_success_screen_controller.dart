@@ -1,7 +1,7 @@
 import 'package:forwa_app/datasource/repository/review_repo.dart';
-import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/review/review.dart';
 import 'package:forwa_app/screens/base_controller/rating_controller.dart';
+import 'package:forwa_app/screens/my_receivings/my_receivings_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 
@@ -20,9 +20,11 @@ class TakeSuccessScreenController extends RatingController {
 
   final ReviewRepo _reviewRepo = Get.find();
 
+  final MyReceivingsScreenController _myReceivingsController = Get.find();
+
   String? customerName;
   int? toId;
-  int? productId;
+  int? orderId;
 
   @override
   void onInit(){
@@ -30,7 +32,7 @@ class TakeSuccessScreenController extends RatingController {
 
     customerName = Get.parameters[customerNameParam];
     toId = int.tryParse(Get.parameters[toIdParam]!);
-    productId = int.tryParse(Get.parameters[orderIdParam]!);
+    orderId = int.tryParse(Get.parameters[orderIdParam]!);
   }
 
   @override
@@ -42,7 +44,7 @@ class TakeSuccessScreenController extends RatingController {
   }
 
   void submit() {
-    Get.offAndToNamed(ROUTE_MAIN);
+    Get.back();
   }
 
   @override
@@ -51,17 +53,17 @@ class TakeSuccessScreenController extends RatingController {
       message: ratingDialogResponse.comment,
       rating: ratingDialogResponse.rating.toInt(),
       toUserId: toId!,
-      orderId: productId!,
+      orderId: orderId!,
     );
 
     showLoadingDialog();
-    final response = await _reviewRepo.createReview(review);
+    final response = await _reviewRepo.createBuyerReview(review);
     hideDialog();
 
     if(!response.isSuccess || response.data == null){
       return;
     }
 
-    hideDialog();
+    _myReceivingsController.setSuccessReviewId(orderId!, response.data!.id!);
   }
 }

@@ -48,15 +48,31 @@ class ChooseReceiverScreen extends GetView<ChooseReceiverScreenController> {
               ),
               const Divider(),
               AppLevelActionContainer(
-                child: ElevatedButton(
-                  onPressed: controller.productToSuccess,
-                  child: const Text('Hoàn thành'),
-                )
+                clipBehavior: Clip.none,
+                child: _buildMainButton()
               )
             ],
           ),
         ),
       ),
+    );
+  }
+
+  _buildMainButton(){
+    return Obx(
+      () {
+        if(controller.finish.isFalse){
+          return OutlinedButton(
+            onPressed: controller.productToSuccess,
+            child: const Text('Hoàn thành'),
+          );
+        }
+
+        return const TextButton(
+          onPressed: null,
+          child: Text('Đã hoàn thành')
+        );
+      }
     );
   }
 }
@@ -133,7 +149,7 @@ class ReceiverCard extends StatelessWidget {
             ),
             const SizedBox(width: defaultPadding),
             SecondaryActionContainer(
-              child: _buildMainButton(order.statusType!),
+              child: _buildMainButton(order),
             ),
           ],
         )
@@ -141,38 +157,35 @@ class ReceiverCard extends StatelessWidget {
     );
   }
 
-  Widget _buildMainButton(OrderStatus status){
+  Widget _buildMainButton(Order item){
+    final status = item.statusType!;
+
     if(status == OrderStatus.PROCESSING){
       return ElevatedButton(
         onPressed: onPick,
-        child: Text(_buildMainButtonText(status)),
+        child: const Text('Chọn'),
       );
     } else if(status == OrderStatus.SELECTED){
-      return ElevatedButton(
-        onPressed: onSuccess,
-        style: ElevatedButton.styleFrom(
-          primary: Colors.green,
-        ),
-        child: Text(_buildMainButtonText(status)),
+
+      if(item.sellerReviewId == null){
+        return ElevatedButton(
+          onPressed: onSuccess,
+          style: ElevatedButton.styleFrom(
+            primary: Colors.green,
+          ),
+          child: const Text('Đánh giá'),
+        );
+      }
+
+      return const TextButton(
+        onPressed: null,
+        child: Text('Đã đánh giá'),
       );
     }
 
-    return TextButton(
+    return const TextButton(
       onPressed: null,
-      child: Text(_buildMainButtonText(status))
+      child: Text('')
     );
-  }
-
-  _buildMainButtonText(OrderStatus status){
-    switch(status){
-      case OrderStatus.PROCESSING:
-        return 'Chọn';
-      case OrderStatus.SELECTED:
-        return 'Đánh giá';
-      case OrderStatus.FINISH:
-        return 'Đã giao';
-      default:
-        return 'Chọn';
-    }
   }
 }

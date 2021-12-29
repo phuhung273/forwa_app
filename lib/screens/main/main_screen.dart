@@ -22,6 +22,7 @@ const CHAT_SCREEN_INDEX = 4;
 const HOME_SCREEN_INDEX = 0;
 const MY_GIVINGS_SCREEN_INDEX = 1;
 const MY_RECEIVINGS_SCREEN_INDEX = 2;
+const NOTIFICATION_SCREEN_INDEX = 3;
 
 class MainScreen extends StatefulWidget {
 
@@ -69,16 +70,17 @@ class MainScreenView extends GetView<MainScreenController> {
       ),
       child: SafeArea(
         child: Scaffold(
-          body: Obx(
-            () => PageTransitionSwitcher(
-              transitionBuilder: (child, primaryAnimation, secondaryAnimation)=>
-                FadeThroughTransition(
-                  animation: primaryAnimation,
-                  secondaryAnimation: secondaryAnimation,
-                  child: child,
-                ),
-              child:  _buildTab(controller.pageIndex.value),
-            ),
+          body: PageView(
+            controller: controller.pageController,
+            onPageChanged: controller.changeTab,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              HomeScreen(),
+              MyGivingsScreen(),
+              MyReceivingsScreen(),
+              NotificationScreen(),
+              ChatScreen(),
+            ],
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: controller.toGiveScreen,
@@ -90,28 +92,6 @@ class MainScreenView extends GetView<MainScreenController> {
       ),
       drawer: MyDrawer(),
     );
-  }
-
-  Widget _buildTab(int index){
-    switch(index){
-      case HOME_SCREEN_INDEX:
-        return HomeScreen();
-
-      case MY_GIVINGS_SCREEN_INDEX:
-        return MyGivingsScreen();
-
-      case MY_RECEIVINGS_SCREEN_INDEX:
-        return MyReceivingsScreen();
-
-      case 3:
-        return NotificationScreen();
-
-      case CHAT_SCREEN_INDEX:
-        return ChatScreen();
-
-      default:
-        return HomeScreen();
-    }
   }
 }
 
@@ -134,7 +114,7 @@ class MyBottomNavigationBar extends GetView<MainScreenController> {
         ],
         activeIndex: controller.pageIndex.value,
         gapLocation: GapLocation.center,
-        onTap: (index) => controller.changeTab(index),
+        onTap: controller.changeTab,
         backgroundColor: theme.primaryColor,
         activeColor: theme.colorScheme.secondary,
         inactiveColor: Colors.grey,
@@ -198,22 +178,22 @@ class MyDrawer extends GetView<MainScreenController> {
                   title: const Text('Tài Khoản'),
                 ),
                 ListTile(
-                  onTap: () { },
+                  onTap: () => controller.changeTab(MY_GIVINGS_SCREEN_INDEX),
                   leading: const Icon(Icons.volunteer_activism),
                   title: const Text('Danh Sách Cho Đi'),
                 ),
                 ListTile(
-                  onTap: () { },
+                  onTap: () => controller.changeTab(MY_RECEIVINGS_SCREEN_INDEX),
                   leading: const Icon(Icons.card_giftcard),
                   title: const Text('Danh Sách Nhận'),
                 ),
                 ListTile(
-                  onTap: () { },
+                  onTap: () => controller.changeTab(CHAT_SCREEN_INDEX),
                   leading: const Icon(Icons.textsms),
                   title: const Text('Tin nhắn'),
                 ),
                 ListTile(
-                  onTap: () { },
+                  onTap: () => controller.changeTab(NOTIFICATION_SCREEN_INDEX),
                   leading: const Icon(Icons.notifications),
                   title: const Text('Thông Báo'),
                 ),

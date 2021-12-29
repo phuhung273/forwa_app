@@ -4,59 +4,91 @@ import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/chat/chat.dart';
 import 'package:forwa_app/schema/chat/chat_socket_message.dart';
 import 'package:forwa_app/screens/chat/chat_screen_controller.dart';
+import 'package:forwa_app/screens/main/main_screen.dart';
+import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:get/get.dart';
 
 import 'chat_card.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
+
+
+  ChatScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen>
+    with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
 
   final ChatScreenController _controller = Get.put(ChatScreenController());
 
-  ChatScreen({Key? key}) : super(key: key);
+  final MainScreenController _mainController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return RefreshIndicator(
-      onRefresh: _controller.main,
-      color: theme.colorScheme.secondary,
-      child: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            floating: true,
-            title: const Text('Tin nhắn'),
-            leading: IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: (){},
+    return WillPopScope(
+      onWillPop: () async {
+        _mainController.changeTab(HOME_SCREEN_INDEX);
+        return false;
+      },
+      child: RefreshIndicator(
+        onRefresh: _controller.main,
+        color: theme.colorScheme.secondary,
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              floating: true,
+              title: const Text('Tin nhắn'),
+              leading: Container(
+                margin: const EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.menu,
+                    color: theme.colorScheme.secondary,
+                  ),
+                  iconSize: 20.0,
+                  onPressed: () => _mainController.openDrawer(),
+                ),
+              ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[600],
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                      child: const Text(
-                        'Tin nhắn gần đây',
-                        style: TextStyle(
-                            color: Colors.white
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[600],
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                        child: const Text(
+                          'Tin nhắn gần đây',
+                          style: TextStyle(
+                              color: Colors.white
+                          ),
                         ),
                       ),
-                    ),
-                  ]
-                ),
-              ]
+                    ]
+                  ),
+                ]
+              ),
             ),
-          ),
-          _buildRecentMessages()
-        ],
+            _buildRecentMessages()
+          ],
+        ),
       ),
     );
   }

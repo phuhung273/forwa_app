@@ -4,18 +4,31 @@ import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
+import 'package:forwa_app/screens/components/appbar_chat_action.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:get/get.dart';
 
 import 'my_giving_screen_controller.dart';
 
-class MyGivingsScreen extends StatelessWidget {
+class MyGivingsScreen extends StatefulWidget {
 
-  final MyGivingsScreenController _controller = Get.put(MyGivingsScreenController());
-  final MainScreenController _mainController = Get.find();
 
   MyGivingsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<MyGivingsScreen> createState() => _MyGivingsScreenState();
+}
+
+class _MyGivingsScreenState extends State<MyGivingsScreen>
+    with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
+
+  final MyGivingsScreenController _controller = Get.put(MyGivingsScreenController());
+
+  final MainScreenController _mainController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -53,21 +66,7 @@ class MyGivingsScreen extends StatelessWidget {
                     ),
                   ),
                   actions: [
-                    Container(
-                      margin: const EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.textsms,
-                          color: theme.colorScheme.secondary,
-                        ),
-                        iconSize: 20.0,
-                        onPressed: () => _mainController.changeTab(CHAT_SCREEN_INDEX),
-                      ),
-                    )
+                    AppBarChatAction()
                   ],
                 ),
                 SliverToBoxAdapter(
@@ -108,12 +107,7 @@ class MyGivingsScreen extends StatelessWidget {
                             itemBuilder: (context, index) {
                               final product = _controller.products[index];
                               return InkWell(
-                                onTap: () => Get.toNamed(
-                                  ROUTE_CHOOSE_RECEIVER,
-                                  parameters: {
-                                    productIdParam: product.id.toString(),
-                                  }
-                                ),
+                                onTap: () => _buildOnTapCard(product),
                                 child: GivingItem(
                                   product: product
                                 ),
@@ -131,6 +125,17 @@ class MyGivingsScreen extends StatelessWidget {
         )
       ),
     );
+  }
+
+  Future? _buildOnTapCard(Product product){
+    if(product.orders!.isNotEmpty){
+      return Get.toNamed(
+          ROUTE_CHOOSE_RECEIVER,
+          parameters: {
+            productIdParam: product.id.toString(),
+          }
+      );
+    }
   }
 }
 
@@ -213,17 +218,82 @@ class GivingItem extends StatelessWidget {
                           ),
                         ),
                       ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: StatusChip(status: product.status!),
+                    ),
                   ],
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              child: Icon(Icons.arrow_forward_ios),
-            ),
+            if(product.orders!.isNotEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                child: Icon(Icons.arrow_forward_ios),
+              ),
           ],
         ),
       ),
     );
+  }
+}
+
+class StatusChip extends StatelessWidget {
+  final ProductStatus status;
+  const StatusChip({
+    Key? key,
+    required this.status,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Chip(
+      backgroundColor: _buildColor(status),
+      avatar: Icon(
+        _buildIcon(status),
+        color: Colors.white,
+      ),
+      label: Text(
+        _buildMessage(status),
+        style: theme.textTheme.bodyText1?.copyWith(
+            color: Colors.white
+        ),
+      ),
+    );
+  }
+
+  IconData _buildIcon(ProductStatus status){
+    switch(status){
+      case ProductStatus.PROCESSING:
+        return Icons.pending;
+      case ProductStatus.FINISH:
+        return Icons.done;
+      default:
+        return Icons.pending;
+    }
+  }
+
+  _buildColor(ProductStatus status){
+    switch(status){
+      case ProductStatus.PROCESSING:
+        return Colors.blueGrey;
+      case ProductStatus.FINISH:
+        return Colors.green;
+      default:
+        return Colors.blueGrey;
+    }
+  }
+
+  _buildMessage(ProductStatus status){
+    switch(status){
+      case ProductStatus.PROCESSING:
+        return 'Đang cho đi';
+      case ProductStatus.FINISH:
+        return 'Đã xong';
+      default:
+        return 'Đang cho đi';
+    }
   }
 }

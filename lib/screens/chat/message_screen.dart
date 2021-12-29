@@ -81,6 +81,7 @@ class MessageScreen extends GetView<ChatScreenController> {
               border: Border.all(width: 0.0),
               color: Colors.white,
             ),
+            inputCursorColor: Colors.black,
             trailing: <Widget>[
               IconButton(
                 icon: const Icon(Icons.photo),

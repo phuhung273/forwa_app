@@ -32,13 +32,31 @@ abstract class RatingController extends BaseController {
       ),
       commentHint: 'Nhập đánh giá',
       submitButtonText: 'Gửi',
-      onSubmitted: onRating,
+      onSubmitted: (ratingDialogResponse) async {
+        await onRating(ratingDialogResponse);
+        hideDialog();
+      },
     );
 
     // show the dialog
     showDialog(
       context: context,
-      builder: (context) => dialog,
+      builder: (context) => Theme(
+        data: theme.copyWith(
+          inputDecorationTheme: theme.inputDecorationTheme.copyWith(
+            border: const UnderlineInputBorder(),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: theme.colorScheme.secondary,
+              )
+            ),
+          ),
+          textSelectionTheme: theme.textSelectionTheme.copyWith(
+            cursorColor: Colors.black,
+          ),
+        ),
+        child: dialog
+      ),
     );
   }
 }

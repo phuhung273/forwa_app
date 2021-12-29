@@ -2,7 +2,6 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:forwa_app/route/route.dart';
-import 'package:forwa_app/schema/address/address.dart';
 import 'package:forwa_app/screens/address_select/address_select_screen_controller.dart';
 import 'package:forwa_app/screens/edit_profile_address/edit_profile_address_screen_controller.dart';
 import 'package:forwa_app/widgets/app_container.dart';
@@ -69,11 +68,6 @@ class GiveScreen extends GetView<GiveScreenController> {
                   validator: ValidationBuilder(requiredMessage: 'Vui lòng nhập mô tả')
                       .build(),
                 ),
-                // InputField(
-                //   hintText: 'Giờ có thể lấy',
-                //   icon: Icons.schedule,
-                //   controller: controller.address1Controller,
-                // ),
                 const Divider(),
                 AppLevelActionContainer(
                   child: TimeRange(

@@ -20,7 +20,8 @@ import 'package:http_parser/http_parser.dart';
 
 const errorCodeMap = {
   'ADDRESS_009': 'Người dùng chưa có địa chỉ',
-  'PRODUCT_001': 'Thiếu hình ảnh'
+  'PRODUCT_001': 'Thiếu hình ảnh',
+  'PRODUCT_002': 'Thao tác không hợp lệ',
 };
 
 class ProductRepo extends BaseRepo {

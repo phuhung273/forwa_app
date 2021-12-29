@@ -10,6 +10,9 @@ part 'review_service.g.dart';
 abstract class ReviewService {
   factory ReviewService(Dio dio, {String baseUrl}) = _ReviewService;
 
-  @POST('')
-  Future<ApiResponse<Review>> createReview(@Body() Review review);
+  @POST('/seller')
+  Future<ApiResponse<Review>> createSellerReview(@Body() Review review);
+
+  @POST('/buyer')
+  Future<ApiResponse<Review>> createBuyerReview(@Body() Review review);
 }

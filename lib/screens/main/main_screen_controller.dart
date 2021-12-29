@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
@@ -32,6 +33,8 @@ class MainScreenController extends BaseController {
 
   final drawerController = AdvancedDrawerController();
 
+  final pageController = PageController();
+
   var pageIndex = 0.obs;
 
   final avatar = ''.obs;
@@ -57,7 +60,9 @@ class MainScreenController extends BaseController {
   }
 
   void changeTab(int value) {
+    drawerController.hideDrawer();
     pageIndex.value = value;
+    pageController.jumpToPage(value);
   }
 
   void openDrawer(){

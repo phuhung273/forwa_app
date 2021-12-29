@@ -1,4 +1,5 @@
 
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:forwa_app/schema/address/address.dart';
 import 'package:forwa_app/schema/image/image.dart';
 import 'package:forwa_app/schema/order/order.dart';
@@ -8,6 +9,13 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:latlong2/latlong.dart';
 
 part 'product.g.dart';
+
+enum ProductStatus {
+  PROCESSING,
+  SELECTED,
+  FINISH,
+  CANCEL,
+}
 
 @JsonSerializable()
 class Product{
@@ -20,6 +28,9 @@ class Product{
 
   @JsonKey(name: 'sku')
   String sku;
+
+  @JsonKey(name: 'status')
+  String? statusString;
 
   @JsonKey(name: 'created_at')
   DateTime? createdAt;
@@ -98,4 +109,8 @@ class Product{
     if(detail?.dueDate == null) return null;
     return DateTime.parse(detail!.dueDate!);
   }
+
+  ProductStatus? get status => statusString != null
+      ? EnumToString.fromString(ProductStatus.values, statusString!.toUpperCase())
+      : null;
 }

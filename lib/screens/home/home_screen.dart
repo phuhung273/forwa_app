@@ -13,12 +13,24 @@ import 'package:latlong2/latlong.dart';
 
 import 'home_screen_controller.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
 
-  final HomeScreenController _controller = Get.put(HomeScreenController());
-  final MainScreenController _mainController = Get.find();
 
   HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
+
+  final HomeScreenController _controller = Get.put(HomeScreenController());
+
+  final MainScreenController _mainController = Get.find();
 
   @override
   Widget build(BuildContext context) {

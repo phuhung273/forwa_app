@@ -2,17 +2,30 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
+import 'package:forwa_app/screens/components/appbar_chat_action.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:forwa_app/screens/notification/notification_screen_controller.dart';
 import 'package:get/get.dart';
 
-class NotificationScreen extends StatelessWidget {
+class NotificationScreen extends StatefulWidget {
 
-  final _controller = Get.put(NotificationScreenController());
-  final MainScreenController _mainController = Get.find();
 
   NotificationScreen({Key? key}) : super(key: key);
+
+  @override
+  State<NotificationScreen> createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends State<NotificationScreen>
+    with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
+
+  final _controller = Get.put(NotificationScreenController());
+
+  final MainScreenController _mainController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -50,21 +63,7 @@ class NotificationScreen extends StatelessWidget {
                       ),
                     ),
                     actions: [
-                      Container(
-                        margin: const EdgeInsets.all(10.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.textsms,
-                            color: theme.colorScheme.secondary,
-                          ),
-                          iconSize: 20.0,
-                          onPressed: () => _mainController.changeTab(CHAT_SCREEN_INDEX),
-                        ),
-                      )
+                      AppBarChatAction(),
                     ],
                   ),
                   SliverToBoxAdapter(

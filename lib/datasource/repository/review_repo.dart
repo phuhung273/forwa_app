@@ -11,8 +11,28 @@ class ReviewRepo extends BaseRepo{
 
   final ReviewService _service = Get.find();
 
-  Future<ApiResponse<Review>> createReview(Review review) async {
-    return _service.createReview(review).catchError((Object obj) {
+  Future<ApiResponse<Review>> createSellerReview(Review review) async {
+    return _service.createSellerReview(review).catchError((Object obj) {
+      // non-200 error goes here.
+      switch (obj.runtimeType) {
+        case DioError:
+          final res = (obj as DioError).response;
+          if(res == null || res.statusCode == HttpStatus.internalServerError) return ApiResponse<Review>.fromError();
+
+          final data = getErrorData(res);
+          final error = data['message'] ?? res.statusMessage;
+          print(error);
+          return ApiResponse<Review>.fromError(error: data['message'] ?? 'Lỗi không xác định');
+        default:
+          final error = obj.toString();
+          print(error);
+          return ApiResponse<Review>.fromError(error: error);
+      }
+    });
+  }
+
+  Future<ApiResponse<Review>> createBuyerReview(Review review) async {
+    return _service.createBuyerReview(review).catchError((Object obj) {
       // non-200 error goes here.
       switch (obj.runtimeType) {
         case DioError:

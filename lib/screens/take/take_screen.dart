@@ -60,17 +60,6 @@ class TakeScreen extends GetView<TakeScreenController> {
                     child: const PolicySection()
                 ),
               ),
-              // Container(
-              //   padding: const EdgeInsets.all(8.0),
-              //   child: Card(
-              //       clipBehavior: Clip.antiAlias,
-              //       elevation: 4.0,
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.circular(16.0),
-              //       ),
-              //       child: const SellerInfoSection()
-              //   ),
-              // ),
               const SellerInfoSection(),
               Container(
                 padding: const EdgeInsets.symmetric(
@@ -103,6 +92,7 @@ class TakeScreen extends GetView<TakeScreenController> {
                     hintText: 'Soạn lời nhắn cho $name',
                     hintStyle: theme.textTheme.bodyText1,
                   ),
+                  cursorColor: Colors.black,
                 ),
               ),
             ],

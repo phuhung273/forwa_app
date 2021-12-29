@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
+import 'package:forwa_app/screens/components/appbar_chat_action.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:forwa_app/screens/public_profile/public_profile_screen_controller.dart';
@@ -13,12 +14,24 @@ import 'package:latlong2/latlong.dart';
 
 import 'my_receivings_screen_controller.dart';
 
-class MyReceivingsScreen extends StatelessWidget {
+class MyReceivingsScreen extends StatefulWidget {
 
-  final MyReceivingsScreenController _controller = Get.put(MyReceivingsScreenController());
-  final MainScreenController _mainController = Get.find();
 
   MyReceivingsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<MyReceivingsScreen> createState() => _MyReceivingsScreenState();
+}
+
+class _MyReceivingsScreenState extends State<MyReceivingsScreen>
+    with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
+
+  final MyReceivingsScreenController _controller = Get.put(MyReceivingsScreenController());
+
+  final MainScreenController _mainController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -56,21 +69,7 @@ class MyReceivingsScreen extends StatelessWidget {
                     ),
                   ),
                   actions: [
-                    Container(
-                      margin: const EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.textsms,
-                          color: theme.colorScheme.secondary,
-                        ),
-                        iconSize: 20.0,
-                        onPressed: () => _mainController.changeTab(CHAT_SCREEN_INDEX),
-                      ),
-                    )
+                    AppBarChatAction(),
                   ],
                 ),
                 SliverToBoxAdapter(
@@ -223,9 +222,9 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
-                      child: StatusChip(status: order.statusType!),
+                      child: StatusChip(order: order),
                     ),
-                    if(order.statusType == OrderStatus.SELECTED)
+                    if(order.statusType == OrderStatus.SELECTED && order.buyerReviewId == null)
                       Center(
                         child: SecondaryActionContainer(
                           child: ElevatedButton.icon(
@@ -236,18 +235,7 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
                         ),
                       ),
                     if(order.statusType == OrderStatus.SELECTED)
-                      Center(
-                        child: SecondaryActionContainer(
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.green,
-                            ),
-                            icon: const Icon(Icons.done),
-                            onPressed: onTakeSuccess,
-                            label: const Text('Đánh giá'),
-                          )
-                        ),
-                      ),
+                      _buildMainButton()
                   ],
                 ),
               ),
@@ -256,6 +244,25 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
         ),
       ),
     );
+  }
+
+  Widget _buildMainButton(){
+    if(order.buyerReviewId == null) {
+      return Center(
+        child: SecondaryActionContainer(
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.green,
+              ),
+              icon: const Icon(Icons.done),
+              onPressed: onTakeSuccess,
+              label: const Text('Đánh giá'),
+            )
+        ),
+      );
+    }
+
+    return const SizedBox();
   }
 
   String _buildDistance() {
@@ -269,10 +276,10 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
 }
 
 class StatusChip extends StatelessWidget {
-  final OrderStatus status;
+  final Order order;
   const StatusChip({
     Key? key,
-    required this.status,
+    required this.order,
   }) : super(key: key);
 
   @override
@@ -280,13 +287,13 @@ class StatusChip extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Chip(
-      backgroundColor: _buildColor(status),
+      backgroundColor: _buildColor(order),
       avatar: Icon(
-        _buildIcon(status),
+        _buildIcon(order),
         color: Colors.white,
       ),
       label: Text(
-        _buildMessage(status),
+        _buildMessage(order),
         style: theme.textTheme.bodyText1?.copyWith(
             color: Colors.white
         ),
@@ -294,46 +301,49 @@ class StatusChip extends StatelessWidget {
     );
   }
 
-  IconData _buildIcon(OrderStatus status){
+  IconData _buildIcon(Order item){
+    final status = item.statusType;
     switch(status){
       case OrderStatus.PROCESSING:
         return Icons.pending;
       case OrderStatus.SELECTED:
-        return Icons.pending;
-      case OrderStatus.FINISH:
+        if(item.buyerReviewId == null){
+          return Icons.pending;
+        }
         return Icons.done;
-      case OrderStatus.CANCEL:
-        return Icons.close;
       default:
         return Icons.pending;
     }
   }
 
-  _buildColor(OrderStatus status){
+  _buildColor(Order item){
+    final status = item.statusType;
+
     switch(status){
       case OrderStatus.PROCESSING:
         return Colors.blueGrey;
       case OrderStatus.SELECTED:
-        return Colors.amber;
-      case OrderStatus.FINISH:
+        if(item.buyerReviewId == null){
+          return Colors.amber;
+        }
         return Colors.green;
-      case OrderStatus.CANCEL:
-        return Colors.black;
       default:
         return Colors.blueGrey;
     }
   }
 
-  _buildMessage(OrderStatus status){
+  _buildMessage(Order item){
+    final status = item.statusType;
     switch(status){
       case OrderStatus.PROCESSING:
         return 'Chờ xác nhận';
+
       case OrderStatus.SELECTED:
-        return 'Hãy tới lấy';
-      case OrderStatus.FINISH:
-        return 'Đã nhận';
-      case OrderStatus.CANCEL:
-        return 'Đã hủy';
+        if(item.buyerReviewId == null){
+          return 'Hãy tới lấy';
+        }
+        return 'Đã đánh giá';
+
       default:
         return 'Chờ xác nhận';
     }
