@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
@@ -63,16 +62,19 @@ class PublicProfileScreen extends GetView<PublicProfileScreenController> {
                     ),
                   ),
                   const SizedBox(height: 16.0),
-                  CarouselSlider(
-                    options: CarouselOptions(
-                      enableInfiniteScroll: false,
-                      viewportFraction: 1.0,
-                    ),
-                    items: List<Widget>.generate(
-                      controller.reviews.length,
-                      (index) => ReviewItem(review: controller.reviews[index])
-                    ),
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: controller.reviews.length,
+                    itemBuilder: (context, index){
+                      final review = controller.reviews[index];
+                      return ReviewItem(
+                        review: review
+                      );
+                    },
+                    separatorBuilder: (context, index) => const Divider(),
                   ),
+                  const Divider(),
                 ],
               )
             )
@@ -171,7 +173,7 @@ class ItemCountBox extends GetView<PublicProfileScreenController> {
           ),
           Obx(
             () => Text(
-              controller.reviews.length.toString(),
+              controller.productsCount.string,
               style: theme.textTheme.subtitle1?.copyWith(
                   color: theme.colorScheme.secondary
               ),
@@ -191,34 +193,34 @@ class RatingBox extends GetView<PublicProfileScreenController> {
     final theme = Theme.of(context);
 
     return AchievementContainer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Rating(
-                  score: 1,
-                  color: theme.colorScheme.secondary,
-                ),
-                Obx(
-                  () => Text(
-                    controller.rating.value.toString(),
-                    style: theme.textTheme.subtitle1?.copyWith(
-                      color: theme.colorScheme.secondary
-                    ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Rating(
+                score: 1,
+                color: theme.colorScheme.secondary,
+              ),
+              Obx(
+                () => Text(
+                  controller.rating.value.toString(),
+                  style: theme.textTheme.subtitle1?.copyWith(
+                    color: theme.colorScheme.secondary
                   ),
                 ),
-              ],
-            ),
-            Text(
-              'Đánh giá',
-              style: theme.textTheme.subtitle1?.copyWith(
-                color: Colors.grey[500]
               ),
+            ],
+          ),
+          Text(
+            '${controller.reviews.length.toString()} đánh giá',
+            style: theme.textTheme.subtitle1?.copyWith(
+              color: Colors.grey[500]
             ),
-          ],
-        )
+          ),
+        ],
+      )
     );
   }
 }
@@ -245,7 +247,7 @@ class AchievementContainer extends StatelessWidget {
   }
 }
 
-const IMAGE_WIDTH = 150.0;
+const IMAGE_WIDTH = 120.0;
 const REVIEW_AVATAR_SIZE = 16.0;
 
 class ReviewItem extends StatelessWidget {
@@ -265,14 +267,20 @@ class ReviewItem extends StatelessWidget {
 
     return Row(
       children: [
-        ExtendedImage.network(
-          resolveUrl(imageUrl!, HOST_URL),
+        Container(
+          clipBehavior: Clip.hardEdge,
           width: IMAGE_WIDTH,
-          fit: BoxFit.cover,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: ExtendedImage.network(
+            resolveUrl(imageUrl!, HOST_URL),
+            fit: BoxFit.cover,
+          ),
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(left: 8.0),
+            padding: const EdgeInsets.only(left: 12.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

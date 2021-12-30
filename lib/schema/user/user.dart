@@ -28,6 +28,9 @@ class User {
   @JsonKey(name: 'image')
   Image? image;
 
+  @JsonKey(name: 'products_count')
+  int? productCount;
+
   User({
     this.id,
     this.email,
@@ -36,6 +39,7 @@ class User {
     this.reviews,
     this.rating,
     this.image,
+    this.productCount,
   });
 
   factory User.fromJson(Map<String, dynamic> json) =>

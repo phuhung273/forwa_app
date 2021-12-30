@@ -259,41 +259,51 @@ class ProductCard extends GetView<HomeScreenController> {
                         ),
                         subtitle: Rating(score: 5, size: 12.0),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 12.0),
-                        child: Text(
-                          product.name,
-                          style: theme.textTheme.bodyText1,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Text(
-                          'Cách ${_buildDistance()}km',
-                          style: theme.textTheme.bodyText1?.copyWith(
-                            color: theme.colorScheme.secondary
+                      Expanded(
+                        child: InkWell(
+                          onTap: () => Get.toNamed(ROUTE_PRODUCT, arguments: product.id),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 12.0),
+                                child: Text(
+                                  product.name,
+                                  style: theme.textTheme.bodyText1,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Text(
+                                  'Cách ${_buildDistance()}km',
+                                  style: theme.textTheme.bodyText1?.copyWith(
+                                      color: theme.colorScheme.secondary
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
+                              SizedBox(
+                                width: double.infinity,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    bottom: 4.0,
+                                    right: 4.0,
+                                  ),
+                                  child: Text(
+                                    _buildTime(product),
+                                    textAlign: TextAlign.end,
+                                    style: theme.textTheme.bodyText1?.copyWith(
+                                      // color: theme.colorScheme.secondaryVariant
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.grey[600]
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                         ),
                       ),
-                      const Spacer(),
-                      SizedBox(
-                        width: double.infinity,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: 4.0,
-                            right: 4.0,
-                          ),
-                          child: Text(
-                            _buildTime(product),
-                            textAlign: TextAlign.end,
-                            style: theme.textTheme.bodyText1?.copyWith(
-                                // color: theme.colorScheme.secondaryVariant
-                              fontStyle: FontStyle.italic,
-                              color: Colors.grey[600]
-                            ),
-                          ),
-                        ),
-                      )
                     ],
                   ),
                 ),
