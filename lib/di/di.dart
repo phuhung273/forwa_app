@@ -67,14 +67,11 @@ Future configureDependencies() async {
   Get.put(AppNotificationService(Get.find()));
   Get.put(AppNotificationRepo());
 
-  Get.put(ChatController());
-
   Get.put(GoogleSignIn());
   Get.put(LocationService());
   Get.put(const Distance());
   Get.put(FlutterLocalNotificationsPlugin());
   Get.put(NotificationService());
-  Get.put(FirebaseMessagingService());
 
 }
 

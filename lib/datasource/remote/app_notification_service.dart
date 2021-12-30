@@ -13,4 +13,7 @@ abstract class AppNotificationService {
 
   @GET('/')
   Future<ApiResponse<List<AppNotification>>> getMyNoti();
+
+  @GET('/me/read')
+  Future<ApiResponse<List<AppNotification>>> readMyNoti();
 }

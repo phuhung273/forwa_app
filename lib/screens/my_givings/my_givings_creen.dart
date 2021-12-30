@@ -32,6 +32,8 @@ class _MyGivingsScreenState extends State<MyGivingsScreen>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     final theme = Theme.of(context);
 
     return WillPopScope(

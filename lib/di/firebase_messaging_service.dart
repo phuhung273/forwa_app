@@ -1,5 +1,10 @@
+
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:forwa_app/di/notification_service.dart';
+import 'package:forwa_app/schema/app_notification/app_notification.dart';
+import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:get/get.dart';
 
@@ -9,6 +14,7 @@ class FirebaseMessagingService {
 
   final NotificationService _notificationService = Get.find();
   final ChatController _chatController = Get.find();
+  final AppNotificationController _appNotificationController = Get.find();
 
   void init() {
     _setup();
@@ -33,6 +39,14 @@ class FirebaseMessagingService {
       switch(data['type']){
         case MESSAGE_TYPE_CHAT:
           _chatController.unreadMessageCount.value++;
+          break;
+        case APP_NOTIFICATION_TYPE_PROCESSING:
+          final noti = AppNotification.fromJson(jsonDecode(data['data']));
+          _appNotificationController.increaseMyGiving(noti);
+          break;
+        case APP_NOTIFICATION_TYPE_SELECTED:
+          final noti = AppNotification.fromJson(jsonDecode(data['data']));
+          _appNotificationController.increaseMyReceiving(noti);
           break;
         default:
           break;

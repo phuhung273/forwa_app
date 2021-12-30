@@ -35,6 +35,8 @@ class _MyReceivingsScreenState extends State<MyReceivingsScreen>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     final theme = Theme.of(context);
 
     return WillPopScope(

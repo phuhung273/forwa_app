@@ -2,6 +2,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
+import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/components/appbar_chat_action.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
@@ -25,10 +26,14 @@ class _NotificationScreenState extends State<NotificationScreen>
 
   final _controller = Get.put(NotificationScreenController());
 
+  final AppNotificationController _appNotificationController = Get.find();
+
   final MainScreenController _mainController = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     final theme = Theme.of(context);
 
     return WillPopScope(
@@ -81,9 +86,9 @@ class _NotificationScreenState extends State<NotificationScreen>
                             () => ListView.separated(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              itemCount: _controller.notifications.length,
+                              itemCount: _appNotificationController.notifications.length,
                               itemBuilder: (context, index) {
-                                final item = _controller.notifications[index];
+                                final item = _appNotificationController.notifications[index];
                                 return NotificationItem(notification: item);
                               },
                               separatorBuilder: (context, index) => const SizedBox(height: 12.0),

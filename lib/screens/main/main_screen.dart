@@ -1,5 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:animations/animations.dart';
+import 'package:badges/badges.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
@@ -7,6 +8,7 @@ import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/di/firebase_messaging_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
+import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/chat/chat_screen.dart';
 import 'package:forwa_app/screens/home/home_screen.dart';
 import 'package:forwa_app/screens/my_givings/my_givings_creen.dart';
@@ -86,8 +88,8 @@ class MainScreenView extends GetView<MainScreenController> {
             onPressed: controller.toGiveScreen,
             child: const Icon(Icons.add),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          bottomNavigationBar: const MyBottomNavigationBar(),
+          floatingActionButtonLocation: FloatingActionButtonLocation.miniCenterFloat,
+          bottomNavigationBar: MyBottomNavigationBar(),
         ),
       ),
       drawer: MyDrawer(),
@@ -98,27 +100,83 @@ class MainScreenView extends GetView<MainScreenController> {
 
 class MyBottomNavigationBar extends GetView<MainScreenController> {
 
-  const MyBottomNavigationBar({Key? key}) : super(key: key);
+  final AppNotificationController _appNotificationController = Get.find();
+
+  MyBottomNavigationBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    // return Obx(
+    //   () => AnimatedBottomNavigationBar(
+    //     icons: const [
+    //       Icons.home_outlined,
+    //       Icons.volunteer_activism_outlined,
+    //       Icons.card_giftcard,
+    //       Icons.notifications_outlined,
+    //     ],
+    //     activeIndex: controller.pageIndex.value,
+    //     gapLocation: GapLocation.center,
+    //     onTap: controller.changeTab,
+    //     backgroundColor: theme.primaryColor,
+    //     activeColor: theme.colorScheme.secondary,
+    //     inactiveColor: Colors.grey,
+    //   )
+    // );
+
     return Obx(
-      () => AnimatedBottomNavigationBar(
-        icons: const [
-          Icons.home_outlined,
-          Icons.volunteer_activism_outlined,
-          Icons.card_giftcard,
-          Icons.notifications_outlined,
+      () => BottomNavigationBar(
+        items: [
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: '',
+          ),
+          _buildBottomNavigationCountItem(
+            _appNotificationController.myGivingCount.string,
+            Icons.volunteer_activism_outlined,
+          ),
+          _buildBottomNavigationCountItem(
+            _appNotificationController.myReceivingCount.string,
+            Icons.card_giftcard,
+          ),
+          _buildBottomNavigationCountItem(
+            _appNotificationController.notificationCount.string,
+            Icons.notifications_outlined,
+          )
         ],
-        activeIndex: controller.pageIndex.value,
-        gapLocation: GapLocation.center,
+        currentIndex: controller.pageIndex.value,
         onTap: controller.changeTab,
-        backgroundColor: theme.primaryColor,
-        activeColor: theme.colorScheme.secondary,
-        inactiveColor: Colors.grey,
+        selectedItemColor: theme.colorScheme.secondary,
+        unselectedItemColor: Colors.grey,
+        selectedLabelStyle: const TextStyle(fontSize: 0),
+        unselectedLabelStyle: const TextStyle(fontSize: 0),
       )
+    );
+  }
+
+  _buildBottomNavigationCountItem(String count, IconData icon){
+    final context = Get.context!;
+    final theme = Theme.of(context);
+
+    return BottomNavigationBarItem(
+      icon: count != '0'
+          ? Badge(
+            badgeContent: Text(
+              count,
+              style: theme.textTheme.bodyText1?.copyWith(
+                  color: theme.colorScheme.onSecondary
+              ),
+            ),
+            animationType: BadgeAnimationType.scale,
+            position: BadgePosition.topStart(
+              top: -10,
+              start: -20,
+            ),
+            child: Icon(icon)
+          )
+          : Icon(icon),
+      label: '',
     );
   }
 }

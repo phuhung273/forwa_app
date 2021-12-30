@@ -6,11 +6,22 @@ import '../product/product.dart';
 
 part 'app_notification.g.dart';
 
-enum AppNotificationType{
+enum AppNotificationType {
   PROCESSING,
   SELECTED,
   UPLOAD,
   CANCEL,
+}
+
+const APP_NOTIFICATION_TYPE_PROCESSING = 'processing';
+const APP_NOTIFICATION_TYPE_SELECTED = 'selected';
+const APP_NOTIFICATION_TYPE_UPLOAD = 'upload';
+const APP_NOTIFICATION_TYPE_CANCEL = 'cancel';
+
+enum AppNotificationStatus {
+  READ,
+  UNREAD,
+  CLICKED,
 }
 
 @JsonSerializable()
@@ -21,6 +32,9 @@ class AppNotification {
 
   @JsonKey(name: 'type')
   String typeString;
+
+  @JsonKey(name: 'status')
+  String statusString;
 
   @JsonKey(name: 'image')
   Image image;
@@ -37,6 +51,7 @@ class AppNotification {
     required this.image,
     required this.product,
     required this.createdAt,
+    required this.statusString,
   });
 
   factory AppNotification.fromJson(Map<String, dynamic> json) =>
@@ -45,4 +60,6 @@ class AppNotification {
   Map<String, dynamic> toJson() => _$AppNotificationToJson(this);
 
   AppNotificationType? get type => EnumToString.fromString(AppNotificationType.values, typeString.toUpperCase());
+
+  AppNotificationStatus? get status => EnumToString.fromString(AppNotificationStatus.values, statusString.toUpperCase());
 }

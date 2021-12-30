@@ -3,11 +3,14 @@ import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
+import 'package:forwa_app/di/firebase_messaging_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/auth/logout_request.dart';
 import 'package:forwa_app/screens/base_controller/address_controller.dart';
+import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
+import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/policy/policy_upload_screen.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -17,6 +20,9 @@ class MainScreenBinding extends Bindings {
   void dependencies() {
     Get.lazyPut(() => MainScreenController());
     Get.put(AddressController());
+    Get.put(AppNotificationController());
+    Get.put(ChatController());
+    Get.put(FirebaseMessagingService());
   }
 }
 
@@ -28,8 +34,9 @@ class MainScreenController extends BaseController {
 
   final AuthRepo _authRepo = Get.find();
 
-
   final ChatController _chatController = Get.find();
+
+  final AppNotificationController _appNotificationController = Get.find();
 
   final drawerController = AdvancedDrawerController();
 
@@ -63,6 +70,20 @@ class MainScreenController extends BaseController {
     drawerController.hideDrawer();
     pageIndex.value = value;
     pageController.jumpToPage(value);
+
+    switch(value){
+      case NOTIFICATION_SCREEN_INDEX:
+        _appNotificationController.readMyNotification();
+        break;
+      case MY_RECEIVINGS_SCREEN_INDEX:
+        _appNotificationController.readMyReceiving();
+        break;
+      case MY_GIVINGS_SCREEN_INDEX:
+        _appNotificationController.readMyGiving();
+        break;
+      default:
+        break;
+    }
   }
 
   void openDrawer(){
