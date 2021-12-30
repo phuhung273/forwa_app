@@ -1,6 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
+import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
@@ -176,7 +177,7 @@ class GivingItem extends StatelessWidget {
                 bottom: 8.0,
               ),
               child: ExtendedImage.network(
-                '$HOST_URL$imageUrl',
+                resolveUrl(imageUrl!, HOST_URL),
                 width: IMAGE_WIDTH,
                 fit: BoxFit.cover,
               ),

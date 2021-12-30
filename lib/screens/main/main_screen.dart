@@ -1,5 +1,4 @@
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:animations/animations.dart';
+
 import 'package:badges/badges.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
@@ -107,23 +106,6 @@ class MyBottomNavigationBar extends GetView<MainScreenController> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    // return Obx(
-    //   () => AnimatedBottomNavigationBar(
-    //     icons: const [
-    //       Icons.home_outlined,
-    //       Icons.volunteer_activism_outlined,
-    //       Icons.card_giftcard,
-    //       Icons.notifications_outlined,
-    //     ],
-    //     activeIndex: controller.pageIndex.value,
-    //     gapLocation: GapLocation.center,
-    //     onTap: controller.changeTab,
-    //     backgroundColor: theme.primaryColor,
-    //     activeColor: theme.colorScheme.secondary,
-    //     inactiveColor: Colors.grey,
-    //   )
-    // );
 
     return Obx(
       () => BottomNavigationBar(

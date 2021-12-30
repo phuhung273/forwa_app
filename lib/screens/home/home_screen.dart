@@ -1,6 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
+import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/mixins/reportable.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
@@ -156,6 +157,7 @@ class _HomeScreenState extends State<HomeScreen>
 }
 
 const IMAGE_WIDTH = 140.0;
+const AVATAR_SIZE = 16.0;
 const REPORT_PRODUCT_ID = 'product_id';
 const REPORT_USER_ID = 'user_id';
 
@@ -171,8 +173,6 @@ class ProductCard extends GetView<HomeScreenController> {
     final theme = Theme.of(context);
 
     final name = product.sellerName!;
-    final List<String> words = name.split(' ');
-    final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
 
     final imageUrl = product.firstImageUrl;
 
@@ -199,7 +199,7 @@ class ProductCard extends GetView<HomeScreenController> {
                   bottom: 4.0,
                 ),
                 child: ExtendedImage.network(
-                  '$HOST_URL$imageUrl',
+                  resolveUrl(imageUrl!, HOST_URL),
                   width: IMAGE_WIDTH,
                   fit: BoxFit.cover,
                 ),
@@ -248,16 +248,7 @@ class ProductCard extends GetView<HomeScreenController> {
                           userIdParam: product.user!.id.toString()
                           }
                         ),
-                        leading: CircleAvatar(
-                          radius: 16.0,
-                          backgroundColor: theme.colorScheme.secondary,
-                          child: Text(
-                            shortWords.map((e) => e[0]).join(),
-                            style: theme.textTheme.bodyText1!.copyWith(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+                        leading: _buildAvatar(),
                         title: Text(
                           // shortWords.join(' '),
                           name,
@@ -311,6 +302,34 @@ class ProductCard extends GetView<HomeScreenController> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildAvatar(){
+    final theme = Theme.of(Get.context!);
+    final name = product.sellerName!;
+    final List<String> words = name.split(' ');
+    final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
+
+    if(product.user?.imageUrl == null){
+      return CircleAvatar(
+        radius: AVATAR_SIZE,
+        backgroundColor: theme.colorScheme.secondary,
+        child: Text(
+          shortWords.map((e) => e[0]).join(),
+          style: theme.textTheme.bodyText1!.copyWith(
+            color: Colors.white,
+          ),
+        ),
+      );
+    }
+
+    return ExtendedImage.network(
+      resolveUrl(product.user!.imageUrl!, HOST_URL),
+      fit: BoxFit.cover,
+      shape: BoxShape.circle,
+      width: AVATAR_SIZE * 2,
+      height: AVATAR_SIZE * 2,
     );
   }
 

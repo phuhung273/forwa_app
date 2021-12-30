@@ -1,5 +1,7 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
+import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/public_profile/public_profile_screen_controller.dart';
@@ -77,6 +79,8 @@ class ChooseReceiverScreen extends GetView<ChooseReceiverScreenController> {
   }
 }
 
+const AVATAR_SIZE = 24.0;
+
 class ReceiverCard extends StatelessWidget {
   final Order order;
   final VoidCallback onPick;
@@ -92,24 +96,13 @@ class ReceiverCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final name = order.user!.name;
-    final List<String> words = name.split(' ');
-    final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
 
     return Column(
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
-              radius: 24.0,
-              backgroundColor: theme.colorScheme.secondary,
-              child: Text(
-                shortWords.map((e) => e[0]).join(),
-                style: theme.textTheme.subtitle1!.copyWith(
-                  color: Colors.white,
-                ),
-              ),
-            ),
+            _buildAvatar(),
             const SizedBox(width: defaultPadding),
             Expanded(
               child: Column(
@@ -154,6 +147,34 @@ class ReceiverCard extends StatelessWidget {
           ],
         )
       ],
+    );
+  }
+
+  Widget _buildAvatar(){
+    final theme = Theme.of(Get.context!);
+    final name = order.user!.name;
+    final List<String> words = name.split(' ');
+    final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
+
+    if(order.user?.imageUrl == null){
+      return CircleAvatar(
+        radius: AVATAR_SIZE,
+        backgroundColor: theme.colorScheme.secondary,
+        child: Text(
+          shortWords.map((e) => e[0]).join(),
+          style: theme.textTheme.subtitle1!.copyWith(
+            color: Colors.white,
+          ),
+        ),
+      );
+    }
+
+    return ExtendedImage.network(
+      resolveUrl(order.user!.imageUrl!, HOST_URL),
+      fit: BoxFit.cover,
+      shape: BoxShape.circle,
+      width: AVATAR_SIZE * 2,
+      height: AVATAR_SIZE * 2,
     );
   }
 

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
 import 'package:forwa_app/route/route.dart';
@@ -33,7 +34,7 @@ class SplashScreenController extends GetxController {
     final token = await FirebaseMessaging.instance.getToken();
 
     if(token != null) {
-      print('Firebase token: $token');
+      debugPrint('Firebase token: $token');
       final oldToken = _localStorage.getFirebaseToken();
       if(token != oldToken){
         _localStorage.removeCredentials();

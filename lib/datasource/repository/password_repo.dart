@@ -1,4 +1,5 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:forwa_app/datasource/remote/password_service.dart';
 import 'package:forwa_app/datasource/repository/base_repo.dart';
 import 'package:forwa_app/schema/api_response.dart';
@@ -36,11 +37,11 @@ class PasswordRepo extends BaseRepo {
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
-          print(error);
+          debugPrint(error);
           return ApiResponse.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
-          print(error);
+          debugPrint(error);
           return ApiResponse.fromError(error: error);
       }
     });
@@ -56,11 +57,11 @@ class PasswordRepo extends BaseRepo {
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
-          print(error);
+          debugPrint(error);
           return ApiResponse<ForgotPasswordPhoneResponse>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
-          print(error);
+          debugPrint(error);
           return ApiResponse<ForgotPasswordPhoneResponse>.fromError(error: error);
       }
     });
@@ -76,11 +77,11 @@ class PasswordRepo extends BaseRepo {
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
-          print(error);
+          debugPrint(error);
           return ApiResponse.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
-          print(error);
+          debugPrint(error);
           return ApiResponse.fromError(error: error);
       }
     });

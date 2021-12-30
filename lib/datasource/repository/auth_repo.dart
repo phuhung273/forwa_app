@@ -1,4 +1,5 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:forwa_app/datasource/remote/auth_service.dart';
 import 'package:forwa_app/datasource/repository/base_repo.dart';
 import 'package:forwa_app/schema/api_response.dart';
@@ -44,11 +45,11 @@ class AuthRepo extends BaseRepo{
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
-          print(error);
+          debugPrint(error);
           return ApiResponse<LoginResponse>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
-          print(error);
+          debugPrint(error);
           return ApiResponse<LoginResponse>.fromError(error: error);
       }
     });
@@ -64,11 +65,11 @@ class AuthRepo extends BaseRepo{
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
-          print(error);
+          debugPrint(error);
           return ApiResponse<LoginResponse>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
-          print(error);
+          debugPrint(error);
           return ApiResponse<LoginResponse>.fromError(error: error);
       }
     });
@@ -84,11 +85,11 @@ class AuthRepo extends BaseRepo{
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
-          print(error);
+          debugPrint(error);
           return ApiResponse<LoginResponse>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
-          print(error);
+          debugPrint(error);
           return ApiResponse<LoginResponse>.fromError(error: error);
       }
     });
@@ -104,11 +105,11 @@ class AuthRepo extends BaseRepo{
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
-          print(error);
+          debugPrint(error);
           return ApiResponse<LoginResponse>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
-          print(error);
+          debugPrint(error);
           return ApiResponse<LoginResponse>.fromError(error: error);
       }
     });
@@ -124,11 +125,11 @@ class AuthRepo extends BaseRepo{
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
-          print(error);
+          debugPrint(error);
           return ApiResponse<String>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
-          print(error);
+          debugPrint(error);
           return ApiResponse<String>.fromError(error: error);
       }
     });
@@ -144,11 +145,11 @@ class AuthRepo extends BaseRepo{
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
-          print(error);
+          debugPrint(error);
           return ApiResponse<String>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
-          print(error);
+          debugPrint(error);
           return ApiResponse<String>.fromError(error: error);
       }
     });
@@ -166,11 +167,11 @@ class AuthRepo extends BaseRepo{
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
-          print(error);
+          debugPrint(error);
           return ApiResponse<String>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
-          print(error);
+          debugPrint(error);
           return ApiResponse<String>.fromError(error: error);
       }
     });
@@ -186,11 +187,11 @@ class AuthRepo extends BaseRepo{
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
-          print(error);
+          debugPrint(error);
           return ApiResponse<RefreshTokenResponse>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
-          print(error);
+          debugPrint(error);
           return ApiResponse<RefreshTokenResponse>.fromError(error: error);
       }
     });

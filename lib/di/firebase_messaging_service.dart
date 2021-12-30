@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
@@ -66,11 +67,11 @@ class FirebaseMessagingService {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
+      debugPrint('User granted permission');
     } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-      print('User granted provisional permission');
+      debugPrint('User granted provisional permission');
     } else {
-      print('User declined or has not accepted permission');
+      debugPrint('User declined or has not accepted permission');
     }
 
     // /// Update the iOS foreground notification presentation options to allow
@@ -83,22 +84,22 @@ class FirebaseMessagingService {
     // );
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-      print(message.data);
+      debugPrint('A new onMessageOpenedApp event was published!');
+      debugPrint(message.data.toString());
     });
 
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage? message) {
       if (message != null) {
-        print('An initial message event was published!');
+        debugPrint('An initial message event was published!');
       }
     });
   }
 }
 
 Future firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Handling a background message ${message.messageId}');
+  debugPrint('Handling a background message ${message.messageId}');
   // message.data
 }
 

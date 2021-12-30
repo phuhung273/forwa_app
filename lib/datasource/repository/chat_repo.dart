@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:forwa_app/datasource/remote/chat_api_service.dart';
 import 'package:forwa_app/schema/api_response.dart';
 import 'package:forwa_app/schema/chat/chat_unread_response.dart';
@@ -22,12 +23,12 @@ class ChatRepo extends BaseRepo {
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
-          print(error);
+          debugPrint(error);
           return ApiResponse<ChatUnreadResponse>.fromError(
               error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
-          print(error);
+          debugPrint(error);
           return ApiResponse<ChatUnreadResponse>.fromError(error: error);
       }
     });

@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_controller.dart';
+import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/di/location_service.dart';
@@ -38,6 +39,7 @@ class ProductScreenController extends BaseController {
   final pickupTime = ''.obs;
   final dueDate = ''.obs;
   final enabled = false.obs;
+  final avatar = ''.obs;
   LocationData? here;
 
   set page(int index) => current.value = index;
@@ -65,7 +67,7 @@ class ProductScreenController extends BaseController {
     }
     final product = response.data!;
 
-    images.assignAll(product.images!.map((e) => resolveUrl(e.url)));
+    images.assignAll(product.images!.map((e) => resolveUrl(e.url, HOST_URL)));
     name.value = product.name;
     sellerName.value = product.sellerName!;
     description.value = product.description!;
@@ -78,6 +80,7 @@ class ProductScreenController extends BaseController {
         ? DateFormat('dd-MM-yyyy').format(product.dueDate!)
         : '';
     userId = product.user?.id;
+    avatar.value = product.user?.imageUrl ?? '';
   }
 
   void toTakeScreen(){

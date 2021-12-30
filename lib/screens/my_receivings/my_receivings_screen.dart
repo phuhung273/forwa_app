@@ -1,6 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
+import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/components/appbar_chat_action.dart';
@@ -15,7 +16,6 @@ import 'package:latlong2/latlong.dart';
 import 'my_receivings_screen_controller.dart';
 
 class MyReceivingsScreen extends StatefulWidget {
-
 
   MyReceivingsScreen({Key? key}) : super(key: key);
 
@@ -115,6 +115,7 @@ class _MyReceivingsScreenState extends State<MyReceivingsScreen>
 }
 
 const IMAGE_WIDTH = 150.0;
+const AVATAR_SIZE = 16.0;
 
 class ReceivingCard extends GetView<MyReceivingsScreenController> {
   final Order order;
@@ -133,8 +134,6 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
     final theme = Theme.of(context);
     final item = order.product;
     final name = order.sellerName ?? 'Không tên';
-    final List<String> words = name.split(' ');
-    final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
     final imageUrl = order.firstImageUrl;
 
     return Padding(
@@ -158,7 +157,7 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
                 bottom: 8.0,
               ),
               child: ExtendedImage.network(
-                '$HOST_URL$imageUrl',
+                resolveUrl(imageUrl!, HOST_URL),
                 width: IMAGE_WIDTH,
                 fit: BoxFit.cover,
               ),
@@ -186,16 +185,7 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
                             userIdParam: order.product!.user!.id.toString()
                           }
                       ),
-                      leading: CircleAvatar(
-                        radius: 16.0,
-                        backgroundColor: theme.colorScheme.secondary,
-                        child: Text(
-                          shortWords.map((e) => e[0]).join(),
-                          style: theme.textTheme.bodyText1!.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                      leading: _buildAvatar(),
                       title: Text(
                         // shortWords.join(' '),
                         name,
@@ -245,6 +235,34 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildAvatar(){
+    final theme = Theme.of(Get.context!);
+    final name = order.sellerName ?? 'Không tên';
+    final List<String> words = name.split(' ');
+    final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
+
+    if(order.product?.user?.imageUrl == null){
+      return CircleAvatar(
+        radius: AVATAR_SIZE,
+        backgroundColor: theme.colorScheme.secondary,
+        child: Text(
+          shortWords.map((e) => e[0]).join(),
+          style: theme.textTheme.bodyText1!.copyWith(
+            color: Colors.white,
+          ),
+        ),
+      );
+    }
+
+    return ExtendedImage.network(
+      resolveUrl(order.product!.user!.imageUrl!, HOST_URL),
+      fit: BoxFit.cover,
+      shape: BoxShape.circle,
+      width: AVATAR_SIZE * 2,
+      height: AVATAR_SIZE * 2,
     );
   }
 

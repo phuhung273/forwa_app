@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:forwa_app/constants.dart';
+import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/screens/public_profile/public_profile_screen_controller.dart';
 import 'package:forwa_app/widgets/app_container.dart';
@@ -112,29 +113,6 @@ class ProductRender extends GetView<ProductScreenController> {
               child: const ProductPrimaryInfoSection()
             ),
           ),
-          // AppContainer(
-          //   child: Container(
-          //     clipBehavior: Clip.antiAlias,
-          //     decoration: BoxDecoration(
-          //       borderRadius: BorderRadius.circular(16.0),
-          //       boxShadow: [
-          //         BoxShadow(
-          //           color: Colors.grey.withOpacity(0.5),
-          //           spreadRadius: 1,
-          //           blurRadius: 3,
-          //           offset: const Offset(0, 1), // changes position of shadow
-          //         ),
-          //       ],
-          //     ),
-          //     child: HeadlessTable(
-          //       data: {
-          //         'Ngày hết hạn': '30/11/2021',
-          //         'Ngày tới lấy': 'Thứ 2 - Thứ 6',
-          //         'Giờ có thể lấy': controller.pickupTime.value,
-          //       },
-          //     ),
-          //   ),
-          // ),
           Container(
             padding: const EdgeInsets.all(8.0),
             child: const PickupSection(),
@@ -163,15 +141,9 @@ class ProductRender extends GetView<ProductScreenController> {
       child: const Text('Tôi muốn nhận'),
     );
   }
-
-  String _buildDistance(){
-    final here = controller.here;
-    return here != null
-        ? (controller.distance.as(LengthUnit.Meter,
-        LatLng(here.latitude!, here.longitude!), controller.location!) / 1000).toStringAsFixed(1)
-        : '';
-  }
 }
+
+const AVATAR_SIZE = 24.0;
 
 class SellerInfoSection extends GetView<ProductScreenController> {
   const SellerInfoSection({Key? key}) : super(key: key);
@@ -180,8 +152,6 @@ class SellerInfoSection extends GetView<ProductScreenController> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final sellerName = controller.sellerName.value;
-    final List<String> words = sellerName.split(' ');
-    final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
 
     return AppContainer(
       decoration: BoxDecoration(
@@ -197,16 +167,7 @@ class SellerInfoSection extends GetView<ProductScreenController> {
             userIdParam: controller.userId.toString()
           }
         ),
-        leading: CircleAvatar(
-          radius: 24.0,
-          backgroundColor: theme.colorScheme.secondary,
-          child: Text(
-            shortWords.map((e) => e[0]).join(),
-            style: theme.textTheme.headline6!.copyWith(
-              color: Colors.white,
-            ),
-          ),
-        ),
+        leading: _buildAvatar(),
         title: Text(
           sellerName,
           style: theme.textTheme.subtitle1,
@@ -234,6 +195,34 @@ class SellerInfoSection extends GetView<ProductScreenController> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildAvatar(){
+    final theme = Theme.of(Get.context!);
+    final sellerName = controller.sellerName.value;
+    final List<String> words = sellerName.split(' ');
+    final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
+
+    if(controller.avatar.isEmpty){
+      return CircleAvatar(
+        radius: AVATAR_SIZE,
+        backgroundColor: theme.colorScheme.secondary,
+        child: Text(
+          shortWords.map((e) => e[0]).join(),
+          style: theme.textTheme.headline6!.copyWith(
+            color: Colors.white,
+          ),
+        ),
+      );
+    }
+
+    return ExtendedImage.network(
+      resolveUrl(controller.avatar.value, HOST_URL),
+      fit: BoxFit.cover,
+      shape: BoxShape.circle,
+      width: AVATAR_SIZE * 2,
+      height: AVATAR_SIZE * 2,
     );
   }
 }
@@ -280,16 +269,6 @@ class ProductPrimaryInfoSection extends GetView<ProductScreenController> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              // Container(
-              //   padding: const EdgeInsets.symmetric(vertical: 4.0),
-              //   margin: const EdgeInsets.symmetric(vertical: 12.0),
-              //   child: Text(
-              //     'Cách 3.5km',
-              //     style: theme.textTheme.bodyText1?.copyWith(
-              //       color: theme.colorScheme.secondary,
-              //     ),
-              //   ),
-              // ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -351,7 +330,7 @@ class ImageSlider extends GetView<ProductScreenController> {
           borderRadius: BorderRadius.circular(16.0),
         ),
         child: ExtendedImage.network(
-          '$HOST_URL$item',
+          resolveUrl(item, HOST_URL),
           // width: size.width,
           fit: BoxFit.cover,
         ),

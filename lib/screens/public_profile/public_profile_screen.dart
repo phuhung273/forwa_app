@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
+import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/mixins/reportable.dart';
 import 'package:forwa_app/schema/review/review.dart';
 import 'package:forwa_app/widgets/rating.dart';
@@ -82,6 +83,8 @@ class PublicProfileScreen extends GetView<PublicProfileScreenController> {
   }
 }
 
+const AVATAR_SIZE = 90.0;
+
 class Profile extends GetView<PublicProfileScreenController> {
   const Profile({Key? key}) : super(key: key);
 
@@ -91,25 +94,11 @@ class Profile extends GetView<PublicProfileScreenController> {
 
     return Obx(() {
       final name = controller.name.isNotEmpty ? controller.name.value : 'Không tên';
-      final List<String> words = name.split(' ');
-      final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
 
       return Column(
         children: [
           const SizedBox(height: 16.0),
-          Container(
-            padding: const EdgeInsets.all(32.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16.0),
-              color: theme.colorScheme.secondary
-            ),
-            child: Text(
-              shortWords[0].isEmpty ? '' : shortWords.map((e) => e[0]).join(),
-              style: theme.textTheme.headline5!.copyWith(
-                color: Colors.white,
-              ),
-            ),
-          ),
+          _buildAvatar(),
           const SizedBox(height: 16.0),
           Text(
             name,
@@ -132,6 +121,36 @@ class Profile extends GetView<PublicProfileScreenController> {
         ],
       );
     });
+  }
+
+  Widget _buildAvatar(){
+    final theme = Theme.of(Get.context!);
+    final name = controller.name.isNotEmpty ? controller.name.value : 'Không tên';
+    final List<String> words = name.split(' ');
+    final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
+
+    return Container(
+      width: AVATAR_SIZE,
+      height: AVATAR_SIZE,
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16.0),
+        color: theme.colorScheme.secondary
+      ),
+      child: controller.avatar.isEmpty
+        ? Center(
+          child: Text(
+            shortWords[0].isEmpty ? '' : shortWords.map((e) => e[0]).join(),
+            style: theme.textTheme.headline5!.copyWith(
+              color: Colors.white,
+            ),
+          ),
+        )
+        : ExtendedImage.network(
+          resolveUrl(controller.avatar.value, HOST_URL),
+          fit: BoxFit.cover,
+        ),
+    );
   }
 }
 
@@ -227,6 +246,7 @@ class AchievementContainer extends StatelessWidget {
 }
 
 const IMAGE_WIDTH = 150.0;
+const REVIEW_AVATAR_SIZE = 16.0;
 
 class ReviewItem extends StatelessWidget {
   final Review review;
@@ -246,7 +266,7 @@ class ReviewItem extends StatelessWidget {
     return Row(
       children: [
         ExtendedImage.network(
-          '$HOST_URL$imageUrl',
+          resolveUrl(imageUrl!, HOST_URL),
           width: IMAGE_WIDTH,
           fit: BoxFit.cover,
         ),
@@ -266,14 +286,7 @@ class ReviewItem extends StatelessWidget {
                   minLeadingWidth: 0.0,
                   horizontalTitleGap: 8.0,
                   contentPadding: EdgeInsets.zero,
-                  leading: CircleAvatar(
-                    child: Text(
-                      shortWords.map((e) => e[0]).join(),
-                      style: theme.textTheme.headline6!.copyWith(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                  leading: _buildAvatar(),
                   title: Text(
                     shortWords.join(' '),
                     style: theme.textTheme.subtitle1,
@@ -291,6 +304,33 @@ class ReviewItem extends StatelessWidget {
           )
         ),
       ],
+    );
+  }
+
+  Widget _buildAvatar(){
+    final theme = Theme.of(Get.context!);
+    final name = review.fromUser?.name ?? 'Không tên';
+    final words = name.split(' ');
+    final shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
+
+    if(review.fromUser?.imageUrl == null){
+      return CircleAvatar(
+        radius: REVIEW_AVATAR_SIZE,
+        child: Text(
+          shortWords.map((e) => e[0]).join(),
+          style: theme.textTheme.bodyText1!.copyWith(
+            color: Colors.white,
+          ),
+        ),
+      );
+    }
+
+    return ExtendedImage.network(
+      resolveUrl(review.fromUser!.imageUrl!, HOST_URL),
+      fit: BoxFit.cover,
+      shape: BoxShape.circle,
+      width: REVIEW_AVATAR_SIZE * 2,
+      height: REVIEW_AVATAR_SIZE * 2,
     );
   }
 }

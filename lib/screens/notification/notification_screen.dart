@@ -1,6 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
+import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/components/appbar_chat_action.dart';
@@ -147,7 +148,7 @@ class NotificationItem extends GetView<NotificationScreenController> {
               borderRadius: BorderRadius.circular(12.0),
             ),
             child: ExtendedImage.network(
-              '$HOST_URL${notification.image.url}',
+              resolveUrl(notification.image.url, HOST_URL),
               width: IMAGE_SIZE,
               height: IMAGE_SIZE,
             ),

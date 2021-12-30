@@ -120,7 +120,7 @@ class LoginScreenController extends BaseController {
       _socialEmailLogin(username, email, avatar);
 
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -158,8 +158,8 @@ class LoginScreenController extends BaseController {
 
       _socialEmailLogin(username, email, avatar);
     } else {
-      print(response.status);
-      print(response.message);
+      debugPrint(response.status.toString());
+      debugPrint(response.message);
     }
 
   }
@@ -174,7 +174,6 @@ class LoginScreenController extends BaseController {
     );
 
     if(credential.userIdentifier == null){
-      // TODO: Add error dialog
       return;
     }
 
@@ -219,6 +218,7 @@ class LoginScreenController extends BaseController {
       name: username,
       firebaseToken: firebaseToken.value,
       device: firebaseToken.deviceName,
+      avatar: avatar,
     );
 
     final response = await _authRepo.socialEmailLogin(request);

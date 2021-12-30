@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/remote/product_service.dart';
@@ -41,11 +42,11 @@ class ProductRepo extends BaseRepo {
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
-          print(error);
+          debugPrint(error);
           return ApiResponse<ProductListResponse>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
-          print(error);
+          debugPrint(error);
           return ApiResponse<ProductListResponse>.fromError(error: error);
       }
     });
@@ -61,11 +62,11 @@ class ProductRepo extends BaseRepo {
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
-          print(error);
+          debugPrint(error);
           return ApiResponse<Product>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
-          print(error);
+          debugPrint(error);
           return ApiResponse<Product>.fromError(error: error);
       }
     });
@@ -85,11 +86,11 @@ class ProductRepo extends BaseRepo {
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
-          print(error);
+          debugPrint(error);
           return ApiResponse<ProductListResponse>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
-          print(error);
+          debugPrint(error);
           return ApiResponse<ProductListResponse>.fromError(error: error);
       }
     });
@@ -141,7 +142,7 @@ class ProductRepo extends BaseRepo {
     try {
       final streamedResponse = await imageUploadRequest.send();
       final response = await http.Response.fromStream(streamedResponse);
-      // print('Response: ${response.body}');
+      // debugPrint('Response: ${response.body}');
       return ApiResponse<ProductListResponse>.fromJson(
         jsonDecode(response.body),
         (json) {
@@ -152,13 +153,13 @@ class ProductRepo extends BaseRepo {
         }
       );
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
       return ApiResponse<ProductListResponse>.fromError(error: error.toString());
     }
 
     // final streamedResponse = await imageUploadRequest.send();
     // final response = await http.Response.fromStream(streamedResponse);
-    // print('Response: ${response.body}');
+    // debugPrint('Response: ${response.body}');
     // return ApiResponse<ProductListResponse>.fromJson(
     //     jsonDecode(response.body),
     //         (json) {
@@ -180,11 +181,11 @@ class ProductRepo extends BaseRepo {
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
-          print(error);
+          debugPrint(error);
           return ApiResponse<Product>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
-          print(error);
+          debugPrint(error);
           return ApiResponse<Product>.fromError(error: error);
       }
     });

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/user_repo.dart';
+import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/api_response.dart';
 import 'package:forwa_app/schema/user/user.dart';
@@ -75,7 +76,7 @@ class ProfileEditScreenController extends BaseController {
       _localStorage.saveCustomerName(user.name);
     } else if (avatar != null){
       _localStorage.saveCustomerName(user.name);
-      _localStorage.saveAvatarUrl('$HOST_URL${user.imageUrl}');
+      _localStorage.saveAvatarUrl(resolveUrl(user.imageUrl!, HOST_URL));
     }
 
     await showSuccessDialog(message: 'Cập nhật hồ sơ thành công');

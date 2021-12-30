@@ -17,11 +17,15 @@ class SocialEmailLoginRequest {
   @JsonKey(name: 'firebase_token')
   String firebaseToken;
 
+  @JsonKey(name: 'avatar')
+  String? avatar;
+
   SocialEmailLoginRequest({
     required this.email,
     required this.name,
     required this.device,
     required this.firebaseToken,
+    this.avatar,
   });
 
   factory SocialEmailLoginRequest.fromJson(Map<String, dynamic> json) =>

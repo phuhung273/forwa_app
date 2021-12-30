@@ -32,6 +32,7 @@ class PublicProfileScreenController extends BaseController with Reportable{
   final rating = 0.0.obs;
   final status = ''.obs;
   final reviews = List<Review>.empty().obs;
+  final avatar = ''.obs;
 
   @override
   void onInit() {
@@ -60,6 +61,7 @@ class PublicProfileScreenController extends BaseController with Reportable{
     name.value = user.name;
     reviews.assignAll(user.reviews ?? []);
     rating.value = user.rating ?? 0.0;
+    avatar.value = user.image?.url ?? '';
   }
 
   @override

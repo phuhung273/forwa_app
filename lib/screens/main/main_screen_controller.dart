@@ -109,8 +109,8 @@ class MainScreenController extends BaseController {
     }
 
     try{
-      await FacebookAuth.instance.logOut();
-      await _googleSignIn.disconnect();
+      FacebookAuth.instance.logOut();
+      _googleSignIn.disconnect();
     }catch(e){
     }
 

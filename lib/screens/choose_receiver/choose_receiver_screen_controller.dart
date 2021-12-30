@@ -63,7 +63,7 @@ class ChooseReceiverScreenController extends BaseController {
       ),
       buttons: [
         DialogButton(
-          child: Text(
+          child: const Text(
             'Hủy',
           ),
           onPressed: () => Get.back(),
