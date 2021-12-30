@@ -127,7 +127,7 @@ class MyBottomNavigationBar extends GetView<MainScreenController> {
             Icons.notifications_outlined,
           )
         ],
-        currentIndex: controller.pageIndex.value,
+        currentIndex: controller.pageIndex.value > 3 ? 0 : controller.pageIndex.value,
         onTap: controller.changeTab,
         selectedItemColor: theme.colorScheme.secondary,
         unselectedItemColor: Colors.grey,
