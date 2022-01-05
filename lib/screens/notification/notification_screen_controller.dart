@@ -4,13 +4,6 @@ import 'package:forwa_app/screens/base_controller/app_notification_controller.da
 import 'package:forwa_app/screens/base_controller/authorized_refreshable_controller.dart';
 import 'package:get/get.dart';
 
-class NotificationScreenBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPut(() => NotificationScreenController());
-  }
-}
-
 class NotificationScreenController extends AuthorizedRefreshableController {
 
   final AppNotificationRepo _appNotificationRepo = Get.find();

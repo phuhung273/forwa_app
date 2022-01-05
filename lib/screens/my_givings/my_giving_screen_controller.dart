@@ -4,13 +4,6 @@ import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/base_controller/authorized_refreshable_controller.dart';
 import 'package:get/get.dart';
 
-class MyGivingsScreenBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPut(() => MyGivingsScreenController());
-  }
-}
-
 class MyGivingsScreenController extends AuthorizedRefreshableController {
 
   final ProductRepo _productRepo = Get.find();

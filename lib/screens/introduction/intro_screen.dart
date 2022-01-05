@@ -43,7 +43,7 @@ class IntroScreen extends GetView<IntroScreenController> {
         ),
       ],
       onDone: controller.done,
-      onSkip: controller.done,
+      onSkip: controller.doneAndNeverShowAgain,
       showSkipButton: true,
       skip: Text(
         'Bỏ qua',

@@ -14,8 +14,7 @@ import 'my_giving_screen_controller.dart';
 
 class MyGivingsScreen extends StatefulWidget {
 
-
-  MyGivingsScreen({Key? key}) : super(key: key);
+  const MyGivingsScreen({Key? key}) : super(key: key);
 
   @override
   State<MyGivingsScreen> createState() => _MyGivingsScreenState();

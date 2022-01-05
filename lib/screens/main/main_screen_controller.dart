@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
+import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
 import 'package:forwa_app/di/firebase_messaging_service.dart';
+import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/auth/logout_request.dart';
 import 'package:forwa_app/screens/base_controller/address_controller.dart';
@@ -20,9 +22,10 @@ class MainScreenBinding extends Bindings {
   void dependencies() {
     Get.lazyPut(() => MainScreenController());
     Get.put(AddressController());
-    Get.put(AppNotificationController());
-    Get.put(ChatController());
-    Get.put(FirebaseMessagingService());
+    Get.lazyPut(() => AppNotificationController());
+    Get.lazyPut(() => ChatController());
+    Get.lazyPut(() => FirebaseMessagingService());
+    Get.lazyPut(() => PersistentLocalStorage());
   }
 }
 
@@ -38,6 +41,10 @@ class MainScreenController extends BaseController {
 
   final AppNotificationController _appNotificationController = Get.find();
 
+  final FirebaseMessagingService _firebaseMessagingService = Get.find();
+  final NotificationService _notificationService = Get.find();
+  final PersistentLocalStorage _persistentLocalStorage = Get.find();
+
   final drawerController = AdvancedDrawerController();
 
   final pageController = PageController();
@@ -52,13 +59,17 @@ class MainScreenController extends BaseController {
   void onInit() {
     super.onInit();
     refreshCredential();
+
+    _notificationService.init();
+    _firebaseMessagingService.init();
+    _persistentLocalStorage.init();
   }
 
   @override
   void onReady() {
     super.onReady();
 
-    _chatController.fetch();
+    _chatController.fetchUnread();
   }
 
   void refreshCredential(){

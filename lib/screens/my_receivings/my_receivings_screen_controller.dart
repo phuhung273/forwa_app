@@ -9,13 +9,6 @@ import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 
-class MyReceivingsScreenBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPut(() => MyReceivingsScreenController());
-  }
-}
-
 class MyReceivingsScreenController extends AuthorizedRefreshableController {
 
   final LocalStorage _localStorage = Get.find();

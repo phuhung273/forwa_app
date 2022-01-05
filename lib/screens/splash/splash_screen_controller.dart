@@ -56,7 +56,11 @@ class SplashScreenController extends GetxController {
   }
 
   Future _onDoneLoading() async {
-    Get.offAndToNamed(ROUTE_INTRODUCTION);
+    if(_localStorage.getSkipIntro() == null){
+      Get.offAndToNamed(ROUTE_INTRODUCTION);
+    } else {
+      Get.offAllNamed(ROUTE_MAIN);
+    }
   }
 
   Future _configureDevice() async {

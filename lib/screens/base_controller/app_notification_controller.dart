@@ -4,6 +4,7 @@ import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:get/get.dart';
 
 class AppNotificationController extends GetxController {
+
   final AppNotificationRepo _appNotificationRepo = Get.find();
 
   final LocalStorage _localStorage = Get.find();

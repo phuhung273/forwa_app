@@ -13,6 +13,7 @@ const FIELD_CONTENT = 'content';
 const FIELD_FROM = 'fromID';
 const FIELD_TO = 'toID';
 const FIELD_TYPE = 'type';
+const FIELD_READ_BY = 'readBy';
 
 @JsonSerializable()
 class ChatSocketMessage {
@@ -32,12 +33,16 @@ class ChatSocketMessage {
   @JsonKey(name: FIELD_TYPE)
   String type;
 
+  @JsonKey(name: FIELD_READ_BY)
+  List<int>? readBy;
+
   ChatSocketMessage({
     this.id,
     required this.content,
     required this.from,
     required this.to,
     required this.type,
+    this.readBy
   });
 
   factory ChatSocketMessage.fromJson(Map<String, dynamic> json) =>

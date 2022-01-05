@@ -1,9 +1,15 @@
+import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/material.dart';
+import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/chat_repo.dart';
 import 'package:get/get.dart';
 
-class ChatController extends GetxController {
+class ChatController extends GetxController  with WidgetsBindingObserver {
+
+  final PersistentLocalStorage _persistentLocalStorage = Get.find();
+
   final ChatRepo _chatRepo = Get.find();
 
   final unreadMessageCount = 0.obs;
@@ -12,7 +18,30 @@ class ChatController extends GetxController {
 
   void reset() => unreadMessageCount.value = 0;
 
-  void fetch(){
+
+  @override
+  void onInit() {
+    super.onInit();
+    WidgetsBinding.instance?.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+
+    if(state == AppLifecycleState.paused){
+      // print('Im dead');
+      _persistentLocalStorage.saveUnreadCount(unreadMessageCount.value);
+    }
+
+    final lastState = WidgetsBinding.instance?.lifecycleState;
+    if(lastState == AppLifecycleState.resumed){
+      // print('Im alive');
+      unreadMessageCount.value = await _persistentLocalStorage.getUnreadCount() ?? 0;
+    }
+  }
+
+  void fetchUnread(){
     _chatRepo.getUnread().then((response){
       if(!response.isSuccess || response.data == null){
         return;
@@ -23,4 +52,11 @@ class ChatController extends GetxController {
   }
 
   void decrease(int value) => unreadMessageCount.value = max(unreadMessageCount.value - value, 0);
+
+  @override
+  void dispose(){
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
+  }
 }
+

@@ -3,11 +3,13 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const MESSAGE_TYPE_CHAT = 'chat';
 
@@ -39,7 +41,7 @@ class FirebaseMessagingService {
       final data = message.data;
       switch(data['type']){
         case MESSAGE_TYPE_CHAT:
-          _chatController.unreadMessageCount.value++;
+          _chatController.increase(1);
           break;
         case APP_NOTIFICATION_TYPE_PROCESSING:
           final noti = AppNotification.fromJson(jsonDecode(data['data']));
@@ -98,8 +100,24 @@ class FirebaseMessagingService {
   }
 }
 
+
 Future firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   debugPrint('Handling a background message ${message.messageId}');
-  // message.data
+
+  final data = message.data;
+  switch(data['type']){
+    case MESSAGE_TYPE_CHAT:
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      int unreadCount = prefs.getInt(UNREAD_COUNT_KEY) ?? 0;
+      final newCount = unreadCount + 1;
+      await prefs.setInt(UNREAD_COUNT_KEY, newCount);
+      break;
+    case APP_NOTIFICATION_TYPE_PROCESSING:
+      break;
+    case APP_NOTIFICATION_TYPE_SELECTED:
+      break;
+    default:
+      break;
+  }
 }
 

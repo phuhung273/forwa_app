@@ -250,7 +250,7 @@ class LoginScreenController extends BaseController {
     _localStorage.saveCustomerName(data.username);
     _mainController.refreshCredential();
 
-    _chatController.fetch();
+    _chatController.fetchUnread();
     Get.back();
   }
 

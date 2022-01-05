@@ -9,6 +9,7 @@ import 'package:forwa_app/schema/chat/chat_socket_message.dart';
 import 'package:forwa_app/schema/chat/chat_socket_user.dart';
 import 'package:forwa_app/schema/chat/chat_user_disconnected_response.dart';
 import 'package:forwa_app/schema/chat/chat_user_list_response.dart';
+import 'package:forwa_app/schema/chat/leave_socket_message.dart';
 import 'package:forwa_app/schema/chat/read_socket_message.dart';
 import 'package:forwa_app/schema/chat/read_socket_message_response.dart';
 import 'package:forwa_app/screens/base_controller/authorized_refreshable_controller.dart';
@@ -103,9 +104,15 @@ class ChatScreenController extends AuthorizedRefreshableController {
         newMessage.image = '';
       }
 
-      _chatController.increase(1);
+      if(!response.readBy!.contains(_userId!)){
+        // Please keep this line here commented
+        // This was commented not because of error
+        // But because firebase messaging service has already handle the case
+        // _chatController.increase(1);sid
+        users[response.from]?.hasUnreadMessages = true;
+      }
+
       users[response.from]?.messages?.add(response);
-      users[response.from]?.hasUnreadMessages = true;
       users.refresh();
     });
 
@@ -174,6 +181,11 @@ class ChatScreenController extends AuthorizedRefreshableController {
 
     users[fromId]?.hasUnreadMessages = false;
     users.refresh();
+  }
+
+  void leaveMessage(int fromId){
+    final message = LeaveSocketMessage(fromId: fromId);
+    _socket.emit(CHANNEL_LEAVE_MESSAGE, message);
   }
 
   @override

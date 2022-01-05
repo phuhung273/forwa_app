@@ -19,6 +19,7 @@ class IntroScreenController extends GetxController {
   }
 
   void doneAndNeverShowAgain() {
+    _localStorage.saveSkipIntro();
     _checkEULA();
   }
 

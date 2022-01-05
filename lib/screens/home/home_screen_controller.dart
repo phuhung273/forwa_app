@@ -14,13 +14,6 @@ import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 
-class HomeScreenBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPut(() => HomeScreenController());
-  }
-}
-
 class HomeScreenController extends RefreshableController with Reportable{
 
   final ProductRepo _productRepo = Get.find();

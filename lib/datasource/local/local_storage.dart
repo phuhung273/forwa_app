@@ -10,6 +10,7 @@ const CUSTOMER_NAME_KEY = 'CUSTOMER_NAME_KEY';
 const FIREBASE_TOKEN_KEY = 'FIREBASE_TOKEN_KEY';
 const AGREE_TERM_KEY = 'AGREE_TERM_KEY';
 const AGREE_UPLOAD_TERM_KEY = 'AGREE_UPLOAD_TERM_KEY';
+const SKIP_INTRO_KEY = 'SKIP_INTRO_KEY';
 
 class LocalStorage {
   final box = GetStorage();
@@ -84,6 +85,14 @@ class LocalStorage {
 
   String? getAgreeUploadTerm() {
     return box.read(AGREE_UPLOAD_TERM_KEY);
+  }
+
+  void saveSkipIntro(){
+    box.write(SKIP_INTRO_KEY, 'haha');
+  }
+
+  String? getSkipIntro() {
+    return box.read(SKIP_INTRO_KEY);
   }
 
   void removeCredentials(){

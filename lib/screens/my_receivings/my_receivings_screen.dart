@@ -17,7 +17,7 @@ import 'my_receivings_screen_controller.dart';
 
 class MyReceivingsScreen extends StatefulWidget {
 
-  MyReceivingsScreen({Key? key}) : super(key: key);
+  const MyReceivingsScreen({Key? key}) : super(key: key);
 
   @override
   State<MyReceivingsScreen> createState() => _MyReceivingsScreenState();

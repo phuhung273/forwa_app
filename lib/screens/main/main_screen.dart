@@ -4,8 +4,6 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
-import 'package:forwa_app/di/firebase_messaging_service.dart';
-import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/chat/chat_screen.dart';
@@ -33,16 +31,33 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
-
-  final FirebaseMessagingService _firebaseMessagingService = Get.find();
-  final NotificationService _notificationService = Get.find();
+class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
   @override
   void initState() {
     super.initState();
-    _notificationService.init();
-    _firebaseMessagingService.init();
+
+    WidgetsBinding.instance?.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if(state == AppLifecycleState.paused){
+      // print('Im dead');
+    }
+
+    final lastState = WidgetsBinding.instance?.lifecycleState;
+    if(lastState == AppLifecycleState.resumed){
+      // print('Im alive');
+    }
   }
 
   @override
@@ -75,7 +90,7 @@ class MainScreenView extends GetView<MainScreenController> {
             controller: controller.pageController,
             onPageChanged: controller.changeTab,
             physics: const NeverScrollableScrollPhysics(),
-            children: [
+            children: const [
               HomeScreen(),
               MyGivingsScreen(),
               MyReceivingsScreen(),
