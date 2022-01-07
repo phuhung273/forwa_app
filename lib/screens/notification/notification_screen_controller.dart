@@ -23,13 +23,14 @@ class NotificationScreenController extends AuthorizedRefreshableController {
   }
 
   @override
-  void onReady() async {
+  Future<bool> onReady() async {
     if(!isAuthorized()){
       showLoginDialog();
-      return;
+      return false;
     }
 
     await main();
+    return true;
   }
 
   @override

@@ -8,18 +8,23 @@ import '../../constants.dart';
 
 part 'order_service.g.dart';
 
-@RestApi(baseUrl: '$HOST_URL/api/order')
+@RestApi(baseUrl: '$HOST_URL/api/orders')
 abstract class OrderService {
   factory OrderService(Dio dio, {String baseUrl}) = _OrderService;
 
-  @POST('/create')
+  @POST('/')
   Future<String> createOrder(@Body() CreateOrderRequest request);
 
-  @GET('/me')
+  @GET('/me/get')
   Future<ApiResponse<List<Order>>> getMyOrders();
 
   @POST('/status/{orderId}')
   Future<String> selectOrder(
     @Path('orderId') int orderId,
+  );
+
+  @GET('/product/{productId}')
+  Future<ApiResponse<List<Order>>> getOrdersOfProductId(
+    @Path('productId') int productId,
   );
 }

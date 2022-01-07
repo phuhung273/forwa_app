@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -6,7 +5,7 @@ import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/chat_repo.dart';
 import 'package:get/get.dart';
 
-class ChatController extends GetxController  with WidgetsBindingObserver {
+class ChatController extends GetxController with WidgetsBindingObserver {
 
   final PersistentLocalStorage _persistentLocalStorage = Get.find();
 

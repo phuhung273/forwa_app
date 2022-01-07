@@ -88,7 +88,6 @@ class MainScreenView extends GetView<MainScreenController> {
         child: Scaffold(
           body: PageView(
             controller: controller.pageController,
-            onPageChanged: controller.changeTab,
             physics: const NeverScrollableScrollPhysics(),
             children: const [
               HomeScreen(),

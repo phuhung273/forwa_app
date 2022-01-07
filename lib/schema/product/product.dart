@@ -62,8 +62,8 @@ class Product{
   @JsonKey(name: 'enabled')
   bool? enabled;
 
-  @JsonKey(name: 'orders')
-  List<Order>? orders;
+  @JsonKey(name: 'orders_count')
+  int? orderCount;
 
   Product({
     this.id,
@@ -77,7 +77,7 @@ class Product{
     this.address,
     this.detail,
     this.enabled,
-    this.orders,
+    this.orderCount,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) =>
@@ -113,4 +113,6 @@ class Product{
   ProductStatus? get status => statusString != null
       ? EnumToString.fromString(ProductStatus.values, statusString!.toUpperCase())
       : null;
+
+  bool get haveOrders => orderCount != null && orderCount! > 0;
 }

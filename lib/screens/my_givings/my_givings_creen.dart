@@ -26,7 +26,7 @@ class _MyGivingsScreenState extends State<MyGivingsScreen>
   @override
   bool get wantKeepAlive => true;
 
-  final MyGivingsScreenController _controller = Get.put(MyGivingsScreenController());
+  final MyGivingsScreenController _controller = Get.find();
 
   final MainScreenController _mainController = Get.find();
 
@@ -130,7 +130,7 @@ class _MyGivingsScreenState extends State<MyGivingsScreen>
   }
 
   Future? _buildOnTapCard(Product product){
-    if(product.orders!.isNotEmpty){
+    if(product.haveOrders){
       return Get.toNamed(
           ROUTE_CHOOSE_RECEIVER,
           parameters: {
@@ -201,12 +201,12 @@ class GivingItem extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if(product.orders!.isNotEmpty)
+                    if(product.haveOrders)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: RichText(
                           text: TextSpan(
-                            text: '${product.orders!.length} người',
+                            text: '${product.orderCount} người',
                             style: theme.textTheme.bodyText1?.copyWith(
                               color: theme.colorScheme.secondaryVariant,
                               fontWeight: FontWeight.w500,
@@ -228,7 +228,7 @@ class GivingItem extends StatelessWidget {
                 ),
               ),
             ),
-            if(product.orders!.isNotEmpty)
+            if(product.haveOrders)
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.0),
                 child: Icon(Icons.arrow_forward_ios),

@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
+import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/route/route.dart';
@@ -20,13 +23,15 @@ class ChooseReceiverScreenBinding extends Bindings {
 
 const productIdParam = 'product_id';
 
-class ChooseReceiverScreenController extends BaseController {
+class ChooseReceiverScreenController extends BaseController
+    with WidgetsBindingObserver {
 
   final MyGivingsScreenController _myGivingsScreenController = Get.find();
 
   final ProductRepo _productRepo = Get.find();
 
   final OrderRepo _orderRepo = Get.find();
+  final PersistentLocalStorage _persistentLocalStorage = Get.find();
 
   int? _productId;
   final finish = true.obs;
@@ -36,11 +41,48 @@ class ChooseReceiverScreenController extends BaseController {
   @override
   void onInit() {
     super.onInit();
+    WidgetsBinding.instance?.addObserver(this);
     _productId = int.tryParse(Get.parameters[productIdParam]!);
 
     final product = _myGivingsScreenController.products.firstWhere((element) => element.id == _productId);
-    orders.assignAll(product.orders ?? []);
     finish.value = product.status == ProductStatus.FINISH;
+  }
+
+  @override
+  void onReady() async {
+    super.onReady();
+
+    showLoadingDialog();
+    final response = await _orderRepo.getOrdersOfProductId(_productId!);
+    hideDialog();
+
+    if(!response.isSuccess || response.data == null){
+      return;
+    }
+
+    orders.assignAll(response.data ?? []);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+
+    if(state == AppLifecycleState.paused){
+      // print('Im dead');
+    }
+
+    final lastState = WidgetsBinding.instance?.lifecycleState;
+    if(lastState == AppLifecycleState.resumed){
+      // print('Im alive');
+      final backgroundNotificationList = await _persistentLocalStorage.getBackgroundProcessingOrderList();
+      if(backgroundNotificationList != null && backgroundNotificationList.isNotEmpty){
+        for (final element in backgroundNotificationList) {
+          final order = Order.fromJson(jsonDecode(element));
+          orders.add(order);
+        }
+        _persistentLocalStorage.eraseBackgroundProcessingOrderList();
+      }
+    }
   }
 
   Future pickReceiver(int orderId) async {
@@ -167,5 +209,11 @@ class ChooseReceiverScreenController extends BaseController {
       orders[index].sellerReviewId = reviewId;
       orders.refresh();
     }
+  }
+
+  @override
+  void dispose(){
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
   }
 }

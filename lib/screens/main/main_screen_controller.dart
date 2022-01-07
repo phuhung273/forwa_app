@@ -13,6 +13,8 @@ import 'package:forwa_app/screens/base_controller/app_notification_controller.da
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
+import 'package:forwa_app/screens/my_givings/my_giving_screen_controller.dart';
+import 'package:forwa_app/screens/my_receivings/my_receivings_screen_controller.dart';
 import 'package:forwa_app/screens/policy/policy_upload_screen.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -26,6 +28,8 @@ class MainScreenBinding extends Bindings {
     Get.lazyPut(() => ChatController());
     Get.lazyPut(() => FirebaseMessagingService());
     Get.lazyPut(() => PersistentLocalStorage());
+    Get.lazyPut(() => MyGivingsScreenController());
+    Get.lazyPut(() => MyReceivingsScreenController());
   }
 }
 
@@ -44,6 +48,10 @@ class MainScreenController extends BaseController {
   final FirebaseMessagingService _firebaseMessagingService = Get.find();
   final NotificationService _notificationService = Get.find();
   final PersistentLocalStorage _persistentLocalStorage = Get.find();
+
+  final MyGivingsScreenController _myGivingsScreenController = Get.find();
+
+  final MyReceivingsScreenController _myReceivingsScreenController = Get.find();
 
   final drawerController = AdvancedDrawerController();
 
@@ -88,9 +96,11 @@ class MainScreenController extends BaseController {
         break;
       case MY_RECEIVINGS_SCREEN_INDEX:
         _appNotificationController.readMyReceiving();
+        _myReceivingsScreenController.changeTab();
         break;
       case MY_GIVINGS_SCREEN_INDEX:
         _appNotificationController.readMyGiving();
+        _myGivingsScreenController.changeTab();
         break;
       default:
         break;

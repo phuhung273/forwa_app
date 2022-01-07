@@ -8,6 +8,8 @@ import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
+import 'package:forwa_app/screens/my_givings/my_giving_screen_controller.dart';
+import 'package:forwa_app/screens/my_receivings/my_receivings_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +20,8 @@ class FirebaseMessagingService {
   final NotificationService _notificationService = Get.find();
   final ChatController _chatController = Get.find();
   final AppNotificationController _appNotificationController = Get.find();
+  final MyReceivingsScreenController _myReceivingsScreenController = Get.find();
+  final MyGivingsScreenController _myGivingsScreenController = Get.find();
 
   void init() {
     _setup();
@@ -41,20 +45,35 @@ class FirebaseMessagingService {
       final data = message.data;
       switch(data['type']){
         case MESSAGE_TYPE_CHAT:
-          _chatController.increase(1);
+          _handleForegroundChatNotification(data);
           break;
         case APP_NOTIFICATION_TYPE_PROCESSING:
-          final noti = AppNotification.fromJson(jsonDecode(data['data']));
-          _appNotificationController.increaseMyGiving(noti);
+          _handleForegroundProcessingOrderNotification(data);
           break;
         case APP_NOTIFICATION_TYPE_SELECTED:
-          final noti = AppNotification.fromJson(jsonDecode(data['data']));
-          _appNotificationController.increaseMyReceiving(noti);
+          _handleForegroundSelectedOrderNotification(data);
           break;
         default:
           break;
       }
     });
+  }
+
+  _handleForegroundChatNotification(Map<String, dynamic> data){
+    _chatController.increase(1);
+  }
+
+  _handleForegroundProcessingOrderNotification(Map<String, dynamic> data){
+    final noti = AppNotification.fromJson(jsonDecode(data['data']));
+    print(data['order']);
+    _appNotificationController.increaseMyGiving(noti);
+    _myGivingsScreenController.increaseOrderOfProductId(noti.product.id!);
+  }
+
+  _handleForegroundSelectedOrderNotification(Map<String, dynamic> data){
+    final noti = AppNotification.fromJson(jsonDecode(data['data']));
+    _appNotificationController.increaseMyReceiving(noti);
+    _myReceivingsScreenController.changeOrderToSelectedByProductId(noti.product.id!);
   }
 
   Future _setup() async {
@@ -102,22 +121,49 @@ class FirebaseMessagingService {
 
 
 Future firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint('Handling a background message ${message.messageId}');
 
   final data = message.data;
   switch(data['type']){
     case MESSAGE_TYPE_CHAT:
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      int unreadCount = prefs.getInt(UNREAD_COUNT_KEY) ?? 0;
-      final newCount = unreadCount + 1;
-      await prefs.setInt(UNREAD_COUNT_KEY, newCount);
+      await handleBackgroundChatNotification(data);
       break;
     case APP_NOTIFICATION_TYPE_PROCESSING:
+      await handleBackgroundProcessingOrderNotification(data);
       break;
     case APP_NOTIFICATION_TYPE_SELECTED:
+      await handleBackgroundSelectedOrderNotification(data);
       break;
     default:
       break;
   }
+}
+
+Future handleBackgroundChatNotification(Map<String, dynamic> data) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int unreadCount = prefs.getInt(UNREAD_COUNT_KEY) ?? 0;
+  final newCount = unreadCount + 1;
+  return prefs.setInt(UNREAD_COUNT_KEY, newCount);
+}
+
+Future handleBackgroundProcessingOrderNotification(Map<String, dynamic> data) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  List<String>? orderStringList = prefs.getStringList(BACKGROUND_PROCESSING_ORDER_LIST_KEY);
+  if(orderStringList == null){
+    orderStringList = [data['order']];
+  } else {
+    orderStringList.add(data['order']);
+  }
+  return prefs.setStringList(BACKGROUND_PROCESSING_ORDER_LIST_KEY, orderStringList);
+}
+
+Future handleBackgroundSelectedOrderNotification(Map<String, dynamic> data) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  List<String>? orderStringList = prefs.getStringList(BACKGROUND_SELECTED_ORDER_LIST_KEY);
+  if(orderStringList == null){
+    orderStringList = [data['order']];
+  } else {
+    orderStringList.add(data['order']);
+  }
+  return prefs.setStringList(BACKGROUND_SELECTED_ORDER_LIST_KEY, orderStringList);
 }
 

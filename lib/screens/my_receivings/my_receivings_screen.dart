@@ -29,7 +29,7 @@ class _MyReceivingsScreenState extends State<MyReceivingsScreen>
   @override
   bool get wantKeepAlive => true;
 
-  final MyReceivingsScreenController _controller = Get.put(MyReceivingsScreenController());
+  final MyReceivingsScreenController _controller = Get.find();
 
   final MainScreenController _mainController = Get.find();
 

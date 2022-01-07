@@ -13,16 +13,18 @@ abstract class AuthorizedRefreshableController extends BaseController{
   bool isAuthorized();
 
   @override
-  void onReady() async {
+  Future<bool> onReady() async {
     super.onReady();
 
     if(!isAuthorized()){
       showLoginDialog();
-      return;
+      return false;
     }
 
     showLoadingDialog();
     await main();
     hideDialog();
+
+    return true;
   }
 }
