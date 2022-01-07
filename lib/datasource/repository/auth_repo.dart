@@ -25,6 +25,8 @@ const errorCodeMap = {
   'USER_004': 'Email đã tồn tại',
   'USER_005': 'Email sai định dạng',
   'USER_006': 'Số điện thoại đã tồn tại',
+  'USER_010': 'Họ tên quá ngắn',
+  'USER_011': 'Mật khẩu quá ngắn',
 };
 
 const successMessageMap = {

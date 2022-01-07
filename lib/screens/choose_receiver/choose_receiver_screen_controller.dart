@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
-import 'package:forwa_app/datasource/repository/order_repo.dart';
+import 'package:forwa_app/datasource/repository/order_repo.dart' hide errorCodeMap;
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';

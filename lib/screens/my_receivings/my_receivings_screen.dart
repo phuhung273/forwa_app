@@ -165,10 +165,10 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
             Expanded(
               child: Container(
                 padding: const EdgeInsets.only(
-                    top: 0.0,
-                    bottom: 4.0,
-                    right: 4.0,
-                    left: 12.0
+                  top: 0.0,
+                  bottom: 4.0,
+                  right: 4.0,
+                  left: 12.0
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

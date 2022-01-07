@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:form_validator/form_validator.dart';
 import 'package:forwa_app/widgets/app_container.dart';
 import 'package:forwa_app/widgets/body_with_persistent_bottom.dart';
 import 'package:forwa_app/widgets/rating.dart';
@@ -8,7 +9,15 @@ import 'take_screen_controller.dart';
 
 class TakeScreen extends GetView<TakeScreenController> {
 
-  const TakeScreen({Key? key}) : super(key: key);
+  TakeScreen({Key? key}) : super(key: key);
+
+  final _formKey = GlobalKey<FormState>();
+
+  void _validate() {
+    if (_formKey.currentState!.validate()) {
+      controller.createOrder();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,82 +40,88 @@ class TakeScreen extends GetView<TakeScreenController> {
             ),
           ),
         ),
-        body: BodyWithPersistentBottom(
-          isKeyboard: isKeyboard,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppContainer(
-                padding: const EdgeInsets.only(
-                    left: 12.0,
-                    top: 24.0
-                ),
-                child: Text(
-                  'Xin lưu ý:',
-                  style: theme.textTheme.subtitle1?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.secondary
+        body: Form(
+          key: _formKey,
+          child: BodyWithPersistentBottom(
+            isKeyboard: isKeyboard,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppContainer(
+                  padding: const EdgeInsets.only(
+                      left: 12.0,
+                      top: 24.0
                   ),
-                )
-              ),
-              Container(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                    clipBehavior: Clip.antiAlias,
-                    elevation: 4.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.0),
+                  child: Text(
+                    'Xin lưu ý:',
+                    style: theme.textTheme.subtitle1?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.secondary
                     ),
-                    child: const PolicySection()
+                  )
                 ),
-              ),
-              const SellerInfoSection(),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                ),
-                child: Text(
-                  'Soạn tin nhắn',
-                  style: theme.textTheme.subtitle1?.copyWith(
-                    color: theme.colorScheme.secondary,
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                      clipBehavior: Clip.antiAlias,
+                      elevation: 4.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                      ),
+                      child: const PolicySection()
                   ),
-                )
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 12.0,
-                  vertical: 16.0,
                 ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0,
-                  vertical: 8.0
-                ),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: TextField(
-                  controller: controller.messageController,
-                  maxLines: 5,
-                  decoration: InputDecoration.collapsed(
-                    hintText: 'Soạn lời nhắn cho $name',
-                    hintStyle: theme.textTheme.bodyText1,
+                const SellerInfoSection(),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
                   ),
-                  cursorColor: Colors.black,
+                  child: Text(
+                    'Soạn tin nhắn',
+                    style: theme.textTheme.subtitle1?.copyWith(
+                      color: theme.colorScheme.secondary,
+                    ),
+                  )
                 ),
-              ),
-            ],
-          ),
-          bottom: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12.0,
-              vertical: 8.0
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                    vertical: 16.0,
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                    vertical: 8.0
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surface,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: TextFormField(
+                    controller: controller.messageController,
+                    maxLines: 5,
+                    decoration: InputDecoration.collapsed(
+                      hintText: 'Soạn lời nhắn cho $name',
+                      hintStyle: theme.textTheme.bodyText1,
+                    ),
+                    cursorColor: Colors.black,
+                    validator: ValidationBuilder(requiredMessage: 'Vui lòng nhập lời nhắn')
+                        .minLength(10, 'Lời nhắn quá ngắn!')
+                        .build(),
+                  ),
+                ),
+              ],
             ),
-            child: ElevatedButton(
-              onPressed: controller.addToOrder,
-              child: const Text('Gửi'),
-            )
+            bottom: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: 8.0
+              ),
+              child: ElevatedButton(
+                onPressed: _validate,
+                child: const Text('Gửi'),
+              )
+            ),
           ),
         ),
       )

@@ -13,7 +13,7 @@ abstract class OrderService {
   factory OrderService(Dio dio, {String baseUrl}) = _OrderService;
 
   @POST('/')
-  Future<String> createOrder(@Body() CreateOrderRequest request);
+  Future<ApiResponse<Order>> createOrder(@Body() CreateOrderRequest request);
 
   @GET('/me/get')
   Future<ApiResponse<List<Order>>> getMyOrders();

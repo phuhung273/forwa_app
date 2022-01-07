@@ -130,6 +130,13 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController
     }
   }
 
+  void insertOrder(Order order){
+    if(_initialized){
+      orders.insert(0, order);
+      orders.refresh();
+    }
+  }
+
   @override
   void dispose(){
     WidgetsBinding.instance?.removeObserver(this);

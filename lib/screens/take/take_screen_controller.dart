@@ -3,6 +3,7 @@ import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/create_order_request.dart';
+import 'package:forwa_app/screens/my_receivings/my_receivings_screen_controller.dart';
 import 'package:get/get.dart';
 
 import '../base_controller/base_controller.dart';
@@ -23,6 +24,8 @@ class TakeScreenController extends BaseController {
 
   final OrderRepo _orderRepo = Get.find();
 
+  final MyReceivingsScreenController _myReceivingsScreenController = Get.find();
+
   final String _id = Get.parameters[idParam]!;
   final String sellerName = Get.parameters[sellerNameParam]!;
 
@@ -40,24 +43,25 @@ class TakeScreenController extends BaseController {
   @override
   void onReady() {
     if(_userId == null) {
-      // TODO: Show error popup
       Get.back();
     }
     messageController.text = '';
   }
 
-  Future addToOrder() async{
+  Future createOrder() async{
     showLoadingDialog();
     final request = CreateOrderRequest(message: messageController.text, productId: int.tryParse(_id)!);
     final response = await _orderRepo.createOrder(request);
     hideDialog();
 
     if(!response.isSuccess || response.data == null){
-      // TODO: show error popup
+      final message = errorCodeMap[response.statusCode] ?? 'Lỗi không xác định';
+      showErrorDialog(message: message);
       return;
     }
 
-    // TODO: show success popup
+    await showSuccessDialog(message: 'Thành công. Mong bạn sẽ được chọn!');
+    _myReceivingsScreenController.insertOrder(response.data!);
 
     Get.until((route) => route.settings.name == ROUTE_MAIN);
   }
