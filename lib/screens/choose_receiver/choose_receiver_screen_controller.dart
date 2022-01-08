@@ -22,7 +22,7 @@ class ChooseReceiverScreenBinding extends Bindings {
   }
 }
 
-const productIdParam = 'product_id';
+const productIdParamChooseReceiver = 'product_id';
 
 
 class ChooseReceiverScreenController extends BaseController
@@ -45,7 +45,7 @@ class ChooseReceiverScreenController extends BaseController
   void onInit() {
     super.onInit();
     WidgetsBinding.instance?.addObserver(this);
-    _productId = int.tryParse(Get.parameters[productIdParam]!);
+    _productId = int.tryParse(Get.parameters[productIdParamChooseReceiver]!);
     if(Get.parameters[notificationStartParam] == NOTIFICATION_START_TRUE){
       isNotificationStart = true;
     } else {

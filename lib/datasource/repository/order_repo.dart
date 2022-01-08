@@ -111,4 +111,24 @@ class OrderRepo extends BaseRepo{
       }
     });
   }
+
+  Future<ApiResponse<Order>> getMyOrderByProductId(int productId) async {
+    return _service.getMyOrderByProductId(productId).catchError((Object obj) {
+      // non-200 error goes here.
+      switch (obj.runtimeType) {
+        case DioError:
+          final res = (obj as DioError).response;
+          if(res == null || res.statusCode == HttpStatus.internalServerError) return ApiResponse<Order>.fromError();
+
+          final data = getErrorData(res);
+          final error = data['message'] ?? res.statusMessage;
+          debugPrint(error);
+          return ApiResponse<Order>.fromError(error: data['message'] ?? 'Lỗi không xác định');
+        default:
+          final error = obj.toString();
+          debugPrint(error);
+          return ApiResponse<Order>.fromError(error: error);
+      }
+    });
+  }
 }

@@ -16,6 +16,8 @@ import 'package:forwa_app/screens/login/login_screen_controller.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:forwa_app/screens/message/message_screen_controller.dart';
+import 'package:forwa_app/screens/order/order_screen.dart';
+import 'package:forwa_app/screens/order/order_screen_controller.dart';
 import 'package:forwa_app/screens/password_forgot/password_forgot_screen.dart';
 import 'package:forwa_app/screens/password_forgot/password_forgot_screen_controller.dart';
 import 'package:forwa_app/screens/password_reset/password_reset_screen.dart';
@@ -62,6 +64,9 @@ const ROUTE_GIVE_SUCCESS = '/give_success';
 const ROUTE_TAKE_SUCCESS = '/take_success';
 const ROUTE_MESSAGE = '/message';
 const ROUTE_SUPPORT = '/support';
+const ROUTE_ORDER = '/order';
+
+const previousRouteParam = 'previous_route';
 
 var appRoute = [
   GetPage(name: ROUTE_SPLASH, page: () => SplashScreen(), binding: SplashScreenBinding()),
@@ -85,4 +90,5 @@ var appRoute = [
   GetPage(name: ROUTE_MESSAGE, page: () => const MessageScreen(), binding: MessageScreenBinding()),
   GetPage(name: ROUTE_SUPPORT, page: () => const SupportScreen()),
   GetPage(name: ROUTE_SELECT_ADDRESS, page: () => const AddressSelectScreen()),
+  GetPage(name: ROUTE_ORDER, page: () => const OrderScreen(), binding: OrderScreenBinding()),
 ];

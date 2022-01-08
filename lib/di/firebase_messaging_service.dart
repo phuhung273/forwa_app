@@ -12,6 +12,7 @@ import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
 import 'package:forwa_app/screens/my_givings/my_giving_screen_controller.dart';
 import 'package:forwa_app/screens/my_receivings/my_receivings_screen_controller.dart';
+import 'package:forwa_app/screens/order/order_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -117,11 +118,18 @@ class FirebaseMessagingService {
           Get.toNamed(
             ROUTE_CHOOSE_RECEIVER,
             parameters: {
-              productIdParam: notification.product.id.toString(),
+              productIdParamChooseReceiver: notification.product.id.toString(),
             }
           );
           break;
         case APP_NOTIFICATION_TYPE_SELECTED:
+          final notification = AppNotification.fromJson(jsonDecode(data['data']));
+          Get.toNamed(
+            ROUTE_ORDER,
+            parameters: {
+              productIdParamOrderScreen: notification.product.id.toString(),
+            }
+          );
           break;
         default:
           break;

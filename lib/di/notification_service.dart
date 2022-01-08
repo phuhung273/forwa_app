@@ -6,6 +6,7 @@ import 'package:forwa_app/di/firebase_messaging_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
+import 'package:forwa_app/screens/order/order_screen_controller.dart';
 import 'package:get/get.dart';
 
 class NotificationService {
@@ -92,11 +93,18 @@ class NotificationService {
         Get.toNamed(
           ROUTE_CHOOSE_RECEIVER,
           parameters: {
-            productIdParam: notification.product.id.toString(),
+            productIdParamChooseReceiver: notification.product.id.toString(),
           }
         );
         break;
       case APP_NOTIFICATION_TYPE_SELECTED:
+        final notification = AppNotification.fromJson(jsonDecode(data['data']));
+        Get.toNamed(
+            ROUTE_ORDER,
+            parameters: {
+              productIdParamOrderScreen: notification.product.id.toString(),
+            }
+        );
         break;
       default:
         break;

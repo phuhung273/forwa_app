@@ -12,6 +12,7 @@ import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:forwa_app/schema/auth/refresh_token_request.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
+import 'package:forwa_app/screens/order/order_screen_controller.dart';
 import 'package:get/get.dart';
 
 class SplashScreenBinding extends Bindings {
@@ -76,12 +77,20 @@ class SplashScreenController extends GetxController {
           Get.offAndToNamed(
             ROUTE_CHOOSE_RECEIVER,
             parameters: {
-              productIdParam: notification.product.id.toString(),
+              productIdParamChooseReceiver: notification.product.id.toString(),
               notificationStartParam: NOTIFICATION_START_TRUE,
             }
           );
           break;
         case APP_NOTIFICATION_TYPE_SELECTED:
+          final notification = AppNotification.fromJson(jsonDecode(data['data']));
+          Get.offAndToNamed(
+            ROUTE_ORDER,
+            parameters: {
+              productIdParamOrderScreen: notification.product.id.toString(),
+              notificationStartParam: NOTIFICATION_START_TRUE,
+            }
+          );
           break;
         default:
           _normalStart();

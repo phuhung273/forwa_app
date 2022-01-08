@@ -10,6 +10,7 @@ import 'package:forwa_app/screens/components/appbar_chat_action.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:forwa_app/screens/notification/notification_screen_controller.dart';
+import 'package:forwa_app/screens/order/order_screen_controller.dart';
 import 'package:get/get.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -113,9 +114,8 @@ const IMAGE_SIZE = 80.0;
 
 class NotificationItem extends GetView<NotificationScreenController> {
   final AppNotification notification;
-  final MainScreenController _mainController = Get.find();
 
-  NotificationItem({
+  const NotificationItem({
     Key? key,
     required this.notification,
   }) : super(key: key);
@@ -131,12 +131,17 @@ class NotificationItem extends GetView<NotificationScreenController> {
             Get.toNamed(
               ROUTE_CHOOSE_RECEIVER,
               parameters: {
-                productIdParam: notification.product.id.toString()
+                productIdParamChooseReceiver: notification.product.id.toString()
               }
             );
             break;
           case AppNotificationType.SELECTED:
-            _mainController.changeTab(MY_RECEIVINGS_SCREEN_INDEX);
+            Get.toNamed(
+              ROUTE_ORDER,
+              parameters: {
+                productIdParamOrderScreen: notification.product.id.toString()
+              }
+            );
             break;
           case AppNotificationType.UPLOAD:
             break;

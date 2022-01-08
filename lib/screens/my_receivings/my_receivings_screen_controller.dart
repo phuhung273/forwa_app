@@ -122,11 +122,13 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController
   }
 
   void setSuccessReviewId(int orderId, int reviewId){
-    final index = orders.indexWhere((element) => element.id == orderId);
+    if(_initialized){
+      final index = orders.indexWhere((element) => element.id == orderId);
 
-    if(index > -1){
-      orders[index].buyerReviewId = reviewId;
-      orders.refresh();
+      if(index > -1){
+        orders[index].buyerReviewId = reviewId;
+        orders.refresh();
+      }
     }
   }
 

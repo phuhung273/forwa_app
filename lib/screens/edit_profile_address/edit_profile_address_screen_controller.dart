@@ -17,8 +17,6 @@ class EditProfileAddressBinding extends Bindings {
   }
 }
 
-const previousRouteParam = 'previous_route';
-
 class EditProfileAddressController extends BaseController {
 
   final LocalStorage _localStorage = Get.find();

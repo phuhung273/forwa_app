@@ -134,7 +134,7 @@ class _MyGivingsScreenState extends State<MyGivingsScreen>
       return Get.toNamed(
           ROUTE_CHOOSE_RECEIVER,
           parameters: {
-            productIdParam: product.id.toString(),
+            productIdParamChooseReceiver: product.id.toString(),
           }
       );
     }

@@ -28,4 +28,7 @@ abstract class OrderService {
   Future<ApiResponse<ListOrdersOfProductResponse>> getOrdersOfProductId(
     @Path('productId') int productId,
   );
+
+  @GET('/mine/{productId}')
+  Future<ApiResponse<Order>> getMyOrderByProductId(@Path('productId') int productId);
 }
