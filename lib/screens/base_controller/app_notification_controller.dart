@@ -1,13 +1,20 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
+import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/app_notification_repo.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:get/get.dart';
 
-class AppNotificationController extends GetxController {
+class AppNotificationController extends GetxController
+    with WidgetsBindingObserver {
 
   final AppNotificationRepo _appNotificationRepo = Get.find();
 
   final LocalStorage _localStorage = Get.find();
+
+  final PersistentLocalStorage _persistentLocalStorage = Get.find();
 
   final notifications = List<AppNotification>.empty().obs;
   int? _userId;
@@ -19,8 +26,30 @@ class AppNotificationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
+    WidgetsBinding.instance?.addObserver(this);
     _userId = _localStorage.getUserID();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+
+    if(state == AppLifecycleState.paused){
+      // print('Im dead');
+    }
+
+    final lastState = WidgetsBinding.instance?.lifecycleState;
+    if(lastState == AppLifecycleState.resumed){
+      // print('Im alive');
+      final backgroundNotificationList = await _persistentLocalStorage.getBackgroundUploadList();
+      if(backgroundNotificationList != null && backgroundNotificationList.isNotEmpty){
+        for (final element in backgroundNotificationList) {
+          final notification = AppNotification.fromJson(jsonDecode(element));
+          increaseMyNotification(notification);
+        }
+        _persistentLocalStorage.eraseBackgroundUploadList();
+      }
+    }
   }
 
   @override
@@ -76,16 +105,31 @@ class AppNotificationController extends GetxController {
   void increaseMyGiving(AppNotification notification){
     myGivingCount.value++;
     notificationCount.value++;
-    _addNotification(notification);
+    insertNotification(notification);
   }
 
   void increaseMyReceiving(AppNotification notification){
     myReceivingCount.value++;
     notificationCount.value++;
-    _addNotification(notification);
+    insertNotification(notification);
   }
 
-  void _addNotification(AppNotification notification){
+  void increaseMyNotification(AppNotification notification){
+    notificationCount.value++;
+    insertNotification(notification);
+  }
+
+  void insertNotification(AppNotification notification){
     notifications.insert(0, notification);
+  }
+
+  void assignAll(List<AppNotification> notifications){
+    notifications.assignAll(notifications);
+  }
+
+  @override
+  void dispose(){
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
   }
 }

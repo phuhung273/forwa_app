@@ -92,6 +92,16 @@ class SplashScreenController extends GetxController {
             }
           );
           break;
+        case APP_NOTIFICATION_TYPE_UPLOAD:
+          final notification = AppNotification.fromJson(jsonDecode(data['data']));
+          Get.toNamed(
+            ROUTE_PRODUCT,
+            arguments: notification.product.id!,
+            parameters: {
+              notificationStartParam: NOTIFICATION_START_TRUE,
+            }
+          );
+          break;
         default:
           _normalStart();
           break;

@@ -16,6 +16,7 @@ import 'package:get/get_connect/http/src/status/http_status.dart';
 const errorCodeMap = {
   'ORDER_001': 'Bạn đã xin món này rồi!',
   'ORDER_002': 'Lời nhắn quá ngắn!',
+  'PRODUCT_002': 'Món đồ này đã ngưng nhận thêm người!'
 };
 
 class OrderRepo extends BaseRepo{

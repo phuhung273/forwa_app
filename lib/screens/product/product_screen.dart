@@ -23,23 +23,33 @@ class ProductScreen extends GetView<ProductScreenController> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return SafeArea(
-      child: Scaffold(
-        body: Obx(
-          () => CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                floating: true,
-                title: Text(
-                  'Thông tin món đồ',
-                  style: theme.textTheme.headline6
+    return WillPopScope(
+      onWillPop: () async {
+        if(controller.isNotificationStart){
+          Get.offAndToNamed(ROUTE_MAIN);
+          return false;
+        } else {
+          return true;
+        }
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body: Obx(
+            () => CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  floating: true,
+                  title: Text(
+                    'Thông tin món đồ',
+                    style: theme.textTheme.headline6
+                  ),
                 ),
-              ),
-              if(controller.name.isNotEmpty)
-                const SliverToBoxAdapter(
-                  child: ProductRender(),
-                ),
-            ]
+                if(controller.name.isNotEmpty)
+                  const SliverToBoxAdapter(
+                    child: ProductRender(),
+                  ),
+              ]
+            ),
           ),
         ),
       ),

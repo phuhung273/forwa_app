@@ -6,6 +6,7 @@ import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
+import 'package:forwa_app/screens/splash/splash_screen_controller.dart';
 import 'package:forwa_app/screens/take/take_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -45,11 +46,20 @@ class ProductScreenController extends BaseController {
   set page(int index) => current.value = index;
   int get page => current.value;
 
+  bool isNotificationStart = false;
   final int id = Get.arguments;
   late int? userId;
 
   LatLng? location;
   LatLng? wardLocation;
+
+  @override
+  void onInit() {
+    super.onInit();
+    if(Get.parameters[notificationStartParam] == NOTIFICATION_START_TRUE){
+      isNotificationStart = true;
+    }
+  }
 
   @override
   Future onReady() async {
@@ -93,6 +103,7 @@ class ProductScreenController extends BaseController {
         parameters: {
           idParam: id.toString(),
           sellerNameParam: sellerName.value,
+          notificationStartParam: isNotificationStart ? NOTIFICATION_START_TRUE : ''
         }
       );
     }

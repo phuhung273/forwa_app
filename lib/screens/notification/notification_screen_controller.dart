@@ -1,3 +1,4 @@
+
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/app_notification_repo.dart';
 import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
@@ -11,6 +12,7 @@ class NotificationScreenController extends AuthorizedRefreshableController {
   final AppNotificationController _appNotificationController = Get.find();
 
   final LocalStorage _localStorage = Get.find();
+
   int? _userId;
 
   DateTime now = DateTime.now();
@@ -43,7 +45,7 @@ class NotificationScreenController extends AuthorizedRefreshableController {
       return;
     }
 
-    _appNotificationController.notifications.assignAll(response.data ?? []);
+    _appNotificationController.assignAll(response.data ?? []);
   }
 
   @override

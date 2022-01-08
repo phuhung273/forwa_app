@@ -4,6 +4,7 @@ import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/create_order_request.dart';
 import 'package:forwa_app/screens/my_receivings/my_receivings_screen_controller.dart';
+import 'package:forwa_app/screens/splash/splash_screen_controller.dart';
 import 'package:get/get.dart';
 
 import '../base_controller/base_controller.dart';
@@ -24,7 +25,7 @@ class TakeScreenController extends BaseController {
 
   final OrderRepo _orderRepo = Get.find();
 
-  final MyReceivingsScreenController _myReceivingsScreenController = Get.find();
+  late MyReceivingsScreenController _myReceivingsScreenController;
 
   final String _id = Get.parameters[idParam]!;
   final String sellerName = Get.parameters[sellerNameParam]!;
@@ -32,18 +33,25 @@ class TakeScreenController extends BaseController {
   final TextEditingController messageController = TextEditingController();
 
   int? _userId;
+  bool isNotificationStart = false;
 
   @override
   void onInit(){
     super.onInit();
 
     _userId = _localStorage.getUserID();
+
+    if(Get.parameters[notificationStartParam] == NOTIFICATION_START_TRUE){
+      isNotificationStart = true;
+    } else {
+      _myReceivingsScreenController = Get.find();
+    }
   }
 
   @override
   void onReady() {
     if(_userId == null) {
-      Get.back();
+      return;
     }
     messageController.text = '';
   }
@@ -61,8 +69,13 @@ class TakeScreenController extends BaseController {
     }
 
     await showSuccessDialog(message: 'Thành công. Mong bạn sẽ được chọn!');
-    _myReceivingsScreenController.insertOrder(response.data!);
 
-    Get.until((route) => route.settings.name == ROUTE_MAIN);
+    if(!isNotificationStart){
+      _myReceivingsScreenController.insertOrder(response.data!);
+      Get.until((route) => route.settings.name == ROUTE_MAIN);
+    } else {
+      Get.offAllNamed(ROUTE_MAIN);
+    }
+
   }
 }

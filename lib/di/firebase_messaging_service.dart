@@ -58,6 +58,9 @@ class FirebaseMessagingService {
         case APP_NOTIFICATION_TYPE_SELECTED:
           _handleForegroundSelectedOrderNotification(data);
           break;
+        case APP_NOTIFICATION_TYPE_UPLOAD:
+          _handleForegroundUploadNotification(data);
+          break;
         default:
           break;
       }
@@ -78,6 +81,11 @@ class FirebaseMessagingService {
     final notification = AppNotification.fromJson(jsonDecode(data['data']));
     _appNotificationController.increaseMyReceiving(notification);
     _myReceivingsScreenController.changeOrderToSelectedByProductId(notification.product.id!);
+  }
+
+  _handleForegroundUploadNotification(Map<String, dynamic> data){
+    final notification = AppNotification.fromJson(jsonDecode(data['data']));
+    _appNotificationController.increaseMyNotification(notification);
   }
 
   Future _setup() async {
@@ -131,6 +139,13 @@ class FirebaseMessagingService {
             }
           );
           break;
+        case APP_NOTIFICATION_TYPE_UPLOAD:
+          final notification = AppNotification.fromJson(jsonDecode(data['data']));
+          Get.toNamed(
+            ROUTE_PRODUCT,
+            arguments: notification.product.id!
+          );
+          break;
         default:
           break;
       }
@@ -151,6 +166,9 @@ Future firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       break;
     case APP_NOTIFICATION_TYPE_SELECTED:
       await handleBackgroundSelectedOrderNotification(data);
+      break;
+    case APP_NOTIFICATION_TYPE_UPLOAD:
+      await handleBackgroundUploadNotification(data);
       break;
     default:
       break;
@@ -184,5 +202,16 @@ Future handleBackgroundSelectedOrderNotification(Map<String, dynamic> data) asyn
     orderStringList.add(data['order']);
   }
   return prefs.setStringList(BACKGROUND_SELECTED_ORDER_LIST_KEY, orderStringList);
+}
+
+Future handleBackgroundUploadNotification(Map<String, dynamic> data) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  List<String>? uploadStringList = prefs.getStringList(BACKGROUND_UPLOAD_LIST_KEY);
+  if(uploadStringList == null){
+    uploadStringList = [data['data']];
+  } else {
+    uploadStringList.add(data['data']);
+  }
+  return prefs.setStringList(BACKGROUND_UPLOAD_LIST_KEY, uploadStringList);
 }
 

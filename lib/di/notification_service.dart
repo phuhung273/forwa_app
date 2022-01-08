@@ -106,6 +106,13 @@ class NotificationService {
             }
         );
         break;
+      case APP_NOTIFICATION_TYPE_UPLOAD:
+        final notification = AppNotification.fromJson(jsonDecode(data['data']));
+        Get.toNamed(
+            ROUTE_PRODUCT,
+            arguments: notification.product.id!
+        );
+        break;
       default:
         break;
     }

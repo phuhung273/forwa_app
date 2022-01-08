@@ -144,8 +144,10 @@ class NotificationItem extends GetView<NotificationScreenController> {
             );
             break;
           case AppNotificationType.UPLOAD:
-            break;
-          case AppNotificationType.CANCEL:
+            Get.toNamed(
+              ROUTE_PRODUCT,
+              arguments: notification.product.id!
+            );
             break;
           default:
             break;
@@ -193,9 +195,7 @@ class NotificationItem extends GetView<NotificationScreenController> {
       case AppNotificationType.SELECTED:
         return 'Bạn đã được chọn. Mau tới lấy ${notification.product.name}';
       case AppNotificationType.UPLOAD:
-        return '';
-      case AppNotificationType.CANCEL:
-        return '';
+        return 'Vừa có người đăng ${notification.product.name} ở gần bạn';
       default:
         return '';
     }
