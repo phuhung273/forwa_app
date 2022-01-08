@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
@@ -87,6 +88,16 @@ class MyGivingsScreenController extends AuthorizedRefreshableController
         products[index].orderCount = products[index].orderCount == null
             ? 1
             : products[index].orderCount! + 1;
+        products.refresh();
+      }
+    }
+  }
+
+  void changeProductIdToSuccess(int productId){
+    if(_initialized){
+      final index = products.indexWhere((element) => element.id == productId);
+      if(index > -1) {
+        products[index].statusString = EnumToString.convertToString(ProductStatus.FINISH).toLowerCase();
         products.refresh();
       }
     }

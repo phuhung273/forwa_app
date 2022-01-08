@@ -5,6 +5,7 @@ import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/datasource/local/hidden_product_db.dart';
 import 'package:forwa_app/datasource/local/hidden_user_db.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
+import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/remote/address_service.dart';
 import 'package:forwa_app/datasource/remote/app_notification_service.dart';
 import 'package:forwa_app/datasource/remote/auth_service.dart';
@@ -37,6 +38,8 @@ Future configureDependencies() async {
   await GetStorage.init();
 
   Get.put(LocalStorage());
+  Get.lazyPut(() => PersistentLocalStorage());
+
 
   _configureApiClient();
   _configureSocketIO();

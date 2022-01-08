@@ -5,6 +5,7 @@ import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/public_profile/public_profile_screen_controller.dart';
+import 'package:forwa_app/screens/splash/splash_screen_controller.dart';
 import 'package:forwa_app/widgets/app_level_action_container.dart';
 import 'package:forwa_app/widgets/rating.dart';
 import 'package:forwa_app/widgets/secondary_action_container.dart';
@@ -20,40 +21,50 @@ class ChooseReceiverScreen extends GetView<ChooseReceiverScreenController> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Chọn người nhận',
+    return WillPopScope(
+      onWillPop: () async {
+        if(controller.isNotificationStart){
+          Get.offAndToNamed(ROUTE_MAIN);
+          return false;
+        } else {
+          return true;
+        }
+      },
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Chọn người nhận',
+            ),
           ),
-        ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(defaultPadding),
-          child: Column(
-            children: [
-              Obx(
-                () => ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: controller.orders.length,
-                  itemBuilder: (context, index) {
-                    final order = controller.orders[index];
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: Column(
+              children: [
+                Obx(
+                  () => ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: controller.orders.length,
+                    itemBuilder: (context, index) {
+                      final order = controller.orders[index];
 
-                    return ReceiverCard(
-                      order: order,
-                      onPick: () => controller.pickReceiver(order.id),
-                      onSuccess: () => controller.orderToSuccess(index),
-                    );
-                  },
-                  separatorBuilder: (context, index) => const Divider(),
+                      return ReceiverCard(
+                        order: order,
+                        onPick: () => controller.pickReceiver(order.id),
+                        onSuccess: () => controller.orderToSuccess(index),
+                      );
+                    },
+                    separatorBuilder: (context, index) => const Divider(),
+                  ),
                 ),
-              ),
-              const Divider(),
-              AppLevelActionContainer(
-                clipBehavior: Clip.none,
-                child: _buildMainButton()
-              )
-            ],
+                const Divider(),
+                AppLevelActionContainer(
+                  clipBehavior: Clip.none,
+                  child: _buildMainButton()
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -81,7 +92,7 @@ class ChooseReceiverScreen extends GetView<ChooseReceiverScreenController> {
 
 const AVATAR_SIZE = 24.0;
 
-class ReceiverCard extends StatelessWidget {
+class ReceiverCard extends GetView<ChooseReceiverScreenController> {
   final Order order;
   final VoidCallback onPick;
   final VoidCallback onSuccess;
@@ -134,7 +145,8 @@ class ReceiverCard extends StatelessWidget {
                   Get.toNamed(
                     ROUTE_PUBLIC_PROFILE,
                     parameters: {
-                      userIdParam: order.userId.toString()
+                      userIdParam: order.userId.toString(),
+                      notificationStartParam: controller.isNotificationStart ? NOTIFICATION_START_TRUE : ''
                     }
                   ),
                 child: const Text('Xem thêm'),

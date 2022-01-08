@@ -4,6 +4,10 @@ import 'package:forwa_app/datasource/remote/order_service.dart';
 import 'package:forwa_app/datasource/repository/base_repo.dart';
 import 'package:forwa_app/schema/api_response.dart';
 import 'package:forwa_app/schema/order/create_order_request.dart';
+import 'package:forwa_app/schema/order/list_orders_of_product_response.dart';
+import 'package:forwa_app/schema/order/list_orders_of_product_response.dart';
+import 'package:forwa_app/schema/order/list_orders_of_product_response.dart';
+import 'package:forwa_app/schema/order/list_orders_of_product_response.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
@@ -83,7 +87,7 @@ class OrderRepo extends BaseRepo{
     });
   }
 
-  Future<ApiResponse<List<Order>>> getOrdersOfProductId(
+  Future<ApiResponse<ListOrdersOfProductResponse>> getOrdersOfProductId(
     int productId,
     {
       int pageSize = 10,
@@ -94,16 +98,16 @@ class OrderRepo extends BaseRepo{
       switch (obj.runtimeType) {
         case DioError:
           final res = (obj as DioError).response;
-          if(res == null || res.statusCode == HttpStatus.internalServerError) return ApiResponse<List<Order>>.fromError();
+          if(res == null || res.statusCode == HttpStatus.internalServerError) return ApiResponse<ListOrdersOfProductResponse>.fromError();
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
           debugPrint(error);
-          return ApiResponse<List<Order>>.fromError(error: data['message'] ?? 'Lỗi không xác định');
+          return ApiResponse<ListOrdersOfProductResponse>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
           debugPrint(error);
-          return ApiResponse<List<Order>>.fromError(error: error);
+          return ApiResponse<ListOrdersOfProductResponse>.fromError(error: error);
       }
     });
   }

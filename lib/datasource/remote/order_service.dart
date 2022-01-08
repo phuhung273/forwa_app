@@ -1,5 +1,6 @@
 import 'package:forwa_app/schema/api_response.dart';
 import 'package:forwa_app/schema/order/create_order_request.dart';
+import 'package:forwa_app/schema/order/list_orders_of_product_response.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
@@ -24,7 +25,7 @@ abstract class OrderService {
   );
 
   @GET('/product/{productId}')
-  Future<ApiResponse<List<Order>>> getOrdersOfProductId(
+  Future<ApiResponse<ListOrdersOfProductResponse>> getOrdersOfProductId(
     @Path('productId') int productId,
   );
 }

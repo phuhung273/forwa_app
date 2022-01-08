@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:forwa_app/constants.dart';
+import 'package:forwa_app/di/firebase_messaging_service.dart';
+import 'package:forwa_app/route/route.dart';
+import 'package:forwa_app/schema/app_notification/app_notification.dart';
+import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
 import 'package:get/get.dart';
 
 class NotificationService {
@@ -36,7 +42,15 @@ class NotificationService {
       iOS: initializationSettingsIOS,
     );
 
-    await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    await _flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onSelectNotification: (String? payload) async {
+        if (payload != null) {
+          final data = jsonDecode(payload);
+          _handleForegroundNotificationClick(data);
+        }
+      }
+    );
 
     /// Create an Android Notification Channel.
     ///
@@ -68,4 +82,25 @@ class NotificationService {
       payload: payload,
     );
   }
+
+  void _handleForegroundNotificationClick(Map<String, dynamic> data){
+    switch(data['type']){
+      case MESSAGE_TYPE_CHAT:
+        break;
+      case APP_NOTIFICATION_TYPE_PROCESSING:
+        final notification = AppNotification.fromJson(jsonDecode(data['data']));
+        Get.toNamed(
+          ROUTE_CHOOSE_RECEIVER,
+          parameters: {
+            productIdParam: notification.product.id.toString(),
+          }
+        );
+        break;
+      case APP_NOTIFICATION_TYPE_SELECTED:
+        break;
+      default:
+        break;
+    }
+  }
 }
+

@@ -11,6 +11,7 @@ import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/give_success/give_success_screen_controller.dart';
 import 'package:forwa_app/screens/my_givings/my_giving_screen_controller.dart';
+import 'package:forwa_app/screens/splash/splash_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -23,16 +24,18 @@ class ChooseReceiverScreenBinding extends Bindings {
 
 const productIdParam = 'product_id';
 
+
 class ChooseReceiverScreenController extends BaseController
     with WidgetsBindingObserver {
 
-  final MyGivingsScreenController _myGivingsScreenController = Get.find();
+  late MyGivingsScreenController _myGivingsScreenController;
 
   final ProductRepo _productRepo = Get.find();
 
   final OrderRepo _orderRepo = Get.find();
   final PersistentLocalStorage _persistentLocalStorage = Get.find();
 
+  bool isNotificationStart = false;
   int? _productId;
   final finish = true.obs;
 
@@ -43,9 +46,11 @@ class ChooseReceiverScreenController extends BaseController
     super.onInit();
     WidgetsBinding.instance?.addObserver(this);
     _productId = int.tryParse(Get.parameters[productIdParam]!);
-
-    final product = _myGivingsScreenController.products.firstWhere((element) => element.id == _productId);
-    finish.value = product.status == ProductStatus.FINISH;
+    if(Get.parameters[notificationStartParam] == NOTIFICATION_START_TRUE){
+      isNotificationStart = true;
+    } else {
+      _myGivingsScreenController = Get.find();
+    }
   }
 
   @override
@@ -60,7 +65,8 @@ class ChooseReceiverScreenController extends BaseController
       return;
     }
 
-    orders.assignAll(response.data ?? []);
+    orders.assignAll(response.data?.orders ?? []);
+    finish.value = response.data?.product.status == ProductStatus.FINISH;
   }
 
   @override
@@ -199,7 +205,12 @@ class ChooseReceiverScreenController extends BaseController
     }
 
     await showSuccessDialog(message: 'Thành công');
-    Get.back();
+
+    if(!isNotificationStart){
+      _myGivingsScreenController.changeProductIdToSuccess(response.data!.id!);
+    }
+
+    finish.value = true;
   }
 
   void setSuccessReviewId(int orderId, int reviewId){

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -6,8 +7,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
+import 'package:forwa_app/di/firebase_messaging_service.dart';
 import 'package:forwa_app/route/route.dart';
+import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:forwa_app/schema/auth/refresh_token_request.dart';
+import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
 import 'package:get/get.dart';
 
 class SplashScreenBinding extends Bindings {
@@ -16,6 +20,9 @@ class SplashScreenBinding extends Bindings {
     Get.lazyPut(() => SplashScreenController());
   }
 }
+
+const NOTIFICATION_START_TRUE = 'yes';
+const notificationStartParam = 'notification_start';
 
 class SplashScreenController extends GetxController {
 
@@ -52,10 +59,40 @@ class SplashScreenController extends GetxController {
         _localStorage.removeCredentials();
       }
     }
+
     return Timer(const Duration(seconds: 1), _onDoneLoading);
   }
 
   Future _onDoneLoading() async {
+
+    final message = await FirebaseMessaging.instance.getInitialMessage();
+    if (message != null) {
+      final data = message.data;
+      switch(data['type']){
+        case MESSAGE_TYPE_CHAT:
+          break;
+        case APP_NOTIFICATION_TYPE_PROCESSING:
+          final notification = AppNotification.fromJson(jsonDecode(data['data']));
+          Get.offAndToNamed(
+            ROUTE_CHOOSE_RECEIVER,
+            parameters: {
+              productIdParam: notification.product.id.toString(),
+              notificationStartParam: NOTIFICATION_START_TRUE,
+            }
+          );
+          break;
+        case APP_NOTIFICATION_TYPE_SELECTED:
+          break;
+        default:
+          _normalStart();
+          break;
+      }
+    } else {
+      _normalStart();
+    }
+  }
+
+  void _normalStart(){
     if(_localStorage.getSkipIntro() == null){
       Get.offAndToNamed(ROUTE_INTRODUCTION);
     } else {

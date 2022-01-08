@@ -5,9 +5,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/di/notification_service.dart';
+import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
+import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
 import 'package:forwa_app/screens/my_givings/my_giving_screen_controller.dart';
 import 'package:forwa_app/screens/my_receivings/my_receivings_screen_controller.dart';
 import 'package:get/get.dart';
@@ -34,15 +36,17 @@ class FirebaseMessagingService {
   void _handleForegroundMessage(){
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       final RemoteNotification? notification = message.notification;
+      final data = message.data;
+
       if (notification != null) {
         _notificationService.showNotification(
           id: notification.hashCode,
           title: notification.title,
           body: notification.body,
+          payload: jsonEncode(data)
         );
       }
 
-      final data = message.data;
       switch(data['type']){
         case MESSAGE_TYPE_CHAT:
           _handleForegroundChatNotification(data);
@@ -64,16 +68,15 @@ class FirebaseMessagingService {
   }
 
   _handleForegroundProcessingOrderNotification(Map<String, dynamic> data){
-    final noti = AppNotification.fromJson(jsonDecode(data['data']));
-    print(data['order']);
-    _appNotificationController.increaseMyGiving(noti);
-    _myGivingsScreenController.increaseOrderOfProductId(noti.product.id!);
+    final notification = AppNotification.fromJson(jsonDecode(data['data']));
+    _appNotificationController.increaseMyGiving(notification);
+    _myGivingsScreenController.increaseOrderOfProductId(notification.product.id!);
   }
 
   _handleForegroundSelectedOrderNotification(Map<String, dynamic> data){
-    final noti = AppNotification.fromJson(jsonDecode(data['data']));
-    _appNotificationController.increaseMyReceiving(noti);
-    _myReceivingsScreenController.changeOrderToSelectedByProductId(noti.product.id!);
+    final notification = AppNotification.fromJson(jsonDecode(data['data']));
+    _appNotificationController.increaseMyReceiving(notification);
+    _myReceivingsScreenController.changeOrderToSelectedByProductId(notification.product.id!);
   }
 
   Future _setup() async {
@@ -105,15 +108,23 @@ class FirebaseMessagingService {
     // );
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      debugPrint('A new onMessageOpenedApp event was published!');
-      debugPrint(message.data.toString());
-    });
-
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((RemoteMessage? message) {
-      if (message != null) {
-        debugPrint('An initial message event was published!');
+      final data = message.data;
+      switch(data['type']){
+        case MESSAGE_TYPE_CHAT:
+          break;
+        case APP_NOTIFICATION_TYPE_PROCESSING:
+          final notification = AppNotification.fromJson(jsonDecode(data['data']));
+          Get.toNamed(
+            ROUTE_CHOOSE_RECEIVER,
+            parameters: {
+              productIdParam: notification.product.id.toString(),
+            }
+          );
+          break;
+        case APP_NOTIFICATION_TYPE_SELECTED:
+          break;
+        default:
+          break;
       }
     });
   }

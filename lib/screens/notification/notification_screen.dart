@@ -2,8 +2,10 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
+import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
+import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
 import 'package:forwa_app/screens/components/appbar_chat_action.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
@@ -126,7 +128,12 @@ class NotificationItem extends GetView<NotificationScreenController> {
       onTap: () {
         switch(notification.type){
           case AppNotificationType.PROCESSING:
-            _mainController.changeTab(MY_GIVINGS_SCREEN_INDEX);
+            Get.toNamed(
+              ROUTE_CHOOSE_RECEIVER,
+              parameters: {
+                productIdParam: notification.product.id.toString()
+              }
+            );
             break;
           case AppNotificationType.SELECTED:
             _mainController.changeTab(MY_RECEIVINGS_SCREEN_INDEX);

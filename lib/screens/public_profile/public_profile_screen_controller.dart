@@ -6,6 +6,7 @@ import 'package:forwa_app/schema/report/user_report.dart';
 import 'package:forwa_app/schema/review/review.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/home/home_screen_controller.dart';
+import 'package:forwa_app/screens/splash/splash_screen_controller.dart';
 import 'package:get/get.dart';
 
 class PublicProfileScreenBinding extends Bindings {
@@ -17,7 +18,7 @@ class PublicProfileScreenBinding extends Bindings {
 
 const userIdParam = 'user_id';
 
-class PublicProfileScreenController extends BaseController with Reportable{
+class PublicProfileScreenController extends BaseController with Reportable {
 
   final UserRepo _userRepo = Get.find();
 
@@ -25,8 +26,9 @@ class PublicProfileScreenController extends BaseController with Reportable{
 
   final HiddenUserDB _hiddenUserDB = Get.find();
 
-  final HomeScreenController _homeController = Get.find();
+  late HomeScreenController _homeController;
 
+  bool isNotificationStart = false;
   int? userId;
   final name = ''.obs;
   final rating = 0.0.obs;
@@ -40,6 +42,12 @@ class PublicProfileScreenController extends BaseController with Reportable{
     super.onInit();
 
     userId = int.tryParse(Get.parameters[userIdParam]!);
+
+    if(Get.parameters[notificationStartParam] == NOTIFICATION_START_TRUE){
+      isNotificationStart = true;
+    } else {
+      _homeController = Get.find();
+    }
   }
 
   @override
@@ -85,6 +93,9 @@ class PublicProfileScreenController extends BaseController with Reportable{
     }
 
     _hiddenUserDB.insert(report.toUserId);
-    _homeController.products.removeWhere((element) => element.user?.id == report.toUserId);
+
+    if(!isNotificationStart){
+      _homeController.products.removeWhere((element) => element.user?.id == report.toUserId);
+    }
   }
 }
