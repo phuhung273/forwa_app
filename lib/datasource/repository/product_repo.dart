@@ -7,6 +7,7 @@ import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/remote/product_service.dart';
 import 'package:forwa_app/datasource/repository/base_repo.dart';
 import 'package:forwa_app/schema/api_response.dart';
+import 'package:forwa_app/schema/product/lazy_product_request.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/schema/product/product_add.dart';
 import 'package:forwa_app/schema/product/product_list_request.dart';
@@ -187,6 +188,26 @@ class ProductRepo extends BaseRepo {
           final error = obj.toString();
           debugPrint(error);
           return ApiResponse<Product>.fromError(error: error);
+      }
+    });
+  }
+
+  Future<ApiResponse<List<Product>>> lazyLoadProduct(LazyProductRequest request) async {
+    return _service.lazyLoadProducts(request).catchError((Object obj) {
+      // non-200 error goes here.
+      switch (obj.runtimeType) {
+        case DioError:
+          final res = (obj as DioError).response;
+          if(res == null || res.statusCode == HttpStatus.internalServerError) return ApiResponse<List<Product>>.fromError();
+
+          final data = getErrorData(res);
+          final error = data['message'] ?? res.statusMessage;
+          debugPrint(error);
+          return ApiResponse<List<Product>>.fromError(error: data['message'] ?? 'Lỗi không xác định');
+        default:
+          final error = obj.toString();
+          debugPrint(error);
+          return ApiResponse<List<Product>>.fromError(error: error);
       }
     });
   }

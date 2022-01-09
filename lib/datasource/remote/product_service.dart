@@ -1,6 +1,7 @@
 
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/schema/api_response.dart';
+import 'package:forwa_app/schema/product/lazy_product_request.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/schema/product/product_list_request.dart';
 import 'package:forwa_app/schema/product/product_list_response.dart';
@@ -27,4 +28,7 @@ abstract class ProductService {
 
   @POST('/products/{id}/finish')
   Future<ApiResponse<Product>> finishProduct(@Path('id') int id);
+
+  @POST('/products_lazy')
+  Future<ApiResponse<List<Product>>> lazyLoadProducts(@Body() LazyProductRequest request);
 }

@@ -11,6 +11,7 @@ import 'package:forwa_app/screens/public_profile/public_profile_screen_controlle
 import 'package:forwa_app/widgets/rating.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import 'home_screen_controller.dart';
 
@@ -39,107 +40,107 @@ class _HomeScreenState extends State<HomeScreen>
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
 
-    return RefreshIndicator(
-      onRefresh: _controller.main,
-      color: theme.colorScheme.secondary,
-      child: CustomScrollView(
-        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-        slivers: [
-          SliverAppBar(
-            floating: true,
-            leading: Container(
-              margin: const EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: IconButton(
-                icon: Icon(
-                  Icons.menu,
-                  color: theme.colorScheme.secondary,
-                ),
-                iconSize: 20.0,
-                onPressed: () => _mainController.openDrawer(),
-              ),
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          floating: true,
+          leading: Container(
+            margin: const EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(8.0),
             ),
-            actions: [
-              AppBarChatAction()
-            ],
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                // borderRadius: roundedRectangleBorderRadius,
+            child: IconButton(
+              icon: Icon(
+                Icons.menu,
+                color: theme.colorScheme.secondary,
               ),
-              child: Obx(
-                () {
-                  final hour = _controller.now.hour;
+              iconSize: 20.0,
+              onPressed: () => _mainController.openDrawer(),
+            ),
+          ),
+          actions: [
+            AppBarChatAction()
+          ],
+        ),
+        SliverToBoxAdapter(
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              // borderRadius: roundedRectangleBorderRadius,
+            ),
+            child: Obx(
+              () {
+                final hour = _controller.now.hour;
 
-                  return Text(
-                    _buildGreeting(hour),
-                    style: theme.textTheme.subtitle1?.copyWith(
-                      color: theme.colorScheme.secondary,
-                    ),
-                  );
-                },
-              ),
+                return Text(
+                  _buildGreeting(hour),
+                  style: theme.textTheme.subtitle1?.copyWith(
+                    color: theme.colorScheme.secondary,
+                  ),
+                );
+              },
             ),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.secondary,
-                          borderRadius: BorderRadius.circular(8.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 3,
-                              offset: const Offset(0, 1), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                        margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-                        child: Text(
-                          'Miễn phí',
-                          style: theme.textTheme.subtitle1?.copyWith(
-                            color: Colors.white,
+        ),
+        SliverFillRemaining(
+          child: Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.secondary,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: const Offset(0, 1), // changes position of shadow
                           ),
+                        ],
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                      margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+                      child: Text(
+                        'Miễn phí',
+                        style: theme.textTheme.subtitle1?.copyWith(
+                          color: Colors.white,
                         ),
                       ),
-                    ]
-                  ),
-                  Obx(
-                    () => ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: _controller.products.length,
-                      itemBuilder: (context, index) {
-                        final product = _controller.products[index];
-                        return ProductCard(
-                          product: product,
-                        );
-                      }
+                    ),
+                  ]
+                ),
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: _controller.main,
+                    color: theme.colorScheme.secondary,
+                    child: Obx(
+                      () => ScrollablePositionedList.builder(
+                        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                        itemCount: _controller.products.length,
+                        itemPositionsListener: _controller.itemPositionsListener,
+                        itemBuilder: (context, index) {
+                          final product = _controller.products[index];
+                          return ProductCard(
+                            product: product,
+                          );
+                        }
+                      ),
                     ),
                   ),
-                  const Divider(),
-                ],
-              ),
+                ),
+              ],
             ),
-          )
-        ],
-      ),
+          ),
+        ),
+      ],
     );
   }
 
