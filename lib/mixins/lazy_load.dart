@@ -11,14 +11,21 @@ mixin LazyLoad {
 
   void initLazyLoad() {
     itemPositionsListener.itemPositions.addListener(() async {
-      final positions = itemPositionsListener.itemPositions.value;
-      if(positions.last.index + stepToLoad >= listLength && !_isLoading && listLength != 0 && !_stop){
+      if(_checkLazyCondition()){
         _isLoading = true;
-        print('Init lazyload');
         await onLazyLoad();
         _isLoading = false;
       }
     });
+  }
+
+  bool _checkLazyCondition(){
+    final positions = itemPositionsListener.itemPositions.value;
+    return positions.last.index + stepToLoad >= listLength // User almost reach end of list
+      && !_isLoading // Lazy load is not fetching
+      && listLength != 0 // list has been initialized
+      && !_stop // has not been stop manually
+      ;
   }
 
   Future onLazyLoad();

@@ -1,6 +1,7 @@
 
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/schema/api_response.dart';
+import 'package:forwa_app/schema/product/lazy_giving_request.dart';
 import 'package:forwa_app/schema/product/lazy_product_request.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/schema/product/product_list_request.dart';
@@ -17,18 +18,21 @@ abstract class ProductService {
   @POST('/products/list')
   Future<ProductListResponse> getProducts(@Body() ProductListRequest request);
 
+  @POST('/products_lazy')
+  Future<ApiResponse<List<Product>>> lazyLoadProducts(@Body() LazyProductRequest request);
+
   // @POST('/products')
   // Future<Product> addProduct(@Body() AddProductRequest request);
 
   @GET('/products/{id}')
   Future<ApiResponse<Product>> getProduct(@Path('id') int id);
 
-  @GET('/user/showMyGiving')
+  @GET('/giving')
   Future<ProductListResponse> getMyProducts();
+
+  @POST('/giving_lazy')
+  Future<ApiResponse<List<Product>>> lazyLoadMyProducts(@Body() LazyGivingRequest request);
 
   @POST('/products/{id}/finish')
   Future<ApiResponse<Product>> finishProduct(@Path('id') int id);
-
-  @POST('/products_lazy')
-  Future<ApiResponse<List<Product>>> lazyLoadProducts(@Body() LazyProductRequest request);
 }

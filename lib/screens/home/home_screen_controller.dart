@@ -17,7 +17,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 
 class HomeScreenController extends RefreshableController
-    with Reportable, LazyLoad{
+    with Reportable, LazyLoad {
 
   final ProductRepo _productRepo = Get.find();
 
@@ -81,10 +81,17 @@ class HomeScreenController extends RefreshableController
       return;
     }
 
-    final filteredProducts = response.data!.items..removeWhere((element) => _hiddenProductIds.contains(element.id));
+    final items = response.data!.items;
+
+    final filteredProducts = items..removeWhere((element) => _hiddenProductIds.contains(element.id));
     products.assignAll(filteredProducts);
-    _calculateEdgeId();
-    resetLazyLoad();
+
+    if(items.length < 10){
+      stopLazyLoad();
+    } else {
+      _calculateEdgeId();
+      resetLazyLoad();
+    }
   }
 
   @override

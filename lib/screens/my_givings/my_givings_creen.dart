@@ -9,6 +9,7 @@ import 'package:forwa_app/screens/components/appbar_chat_action.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:get/get.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import 'my_giving_screen_controller.dart';
 
@@ -71,7 +72,7 @@ class _MyGivingsScreenState extends State<MyGivingsScreen>
                     AppBarChatAction()
                   ],
                 ),
-                SliverToBoxAdapter(
+                SliverFillRemaining(
                   child: Column(
                     children: [
                       Padding(
@@ -99,22 +100,23 @@ class _MyGivingsScreenState extends State<MyGivingsScreen>
                         ),
                       ),
                       const Divider(),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                        child: Obx(
-                          () => ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: _controller.products.length,
-                            itemBuilder: (context, index) {
-                              final product = _controller.products[index];
-                              return InkWell(
-                                onTap: () => _buildOnTapCard(product),
-                                child: GivingItem(
-                                  product: product
-                                ),
-                              );
-                            },
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                          child: Obx(
+                            () => ScrollablePositionedList.builder(
+                              itemCount: _controller.products.length,
+                              itemPositionsListener: _controller.itemPositionsListener,
+                              itemBuilder: (context, index) {
+                                final product = _controller.products[index];
+                                return InkWell(
+                                  onTap: () => _buildOnTapCard(product),
+                                  child: GivingItem(
+                                    product: product
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       )

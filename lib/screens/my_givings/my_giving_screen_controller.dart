@@ -5,13 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
+import 'package:forwa_app/mixins/lazy_load.dart';
 import 'package:forwa_app/schema/order/order.dart';
+import 'package:forwa_app/schema/product/lazy_giving_request.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/base_controller/authorized_refreshable_controller.dart';
 import 'package:get/get.dart';
 
 class MyGivingsScreenController extends AuthorizedRefreshableController
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, LazyLoad  {
 
   bool _initialized = false;
 
@@ -23,6 +25,11 @@ class MyGivingsScreenController extends AuthorizedRefreshableController
 
   final products = List<Product>.empty().obs;
   int? _userId;
+
+  @override
+  int get listLength => products.length;
+
+  late int _lowProductId;
 
   @override
   void onInit() {
@@ -67,6 +74,8 @@ class MyGivingsScreenController extends AuthorizedRefreshableController
     if(!isAuthorized()){
       return false;
     }
+
+    initLazyLoad();
     return true;
   }
 
@@ -78,7 +87,15 @@ class MyGivingsScreenController extends AuthorizedRefreshableController
       return;
     }
 
-    products.assignAll(response.data!.items);
+    final items = response.data!.items;
+    products.assignAll(items);
+
+    if(items.length < 10){
+      stopLazyLoad();
+    } else {
+      _calculateEdgeId();
+      resetLazyLoad();
+    }
   }
 
   void increaseOrderOfProductId(int productId){
@@ -99,6 +116,37 @@ class MyGivingsScreenController extends AuthorizedRefreshableController
       if(index > -1) {
         products[index].statusString = EnumToString.convertToString(ProductStatus.FINISH).toLowerCase();
         products.refresh();
+      }
+    }
+  }
+
+  @override
+  Future onLazyLoad() async {
+    final request = LazyGivingRequest(
+        lowProductId: _lowProductId
+    );
+
+    final response = await _productRepo.lazyLoadMyGiving(request);
+
+    if(!response.isSuccess || response.data == null){
+      return;
+    }
+
+    final newItems = response.data!;
+    if(newItems.isEmpty){
+      stopLazyLoad();
+      return;
+    }
+
+    products.addAll(newItems);
+    _calculateEdgeId();
+  }
+
+  void _calculateEdgeId(){
+    _lowProductId = products.first.id!;
+    for (var product in products) {
+      if(product.id! < _lowProductId){
+        _lowProductId = product.id!;
       }
     }
   }
