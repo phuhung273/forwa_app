@@ -44,67 +44,67 @@ class _MyGivingsScreenState extends State<MyGivingsScreen>
       },
       child: SafeArea(
         child: Scaffold(
-          body: RefreshIndicator(
-            color: theme.colorScheme.secondary,
-            onRefresh: _controller.authorizedMain,
-            child: CustomScrollView(
-              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-              slivers: [
-                SliverAppBar(
-                  automaticallyImplyLeading: false,
-                  floating: true,
-                  leading: Container(
-                    margin: const EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.menu,
-                        color: theme.colorScheme.secondary,
-                      ),
-                      iconSize: 20.0,
-                      onPressed: () => _mainController.openDrawer(),
-                    ),
+          body: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                automaticallyImplyLeading: false,
+                floating: true,
+                leading: Container(
+                  margin: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                  actions: [
-                    AppBarChatAction()
-                  ],
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.menu,
+                      color: theme.colorScheme.secondary,
+                    ),
+                    iconSize: 20.0,
+                    onPressed: () => _mainController.openDrawer(),
+                  ),
                 ),
-                SliverFillRemaining(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Obx(
-                              () => Text(
-                                'Bạn đã cho đi: ${_controller.products.length}',
-                                style: theme.textTheme.subtitle1,
-                              ),
+                actions: [
+                  AppBarChatAction()
+                ],
+              ),
+              SliverFillRemaining(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Obx(
+                            () => Text(
+                              'Bạn đã cho đi: ${_controller.products.length}',
+                              style: theme.textTheme.subtitle1,
                             ),
-                            // ElevatedButton(
-                            //   style: ElevatedButton.styleFrom(
-                            //     shape: thinRoundedRectangleShape,
-                            //     padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                            //     primary: secondaryColor,
-                            //     onPrimary: Colors.white,
-                            //   ),
-                            //   onPressed: _mainController.toGiveScreen,
-                            //   child: const Text('Tải lên')
-                            // )
-                          ],
-                        ),
+                          ),
+                          // ElevatedButton(
+                          //   style: ElevatedButton.styleFrom(
+                          //     shape: thinRoundedRectangleShape,
+                          //     padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                          //     primary: secondaryColor,
+                          //     onPrimary: Colors.white,
+                          //   ),
+                          //   onPressed: _mainController.toGiveScreen,
+                          //   child: const Text('Tải lên')
+                          // )
+                        ],
                       ),
-                      const Divider(),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                    ),
+                    const Divider(),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                        child: RefreshIndicator(
+                          color: theme.colorScheme.secondary,
+                          onRefresh: _controller.authorizedMain,
                           child: Obx(
                             () => ScrollablePositionedList.builder(
+                              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                               itemCount: _controller.products.length,
                               itemPositionsListener: _controller.itemPositionsListener,
                               itemBuilder: (context, index) {
@@ -119,12 +119,12 @@ class _MyGivingsScreenState extends State<MyGivingsScreen>
                             ),
                           ),
                         ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
         )
       ),

@@ -8,12 +8,12 @@ class LazyGivingRequest {
   @JsonKey(name: 'take')
   int take;
 
-  @JsonKey(name: 'low_product_id')
-  int lowProductId;
+  @JsonKey(name: 'low_id')
+  int lowId;
 
   LazyGivingRequest({
     this.take = 10,
-    required this.lowProductId,
+    required this.lowId,
   });
 
   factory LazyGivingRequest.fromJson(Map<String, dynamic> json) =>

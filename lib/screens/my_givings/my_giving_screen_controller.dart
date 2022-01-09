@@ -29,7 +29,7 @@ class MyGivingsScreenController extends AuthorizedRefreshableController
   @override
   int get listLength => products.length;
 
-  late int _lowProductId;
+  late int _lowId;
 
   @override
   void onInit() {
@@ -123,7 +123,7 @@ class MyGivingsScreenController extends AuthorizedRefreshableController
   @override
   Future onLazyLoad() async {
     final request = LazyGivingRequest(
-        lowProductId: _lowProductId
+        lowId: _lowId
     );
 
     final response = await _productRepo.lazyLoadMyGiving(request);
@@ -143,10 +143,10 @@ class MyGivingsScreenController extends AuthorizedRefreshableController
   }
 
   void _calculateEdgeId(){
-    _lowProductId = products.first.id!;
-    for (var product in products) {
-      if(product.id! < _lowProductId){
-        _lowProductId = product.id!;
+    _lowId = products.first.id!;
+    for (var item in products) {
+      if(item.id! < _lowId){
+        _lowId = item.id!;
       }
     }
   }

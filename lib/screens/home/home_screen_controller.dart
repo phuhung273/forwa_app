@@ -42,8 +42,8 @@ class HomeScreenController extends RefreshableController
 
   DateTime now = DateTime.now();
 
-  late int _lowProductId;
-  late int _highProductId;
+  late int _lowId;
+  late int _highId;
 
   @override
   int get listLength => products.length;
@@ -149,8 +149,8 @@ class HomeScreenController extends RefreshableController
       hiddenUserIds: _hiddenUserIds,
       latitude: here!.latitude!,
       longitude: here!.longitude!,
-      lowProductId: _lowProductId,
-      highProductId: _highProductId
+      lowId: _lowId,
+      highId: _highId
     );
 
     final response = await _productRepo.lazyLoadProduct(request);
@@ -170,14 +170,14 @@ class HomeScreenController extends RefreshableController
   }
 
   void _calculateEdgeId(){
-    _lowProductId = products.first.id!;
-    _highProductId = _lowProductId;
+    _lowId = products.first.id!;
+    _highId = _lowId;
     for (var product in products) {
-      if(product.id! > _highProductId){
-        _highProductId = product.id!;
+      if(product.id! > _highId){
+        _highId = product.id!;
       }
-      if(product.id! < _lowProductId){
-        _lowProductId = product.id!;
+      if(product.id! < _lowId){
+        _lowId = product.id!;
       }
     }
   }

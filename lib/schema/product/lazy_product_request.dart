@@ -17,19 +17,19 @@ class LazyProductRequest {
   @JsonKey(name: 'take')
   int take;
 
-  @JsonKey(name: 'low_product_id')
-  int lowProductId;
+  @JsonKey(name: 'low_id')
+  int lowId;
 
-  @JsonKey(name: 'high_product_id')
-  int highProductId;
+  @JsonKey(name: 'high_id')
+  int highId;
 
   LazyProductRequest({
     required this.hiddenUserIds,
     required this.latitude,
     required this.longitude,
     this.take = 10,
-    required this.lowProductId,
-    required this.highProductId,
+    required this.lowId,
+    required this.highId,
   });
 
   factory LazyProductRequest.fromJson(Map<String, dynamic> json) =>

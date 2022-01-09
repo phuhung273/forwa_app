@@ -12,6 +12,7 @@ import 'package:forwa_app/widgets/rating.dart';
 import 'package:forwa_app/widgets/secondary_action_container.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import 'my_receivings_screen_controller.dart';
 
@@ -46,67 +47,68 @@ class _MyReceivingsScreenState extends State<MyReceivingsScreen>
       },
       child: SafeArea(
         child: Scaffold(
-          body: RefreshIndicator(
-            color: theme.colorScheme.secondary,
-            onRefresh: _controller.authorizedMain,
-            child: CustomScrollView(
-              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-              slivers: [
-                SliverAppBar(
-                  automaticallyImplyLeading: false,
-                  floating: true,
-                  leading: Container(
-                    margin: const EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.menu,
-                        color: theme.colorScheme.secondary,
-                      ),
-                      iconSize: 20.0,
-                      onPressed: () => _mainController.openDrawer(),
-                    ),
+          body: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                automaticallyImplyLeading: false,
+                floating: true,
+                leading: Container(
+                  margin: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                  actions: [
-                    AppBarChatAction(),
-                  ],
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.menu,
+                      color: theme.colorScheme.secondary,
+                    ),
+                    iconSize: 20.0,
+                    onPressed: () => _mainController.openDrawer(),
+                  ),
                 ),
-                SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Text(
-                          'Danh sách nhận',
-                          style: theme.textTheme.subtitle1,
-                        ),
+                actions: [
+                  AppBarChatAction(),
+                ],
+              ),
+              SliverFillRemaining(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Text(
+                        'Danh sách nhận',
+                        style: theme.textTheme.subtitle1,
                       ),
-                      const Divider(),
-                      Padding(
+                    ),
+                    const Divider(),
+                    Expanded(
+                      child: Padding(
                         padding: const EdgeInsets.all(6.0),
-                        child: Obx(
-                          () => ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: _controller.orders.length,
-                            itemBuilder: (context, index) =>
-                                ReceivingCard(
-                                  order: _controller.orders[index],
-                                  onTakeSuccess: () => _controller.takeSuccess(index),
-                                ),
-                            separatorBuilder: (context, index) => const Divider(),
+                        child: RefreshIndicator(
+                          color: theme.colorScheme.secondary,
+                          onRefresh: _controller.authorizedMain,
+                          child: Obx(
+                            () => ScrollablePositionedList.separated(
+                              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                              itemCount: _controller.orders.length,
+                              itemPositionsListener: _controller.itemPositionsListener,
+                              itemBuilder: (context, index) =>
+                                  ReceivingCard(
+                                    order: _controller.orders[index],
+                                    onTakeSuccess: () => _controller.takeSuccess(index),
+                                  ),
+                              separatorBuilder: (context, index) => const Divider(),
+                            ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ]
-            ),
+              ),
+            ]
           ),
         )
       ),

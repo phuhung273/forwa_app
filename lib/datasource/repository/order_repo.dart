@@ -4,6 +4,7 @@ import 'package:forwa_app/datasource/remote/order_service.dart';
 import 'package:forwa_app/datasource/repository/base_repo.dart';
 import 'package:forwa_app/schema/api_response.dart';
 import 'package:forwa_app/schema/order/create_order_request.dart';
+import 'package:forwa_app/schema/order/lazy_receiving_request.dart';
 import 'package:forwa_app/schema/order/list_orders_of_product_response.dart';
 import 'package:forwa_app/schema/order/list_orders_of_product_response.dart';
 import 'package:forwa_app/schema/order/list_orders_of_product_response.dart';
@@ -42,12 +43,28 @@ class OrderRepo extends BaseRepo{
     });
   }
 
-  Future<ApiResponse<List<Order>>> getMyOrders(
-      {
-        int pageSize = 10,
-      }
-  ) async {
+  Future<ApiResponse<List<Order>>> getMyOrders() async {
     return _service.getMyOrders().catchError((Object obj) {
+      // non-200 error goes here.
+      switch (obj.runtimeType) {
+        case DioError:
+          final res = (obj as DioError).response;
+          if(res == null || res.statusCode == HttpStatus.internalServerError) return ApiResponse<List<Order>>.fromError();
+
+          final data = getErrorData(res);
+          final error = data['message'] ?? res.statusMessage;
+          debugPrint(error);
+          return ApiResponse<List<Order>>.fromError(error: data['message'] ?? 'Lỗi không xác định');
+        default:
+          final error = obj.toString();
+          debugPrint(error);
+          return ApiResponse<List<Order>>.fromError(error: error);
+      }
+    });
+  }
+
+  Future<ApiResponse<List<Order>>> lazyLoadMyOrders(LazyReceivingRequest request) async {
+    return _service.lazyLoadMyOrders(request).catchError((Object obj) {
       // non-200 error goes here.
       switch (obj.runtimeType) {
         case DioError:

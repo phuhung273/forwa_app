@@ -1,5 +1,6 @@
 import 'package:forwa_app/schema/api_response.dart';
 import 'package:forwa_app/schema/order/create_order_request.dart';
+import 'package:forwa_app/schema/order/lazy_receiving_request.dart';
 import 'package:forwa_app/schema/order/list_orders_of_product_response.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:retrofit/retrofit.dart';
@@ -18,6 +19,9 @@ abstract class OrderService {
 
   @GET('/me/get')
   Future<ApiResponse<List<Order>>> getMyOrders();
+
+  @POST('/me/lazy')
+  Future<ApiResponse<List<Order>>> lazyLoadMyOrders(@Body() LazyReceivingRequest request);
 
   @POST('/status/{orderId}')
   Future<String> selectOrder(

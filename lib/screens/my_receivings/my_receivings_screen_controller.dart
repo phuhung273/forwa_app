@@ -6,7 +6,9 @@ import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/di/location_service.dart';
+import 'package:forwa_app/mixins/lazy_load.dart';
 import 'package:forwa_app/route/route.dart';
+import 'package:forwa_app/schema/order/lazy_receiving_request.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/base_controller/authorized_refreshable_controller.dart';
 import 'package:forwa_app/screens/take_success/take_success_screen_controller.dart';
@@ -15,7 +17,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 
 class MyReceivingsScreenController extends AuthorizedRefreshableController
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, LazyLoad {
 
   bool _initialized = false;
 
@@ -34,6 +36,11 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController
   final orders = List<Order>.empty().obs;
 
   LocationData? here;
+
+  @override
+  int get listLength => orders.length;
+
+  late int _lowId;
 
   @override
   void onInit() {
@@ -79,6 +86,7 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController
       return false;
     }
 
+    initLazyLoad();
     _locationService.here().then((value) => here = value);
     return true;
   }
@@ -96,7 +104,16 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController
       return;
     }
 
-    orders.assignAll(response.data ?? []);
+    final items = response.data!;
+
+    orders.assignAll(items);
+
+    if(items.length < 10){
+      stopLazyLoad();
+    } else {
+      _calculateEdgeId();
+      resetLazyLoad();
+    }
   }
 
   void changeOrderToSelectedByProductId(int id){
@@ -136,6 +153,37 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController
     if(_initialized){
       orders.insert(0, order);
       orders.refresh();
+    }
+  }
+
+  @override
+  Future onLazyLoad() async {
+    final request = LazyReceivingRequest(
+        lowId: _lowId
+    );
+
+    final response = await _orderRepo.lazyLoadMyOrders(request);
+
+    if(!response.isSuccess || response.data == null){
+      return;
+    }
+
+    final newItems = response.data!;
+    if(newItems.isEmpty){
+      stopLazyLoad();
+      return;
+    }
+
+    orders.addAll(newItems);
+    _calculateEdgeId();
+  }
+
+  void _calculateEdgeId(){
+    _lowId = orders.first.id;
+    for (var item in orders) {
+      if(item.id < _lowId){
+        _lowId = item.id;
+      }
     }
   }
 
