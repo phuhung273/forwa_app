@@ -1,11 +1,14 @@
 
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/app_notification_repo.dart';
+import 'package:forwa_app/mixins/lazy_load.dart';
+import 'package:forwa_app/schema/app_notification/lazy_app_notification_request.dart';
 import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/base_controller/authorized_refreshable_controller.dart';
 import 'package:get/get.dart';
 
-class NotificationScreenController extends AuthorizedRefreshableController {
+class NotificationScreenController extends AuthorizedRefreshableController
+    with LazyLoad {
 
   final AppNotificationRepo _appNotificationRepo = Get.find();
 
@@ -16,6 +19,14 @@ class NotificationScreenController extends AuthorizedRefreshableController {
   int? _userId;
 
   DateTime now = DateTime.now();
+
+  @override
+  int get listLength => _appNotificationController.notifications.length;
+
+  @override
+  int get stepToLoad => 1;
+
+  late int _lowId;
 
   @override
   void onInit() {
@@ -31,6 +42,7 @@ class NotificationScreenController extends AuthorizedRefreshableController {
       return false;
     }
 
+    initLazyLoad();
     await main();
     return true;
   }
@@ -45,7 +57,46 @@ class NotificationScreenController extends AuthorizedRefreshableController {
       return;
     }
 
-    _appNotificationController.assignAll(response.data ?? []);
+    final items = response.data!;
+    _appNotificationController.assignAll(items);
+
+    if(items.length < 10){
+      stopLazyLoad();
+    } else {
+      _calculateEdgeId();
+      resetLazyLoad();
+    }
+  }
+
+  @override
+  Future onLazyLoad() async {
+    final request = LazyAppNotificationRequest(
+        lowId: _lowId
+    );
+
+    final response = await _appNotificationRepo.lazyLoadMine(request);
+
+    if(!response.isSuccess || response.data == null){
+      return;
+    }
+
+    final newItems = response.data!;
+    if(newItems.isEmpty){
+      stopLazyLoad();
+      return;
+    }
+
+    _appNotificationController.notifications.addAll(newItems);
+    _calculateEdgeId();
+  }
+
+  void _calculateEdgeId(){
+    _lowId = _appNotificationController.notifications.first.id;
+    for (var item in _appNotificationController.notifications) {
+      if(item.id < _lowId){
+        _lowId = item.id;
+      }
+    }
   }
 
   @override

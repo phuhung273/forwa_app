@@ -12,6 +12,7 @@ import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:forwa_app/screens/notification/notification_screen_controller.dart';
 import 'package:forwa_app/screens/order/order_screen_controller.dart';
 import 'package:get/get.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class NotificationScreen extends StatefulWidget {
 
@@ -46,63 +47,64 @@ class _NotificationScreenState extends State<NotificationScreen>
       },
       child: SafeArea(
           child: Scaffold(
-            body: RefreshIndicator(
-              color: theme.colorScheme.secondary,
-              onRefresh: _controller.authorizedMain,
-              child: CustomScrollView(
-                physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                slivers: [
-                  SliverAppBar(
-                    automaticallyImplyLeading: false,
-                    floating: true,
-                    leading: Container(
-                      margin: const EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.menu,
-                          color: theme.colorScheme.secondary,
-                        ),
-                        iconSize: 20.0,
-                        onPressed: () => _mainController.openDrawer(),
-                      ),
+            body: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  automaticallyImplyLeading: false,
+                  floating: true,
+                  leading: Container(
+                    margin: const EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    actions: [
-                      AppBarChatAction(),
-                    ],
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.menu,
+                        color: theme.colorScheme.secondary,
+                      ),
+                      iconSize: 20.0,
+                      onPressed: () => _mainController.openDrawer(),
+                    ),
                   ),
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Thông báo',
-                            style: theme.textTheme.headline6,
-                          ),
-                          const Divider(),
-                          Obx(
-                            () => ListView.separated(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: _appNotificationController.notifications.length,
-                              itemBuilder: (context, index) {
-                                final item = _appNotificationController.notifications[index];
-                                return NotificationItem(notification: item);
-                              },
-                              separatorBuilder: (context, index) => const SizedBox(height: 12.0),
+                  actions: [
+                    AppBarChatAction(),
+                  ],
+                ),
+                SliverFillRemaining(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Thông báo',
+                          style: theme.textTheme.headline6,
+                        ),
+                        const Divider(),
+                        Expanded(
+                          child: RefreshIndicator(
+                            color: theme.colorScheme.secondary,
+                            onRefresh: _controller.authorizedMain,
+                            child: Obx(
+                              () => ScrollablePositionedList.separated(
+                                physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                                itemCount: _appNotificationController.notifications.length,
+                                itemPositionsListener: _controller.itemPositionsListener,
+                                itemBuilder: (context, index) {
+                                  final item = _appNotificationController.notifications[index];
+                                  return NotificationItem(notification: item);
+                                },
+                                separatorBuilder: (context, index) => const SizedBox(height: 12.0),
+                              ),
                             ),
-                          )
-                        ],
-                      ),
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
           )
       ),

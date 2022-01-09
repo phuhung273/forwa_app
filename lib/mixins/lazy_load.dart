@@ -2,7 +2,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 mixin LazyLoad {
 
-  final int stepToLoad = 3;
+  int get stepToLoad => 3;
   int get listLength;
   bool _isLoading = false;
   bool _stop = false;
