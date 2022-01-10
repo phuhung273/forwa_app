@@ -98,30 +98,30 @@ class _ChatScreenState extends State<ChatScreen>
     return Obx(
       () => SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
-            final userId = _controller.users.keys.elementAt(index);
-            final chatSocketUser = _controller.users[userId];
+            final roomId = _controller.roomMap.keys.elementAt(index);
+            final room = _controller.roomMap[roomId]!;
 
             return ChatCard(
               key: UniqueKey(),
               chat: Chat(
-                name: chatSocketUser!.username,
-                isActive: chatSocketUser.connected == 1,
+                name: room.name,
+                isActive: room.connected == 1,
                 image: '',
                 time: '',
-                lastMessage: _getLastMessage(chatSocketUser.messages),
-                isHighlight: chatSocketUser.hasUnreadMessages ?? false
+                lastMessage: _getLastMessage(room.messages),
+                isHighlight: room.hasUnreadMessages
               ),
-              press: () => _goToMessageScreen(chatSocketUser.userID),
+              press: () => _goToMessageScreen(room.id),
             );
           },
-          childCount: _controller.users.length,
+          childCount: _controller.roomMap.length,
         ),
       ),
     );
   }
 
-  String _getLastMessage(List<ChatSocketMessage>? messages){
-    if(messages == null || messages.isEmpty){
+  String _getLastMessage(List<ChatSocketMessage> messages){
+    if(messages.isEmpty){
       return '';
     }
 
@@ -135,7 +135,7 @@ class _ChatScreenState extends State<ChatScreen>
     return message.content;
   }
 
-  void _goToMessageScreen(int id){
+  void _goToMessageScreen(String id){
     Get.toNamed(ROUTE_MESSAGE, arguments: id);
     _controller.readMessage(id);
   }

@@ -4,11 +4,12 @@ import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/di/chat_service.dart';
 import 'package:forwa_app/schema/chat/chat_handshake_auth.dart';
+import 'package:forwa_app/schema/chat/chat_room.dart';
+import 'package:forwa_app/schema/chat/chat_room_list_response.dart';
 import 'package:forwa_app/schema/chat/chat_session_response.dart';
 import 'package:forwa_app/schema/chat/chat_socket_message.dart';
 import 'package:forwa_app/schema/chat/chat_socket_user.dart';
 import 'package:forwa_app/schema/chat/chat_user_disconnected_response.dart';
-import 'package:forwa_app/schema/chat/chat_user_list_response.dart';
 import 'package:forwa_app/schema/chat/leave_socket_message.dart';
 import 'package:forwa_app/schema/chat/read_socket_message.dart';
 import 'package:forwa_app/schema/chat/read_socket_message_response.dart';
@@ -31,17 +32,17 @@ class ChatScreenController extends AuthorizedRefreshableController {
 
   final ChatController _chatController = Get.find();
 
-  final users = <int, ChatSocketUser>{}.obs;
+  final roomMap = <String, ChatRoom>{}.obs;
 
   String? _username;
-  int? _userId;
+  int? userId;
   String? _token;
 
   @override
   void onInit(){
     super.onInit();
     _username = _localStorage.getCustomerName();
-    _userId = _localStorage.getUserID();
+    userId = _localStorage.getUserID();
     _token = _localStorage.getAccessToken();
   }
 
@@ -52,7 +53,7 @@ class ChatScreenController extends AuthorizedRefreshableController {
 
     _socket.auth = ChatHandshakeAuth(
       username: _username!,
-      userID: _userId!,
+      userID: userId!,
       token: _token!,
     ).toJson();
 
@@ -65,11 +66,13 @@ class ChatScreenController extends AuthorizedRefreshableController {
       _localStorage.saveChatSessionID(response.sessionID);
     });
 
-    _socket.on(CHANNEL_USERS, (data) async {
-      final response = ChatUserListResponse.fromJson(data as Map<String, dynamic>);
+    _socket.on(CHANNEL_ROOMS, (data) async {
+      final response = ChatRoomListResponse.fromJson(data as Map<String, dynamic>);
 
-      for(final user in response.users){
-        users[user.userID] = user;
+      for(final room in response.rooms){
+        final roomName = room.users.firstWhere((element) => element.userID != userId).username;
+        room.name = roomName;
+        roomMap[room.id] = room;
       }
 
       hideDialog();
@@ -77,14 +80,27 @@ class ChatScreenController extends AuthorizedRefreshableController {
 
     _socket.on(CHANNEL_USER_CONNECTED, (data){
       final response = ChatSocketUser.fromJson(data as Map<String, dynamic>);
-      users[response.userID]?.connected = 1;
-      users.refresh();
+      final rooms = roomMap.values;
+      final relatedRooms = rooms.where((room) => room.users.any((user) => user.userID == response.userID));
+      for (var element in relatedRooms) {
+        roomMap[element.id]?.connected = 1;
+      }
+      roomMap.refresh();
     });
 
     _socket.on(CHANNEL_USER_DISCONNECTED, (data){
+      print(data);
       final response = ChatUserDisconnectedResponse.fromJson(data as Map<String, dynamic>);
-      users[response.userID]?.connected = 0;
-      users.refresh();
+      final rooms = roomMap.values;
+      final relatedRooms = rooms.where((room) => room.users.any((user) => user.userID == response.userID));
+
+      for (var room in relatedRooms) {
+        final index = room.users.indexWhere((element) => element.userID == response.userID);
+        room.connected = 0;
+        room.users[index].connected = 0;
+        roomMap[room.id] = room;
+      }
+      roomMap.refresh();
     });
 
     _socket.on(CHANNEL_PRIVATE_MESSAGE, (data) async {
@@ -104,21 +120,21 @@ class ChatScreenController extends AuthorizedRefreshableController {
         newMessage.image = '';
       }
 
-      if(!response.readBy!.contains(_userId!)){
+      if(!response.readBy!.contains(userId!)){
         // Please keep this line here commented
         // This was commented not because of error
         // But because firebase messaging service has already handle the case
         // _chatController.increase(1);sid
-        users[response.from]?.hasUnreadMessages = true;
+        roomMap[response.roomId]?.hasUnreadMessages = true;
       }
 
-      users[response.from]?.messages?.add(response);
-      users.refresh();
+      roomMap[response.roomId]?.messages.add(response);
+      roomMap.refresh();
     });
 
   }
 
-  Future sendStringMessage(ChatMessage newMessage, int toID) async {
+  Future sendStringMessage(ChatMessage newMessage, String roomId) async {
     if(newMessage.text == null || newMessage.text!.isEmpty){
       return;
     }
@@ -126,7 +142,7 @@ class ChatScreenController extends AuthorizedRefreshableController {
     final newSocketMessage = ChatSocketMessage(
       content: newMessage.text!,
       from: _localStorage.getUserID()!,
-      to: toID,
+      roomId: roomId,
       type: EnumToString.convertToString(MessageType.STRING),
     );
 
@@ -134,17 +150,17 @@ class ChatScreenController extends AuthorizedRefreshableController {
       if(data != null){
         final response = ChatSocketMessage.fromJson(data as Map<String, dynamic>);
 
-        _sendMessage(response, newMessage, toID);
+        _sendMessage(response, newMessage, roomId);
       }
     });
 
   }
 
-  Future sendImageMessage(String base64Image, int toID) async {
+  Future sendImageMessage(String base64Image, String roomId) async {
     final newSocketMessage = ChatSocketMessage(
       content: base64Image,
       from: _localStorage.getUserID()!,
-      to: toID,
+      roomId: roomId,
       type: EnumToString.convertToString(MessageType.IMAGE),
     );
 
@@ -159,19 +175,19 @@ class ChatScreenController extends AuthorizedRefreshableController {
           image: '$CHAT_PUBLIC_URL/${response.content}',
         );
 
-        _sendMessage(response, newMessage, toID);
+        _sendMessage(response, newMessage, roomId);
       }
     });
   }
 
-  Future _sendMessage(ChatSocketMessage socketMessage, ChatMessage chatMessage, int toId) async {
+  Future _sendMessage(ChatSocketMessage socketMessage, ChatMessage chatMessage, String roomId) async {
 
-      users[toId]?.messages?.add(socketMessage);
-      users.refresh();
+      roomMap[roomId]?.messages.add(socketMessage);
+      roomMap.refresh();
   }
 
-  void readMessage(int fromId){
-    final message = ReadSocketMessage(fromId: fromId);
+  void readMessage(String roomId){
+    final message = ReadSocketMessage(roomId: roomId);
     _socket.emitWithAck(CHANNEL_READ_MESSAGE, message, ack: (data) {
       if(data != null){
         final response = ReadSocketMessageResponse.fromJson(data as Map<String, dynamic>);
@@ -179,12 +195,12 @@ class ChatScreenController extends AuthorizedRefreshableController {
       }
     });
 
-    users[fromId]?.hasUnreadMessages = false;
-    users.refresh();
+    roomMap[roomId]?.hasUnreadMessages = false;
+    roomMap.refresh();
   }
 
-  void leaveMessage(int fromId){
-    final message = LeaveSocketMessage(fromId: fromId);
+  void leaveMessage(String roomId){
+    final message = LeaveSocketMessage(roomId: roomId);
     _socket.emit(CHANNEL_LEAVE_MESSAGE, message);
   }
 
@@ -196,6 +212,6 @@ class ChatScreenController extends AuthorizedRefreshableController {
 
   @override
   bool isAuthorized() {
-    return _username != null && _userId != null || _token != null;
+    return _username != null && userId != null || _token != null;
   }
 }

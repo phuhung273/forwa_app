@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'chat_socket_message.dart';
 
 part 'chat_socket_user.g.dart';
 
@@ -21,9 +20,6 @@ class ChatSocketUser {
   @JsonKey(name: FIELD_CONNECTED)
   int? connected;
 
-  @JsonKey(name: FIELD_MESSAGES)
-  List<ChatSocketMessage>? messages;
-
   @JsonKey(name: FIELD_HAS_UNREAD_MESSAGES)
   bool? hasUnreadMessages;
 
@@ -31,7 +27,6 @@ class ChatSocketUser {
     required this.userID,
     required this.username,
     this.connected,
-    this.messages,
     this.hasUnreadMessages,
   });
 

@@ -5,11 +5,11 @@ part 'leave_socket_message.g.dart';
 @JsonSerializable()
 class LeaveSocketMessage {
 
-  @JsonKey(name: 'fromID')
-  int fromId;
+  @JsonKey(name: 'roomID')
+  String roomId;
 
   LeaveSocketMessage({
-    required this.fromId,
+    required this.roomId,
   });
 
   factory LeaveSocketMessage.fromJson(Map<String, dynamic> json) =>

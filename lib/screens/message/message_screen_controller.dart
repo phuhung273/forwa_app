@@ -12,7 +12,7 @@ class MessageScreenController extends GetxController {
 
   final ChatScreenController _chatScreenController = Get.find();
 
-  final destinationID = Get.arguments as int;
+  final destinationID = Get.arguments as String;
 
   void leaveMessage(){
     _chatScreenController.leaveMessage(destinationID);

@@ -87,17 +87,16 @@ class MessageView extends GetView<MessageScreenController> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Obx(() => Text(_chatScreenController.users[controller.destinationID] != null
-              ? _chatScreenController.users[controller.destinationID]!.username
+          title: Obx(() => Text(_chatScreenController.roomMap[controller.destinationID] != null
+              ? _chatScreenController.roomMap[controller.destinationID]!.name
               : 'Tin nhắn'
           )),
         ),
         body: Obx(
           (){
-            final user = _chatScreenController.users[controller.destinationID];
+            final user = _chatScreenController.roomMap[controller.destinationID];
             if(user == null) return const SizedBox();
             final socketMessages = user.messages;
-            if(socketMessages == null) return const SizedBox();
 
             final messages = socketMessages.map((e){
               final message = ChatMessage(

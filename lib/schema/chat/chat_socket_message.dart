@@ -11,7 +11,7 @@ enum MessageType{
 const FIELD_ID = '_id';
 const FIELD_CONTENT = 'content';
 const FIELD_FROM = 'fromID';
-const FIELD_TO = 'toID';
+const FIELD_ROOM = 'room';
 const FIELD_TYPE = 'type';
 const FIELD_READ_BY = 'readBy';
 
@@ -27,8 +27,8 @@ class ChatSocketMessage {
   @JsonKey(name: FIELD_FROM)
   int from;
 
-  @JsonKey(name: FIELD_TO)
-  int to;
+  @JsonKey(name: FIELD_ROOM)
+  String roomId;
 
   @JsonKey(name: FIELD_TYPE)
   String type;
@@ -40,7 +40,7 @@ class ChatSocketMessage {
     this.id,
     required this.content,
     required this.from,
-    required this.to,
+    required this.roomId,
     required this.type,
     this.readBy
   });

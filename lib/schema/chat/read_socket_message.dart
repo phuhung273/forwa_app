@@ -5,11 +5,11 @@ part 'read_socket_message.g.dart';
 @JsonSerializable()
 class ReadSocketMessage {
 
-  @JsonKey(name: 'fromID')
-  int fromId;
+  @JsonKey(name: 'roomID')
+  String roomId;
 
   ReadSocketMessage({
-    required this.fromId,
+    required this.roomId,
   });
 
   factory ReadSocketMessage.fromJson(Map<String, dynamic> json) =>
