@@ -1,10 +1,10 @@
 import 'package:forwa_app/datasource/repository/review_repo.dart';
+import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/review/review.dart';
 import 'package:forwa_app/screens/base_controller/rating_controller.dart';
 import 'package:forwa_app/screens/my_receivings/my_receivings_screen_controller.dart';
 import 'package:forwa_app/screens/order/order_screen_controller.dart';
-import 'package:forwa_app/screens/splash/splash_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 

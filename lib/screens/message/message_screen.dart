@@ -6,72 +6,21 @@ import 'package:dash_chat/dash_chat.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
+import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/chat/chat_socket_message.dart';
-import 'package:forwa_app/screens/chat/chat_screen_controller.dart';
 import 'package:forwa_app/widgets/transparent_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'message_screen_controller.dart';
-import '../chat/chat_screen_controller.dart';
 
-class MessageScreen extends StatefulWidget {
-  const MessageScreen({Key? key}) : super(key: key);
+class MessageScreen extends GetView<MessageScreenController> {
 
-  @override
-  _MessageScreenState createState() => _MessageScreenState();
-}
-
-class _MessageScreenState extends State<MessageScreen> with WidgetsBindingObserver {
-
-  final MessageScreenController _controller = Get.find();
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance?.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    if(state == AppLifecycleState.paused){
-      // print('Im dead');
-      _controller.leaveMessage();
-    }
-
-    final lastState = WidgetsBinding.instance?.lifecycleState;
-    if(lastState == AppLifecycleState.resumed){
-      // print('Im alive');
-      _controller.readMessage();
-    }
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-    return MessageView();
-  }
-}
-
-
-class MessageView extends GetView<MessageScreenController> {
-
-  MessageView({Key? key}) : super(key: key);
+  MessageScreen({Key? key}) : super(key: key);
 
 
   final LocalStorage _localStorage = Get.find();
-
-  final ChatScreenController _chatScreenController = Get.find();
 
   final _picker = ImagePicker();
 
@@ -83,22 +32,21 @@ class MessageView extends GetView<MessageScreenController> {
     return WillPopScope(
       onWillPop: () async {
         controller.leaveMessage();
-        return true;
+
+        if(controller.isNotificationStartFromTerminated){
+          Get.offAndToNamed(ROUTE_MAIN);
+          return false;
+        } else {
+          return true;
+        }
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Obx(() => Text(_chatScreenController.roomMap[controller.destinationID] != null
-              ? _chatScreenController.roomMap[controller.destinationID]!.name
-              : 'Tin nhắn'
-          )),
+          title: Obx(() => Text(controller.roomName.value)),
         ),
         body: Obx(
-          (){
-            final user = _chatScreenController.roomMap[controller.destinationID];
-            if(user == null) return const SizedBox();
-            final socketMessages = user.messages;
-
-            final messages = socketMessages.map((e){
+          () {
+            final messages = controller.messages.map((e){
               final message = ChatMessage(
                   id: e.id,
                   text: e.content,
@@ -120,6 +68,7 @@ class MessageView extends GetView<MessageScreenController> {
             return DashChat(
               key: _chatViewKey,
               messages: messages,
+              onLoadEarlier: controller.lazyLoad,
               user: ChatUser(
                 name: _localStorage.getCustomerName(),
                 uid: _localStorage.getUserID().toString(),
@@ -129,6 +78,7 @@ class MessageView extends GetView<MessageScreenController> {
               dateBuilder: _buildDate,
               messageDecorationBuilder: _buildMessageDecoration,
               messageImageBuilder: _buildImage,
+              messagePadding: const EdgeInsets.all(16.0),
               inputTextStyle: const TextStyle(fontSize: 16.0),
               inputContainerStyle: BoxDecoration(
                 border: Border.all(width: 0.0),
@@ -141,7 +91,7 @@ class MessageView extends GetView<MessageScreenController> {
                   onPressed: _onPickImage,
                 ),
               ],
-              onSend: (msg) => _chatScreenController.sendStringMessage(msg, controller.destinationID),
+              onSend: controller.sendStringMessage,
             );
           },
         ),
@@ -154,7 +104,7 @@ class MessageView extends GetView<MessageScreenController> {
     if(image != null){
       final bytes = File(image.path).readAsBytesSync();
       final base64Image =  'data:image/png;base64,${base64Encode(bytes)}';
-      _chatScreenController.sendImageMessage(base64Image, controller.destinationID);
+      controller.sendImageMessage(base64Image);
     }
   }
 
@@ -162,13 +112,16 @@ class MessageView extends GetView<MessageScreenController> {
   Widget _buildDate(String date) => Container();
 
   BoxDecoration _buildMessageDecoration(ChatMessage msg, bool? isUser){
-    if(isUser == null) return const BoxDecoration();
-    if(msg.image != null) return const BoxDecoration();
+    final borderRadius = BorderRadius.circular(12.0);
+
+    if(isUser == null) return BoxDecoration(borderRadius: borderRadius);
+    if(msg.image != null) return BoxDecoration(borderRadius: borderRadius);
 
     return BoxDecoration(
       color: isUser
           ? secondaryColor
-          : const Color.fromRGBO(225, 225, 225, 1)
+          : const Color.fromRGBO(225, 225, 225, 1),
+      borderRadius: borderRadius
     );
   }
 

@@ -22,14 +22,16 @@ class ChatRoom {
   @JsonKey(name: 'hasUnreadMessages')
   bool hasUnreadMessages;
 
-  late String name;
+  @JsonKey(name: 'name')
+  String? name;
 
   ChatRoom({
     required this.id,
     required this.users,
-    required this.connected,
+    this.connected = 0,
     required this.messages,
-    required this.hasUnreadMessages,
+    this.hasUnreadMessages = false,
+    this.name,
   });
 
   factory ChatRoom.fromJson(Map<String, dynamic> json) =>

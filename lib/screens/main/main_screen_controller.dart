@@ -25,7 +25,6 @@ class MainScreenBinding extends Bindings {
     Get.lazyPut(() => MainScreenController());
     Get.put(AddressController());
     Get.lazyPut(() => AppNotificationController());
-    Get.lazyPut(() => ChatController());
     Get.lazyPut(() => FirebaseMessagingService());
     Get.lazyPut(() => MyGivingsScreenController());
     Get.lazyPut(() => MyReceivingsScreenController());

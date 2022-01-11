@@ -1,10 +1,10 @@
 
 import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/di/location_service.dart';
+import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
-import 'package:forwa_app/screens/splash/splash_screen_controller.dart';
 import 'package:forwa_app/screens/take_success/take_success_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';

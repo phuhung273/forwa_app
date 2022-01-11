@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart' hide errorCodeMap;
 import 'package:forwa_app/datasource/repository/product_repo.dart';
+import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/give_success/give_success_screen_controller.dart';
 import 'package:forwa_app/screens/my_givings/my_giving_screen_controller.dart';
-import 'package:forwa_app/screens/splash/splash_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -223,8 +223,8 @@ class ChooseReceiverScreenController extends BaseController
   }
 
   @override
-  void dispose(){
+  void onClose(){
     WidgetsBinding.instance?.removeObserver(this);
-    super.dispose();
+    super.onClose();
   }
 }

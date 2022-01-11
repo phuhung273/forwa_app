@@ -8,9 +8,11 @@ import 'package:flutter/foundation.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
 import 'package:forwa_app/di/firebase_messaging_service.dart';
+import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:forwa_app/schema/auth/refresh_token_request.dart';
+import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
 import 'package:forwa_app/screens/order/order_screen_controller.dart';
 import 'package:get/get.dart';
@@ -22,23 +24,23 @@ class SplashScreenBinding extends Bindings {
   }
 }
 
-const NOTIFICATION_START_TRUE = 'yes';
-const notificationStartParam = 'notification_start';
-
 class SplashScreenController extends GetxController {
 
   final AuthRepo _authRepo = Get.find();
 
   final LocalStorage _localStorage = Get.find();
 
+  final ChatController _chatController = Get.find();
+
   @override
-  void onReady() {
+  void onReady() async {
     super.onReady();
     _configureDevice();
-    Future.microtask(() => _loadData());
+    await _loadData();
+    _onDoneLoading();
   }
 
-  Future<Timer> _loadData() async {
+  _loadData() async {
     final token = await FirebaseMessaging.instance.getToken();
 
     if(token != null) {
@@ -56,21 +58,30 @@ class SplashScreenController extends GetxController {
 
       if(response.isSuccess && response.data != null){
         _localStorage.saveAccessToken(response.data!.accessToken);
+
+        _chatController.init();
+
       } else {
         _localStorage.removeCredentials();
       }
     }
-
-    return Timer(const Duration(seconds: 1), _onDoneLoading);
   }
 
-  Future _onDoneLoading() async {
+  _onDoneLoading() async {
 
     final message = await FirebaseMessaging.instance.getInitialMessage();
     if (message != null) {
       final data = message.data;
       switch(data['type']){
         case MESSAGE_TYPE_CHAT:
+          Get.toNamed(
+            ROUTE_MESSAGE,
+            arguments: data['room'],
+            parameters: {
+              notificationStartParam: NOTIFICATION_START_TRUE,
+              notificationStartFromTerminatedParam: NOTIFICATION_START_FROM_TERMINATED_TRUE
+            }
+          );
           break;
         case APP_NOTIFICATION_TYPE_PROCESSING:
           final notification = AppNotification.fromJson(jsonDecode(data['data']));

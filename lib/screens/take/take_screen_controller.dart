@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart';
+import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/create_order_request.dart';
 import 'package:forwa_app/screens/my_receivings/my_receivings_screen_controller.dart';
-import 'package:forwa_app/screens/splash/splash_screen_controller.dart';
 import 'package:get/get.dart';
 
 import '../base_controller/base_controller.dart';

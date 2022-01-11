@@ -188,8 +188,8 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController
   }
 
   @override
-  void dispose(){
+  void onClose(){
     WidgetsBinding.instance?.removeObserver(this);
-    super.dispose();
+    super.onClose();
   }
 }

@@ -9,6 +9,12 @@ import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_control
 import 'package:forwa_app/screens/order/order_screen_controller.dart';
 import 'package:get/get.dart';
 
+
+const NOTIFICATION_START_TRUE = 'yes';
+const notificationStartParam = 'notification_start';
+const NOTIFICATION_START_FROM_TERMINATED_TRUE = 'yes';
+const notificationStartFromTerminatedParam = 'notification_start_from_terminated';
+
 class NotificationService {
 
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = Get.find();
@@ -87,6 +93,13 @@ class NotificationService {
   void _handleForegroundNotificationClick(Map<String, dynamic> data){
     switch(data['type']){
       case MESSAGE_TYPE_CHAT:
+        Get.toNamed(
+          ROUTE_MESSAGE,
+          arguments: data['room'],
+          parameters: {
+            notificationStartParam: NOTIFICATION_START_TRUE
+          }
+        );
         break;
       case APP_NOTIFICATION_TYPE_PROCESSING:
         final notification = AppNotification.fromJson(jsonDecode(data['data']));

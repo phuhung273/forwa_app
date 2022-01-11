@@ -36,13 +36,21 @@ class ChatSocketMessage {
   @JsonKey(name: FIELD_READ_BY)
   List<int>? readBy;
 
+  @JsonKey(name: 'createdAt')
+  DateTime? createdAt;
+
+  @JsonKey(name: 'updatedAt')
+  DateTime? updatedAt;
+
   ChatSocketMessage({
     this.id,
     required this.content,
     required this.from,
     required this.roomId,
     required this.type,
-    this.readBy
+    this.readBy,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory ChatSocketMessage.fromJson(Map<String, dynamic> json) =>

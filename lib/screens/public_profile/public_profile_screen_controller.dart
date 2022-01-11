@@ -1,12 +1,12 @@
 import 'package:forwa_app/datasource/local/hidden_user_db.dart';
 import 'package:forwa_app/datasource/repository/user_repo.dart';
 import 'package:forwa_app/datasource/repository/user_report_repo.dart';
+import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/mixins/reportable.dart';
 import 'package:forwa_app/schema/report/user_report.dart';
 import 'package:forwa_app/schema/review/review.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/home/home_screen_controller.dart';
-import 'package:forwa_app/screens/splash/splash_screen_controller.dart';
 import 'package:get/get.dart';
 
 class PublicProfileScreenBinding extends Bindings {

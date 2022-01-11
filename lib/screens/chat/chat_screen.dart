@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/chat/chat.dart';
 import 'package:forwa_app/schema/chat/chat_socket_message.dart';
+import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/chat/chat_screen_controller.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:get/get.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import 'chat_card.dart';
 
@@ -25,6 +27,8 @@ class _ChatScreenState extends State<ChatScreen>
   bool get wantKeepAlive => true;
 
   final ChatScreenController _controller = Get.put(ChatScreenController());
+
+  final ChatController _chatController = Get.find();
 
   final MainScreenController _mainController = Get.find();
 
@@ -96,15 +100,18 @@ class _ChatScreenState extends State<ChatScreen>
 
   Widget _buildRecentMessages() {
     return Obx(
-      () => SliverList(
-        delegate: SliverChildBuilderDelegate((context, index) {
+      () => SliverFillRemaining(
+        child: ScrollablePositionedList.builder(
+          itemCount: _controller.roomMap.length,
+          itemPositionsListener: _controller.itemPositionsListener,
+          itemBuilder: (context, index) {
             final roomId = _controller.roomMap.keys.elementAt(index);
             final room = _controller.roomMap[roomId]!;
 
             return ChatCard(
               key: UniqueKey(),
               chat: Chat(
-                name: room.name,
+                name: room.name ?? '',
                 isActive: room.connected == 1,
                 image: '',
                 time: '',
@@ -113,8 +120,7 @@ class _ChatScreenState extends State<ChatScreen>
               ),
               press: () => _goToMessageScreen(room.id),
             );
-          },
-          childCount: _controller.roomMap.length,
+          }
         ),
       ),
     );
@@ -137,6 +143,6 @@ class _ChatScreenState extends State<ChatScreen>
 
   void _goToMessageScreen(String id){
     Get.toNamed(ROUTE_MESSAGE, arguments: id);
-    _controller.readMessage(id);
+    _chatController.readMessage(id);
   }
 }

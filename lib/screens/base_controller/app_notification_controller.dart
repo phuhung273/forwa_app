@@ -128,8 +128,8 @@ class AppNotificationController extends GetxController
   }
 
   @override
-  void dispose(){
+  void onClose(){
     WidgetsBinding.instance?.removeObserver(this);
-    super.dispose();
+    super.onClose();
   }
 }
