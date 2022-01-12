@@ -25,13 +25,17 @@ class ChatRoom {
   @JsonKey(name: 'name')
   String? name;
 
+  @JsonKey(name: 'updatedAt')
+  DateTime updatedAt;
+
   ChatRoom({
     required this.id,
     required this.users,
     this.connected = 0,
-    required this.messages,
+    this.messages = const [],
     this.hasUnreadMessages = false,
     this.name,
+    required this.updatedAt,
   });
 
   factory ChatRoom.fromJson(Map<String, dynamic> json) =>

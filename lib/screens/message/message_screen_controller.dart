@@ -61,14 +61,18 @@ class MessageScreenController extends BaseController with WidgetsBindingObserver
     } else {
       _setupNormal();
     }
+  }
+
+  @override
+  void onReady(){
+    super.onReady();
 
     _chatController.messageStream.listen((event) {
       final chatSocketMessage = event as ChatSocketMessage;
       if(chatSocketMessage.roomId == destinationID){
-        messages.add(chatSocketMessage);
+        messages.insert(0, chatSocketMessage);
       }
     });
-
   }
 
   _setupNormal(){
@@ -87,7 +91,7 @@ class MessageScreenController extends BaseController with WidgetsBindingObserver
   }
 
   _setupNotificationStart(){
-    _socket.emitWithAck(CHANNEL_SHOW, { 'room': destinationID }, ack: (data) async {
+    _socket.emitWithAck(CHANNEL_SHOW, { 'room': destinationID }, ack: (data) {
       final room = ChatRoom.fromJson(data);
       room.name = room.users.firstWhere((element) => element.userID != _userId).username;
       roomName.value = room.name!;
@@ -135,13 +139,7 @@ class MessageScreenController extends BaseController with WidgetsBindingObserver
   }
 
   _sendMessage(ChatSocketMessage message){
-    _chatController.sendMessage(message, destinationID, (response){
-      messages.add(response);
-
-      if(!isNotificationStart){
-        _chatScreenController.sendMessage(message, destinationID);
-      }
-    });
+    _chatController.sendMessage(message, destinationID);
   }
 
   lazyLoad(){
@@ -151,25 +149,26 @@ class MessageScreenController extends BaseController with WidgetsBindingObserver
         createdAt: _earliest
       );
 
-      _socket.emitWithAck(CHANNEL_LAZY_SHOW, request, ack: (data) async {
+      _socket.emitWithAck(CHANNEL_LAZY_SHOW, request, ack: (data) {
         final response = LazyShowResponse.fromJson(data);
-        messages.insertAll(0, response.messages);
+        final newMessages = response.messages;
+        messages.addAll(newMessages);
         messages.refresh();
-        _calculateEarliest(response.messages);
+        _calculateEarliest(newMessages);
+        _chatController.addMessages(destinationID, newMessages);
       });
     }
   }
 
   _calculateEarliest(List<ChatSocketMessage> messageList){
-    _earliest = messageList[0].createdAt!;
-    for (var element in messageList) {
-      final createdAt = element.createdAt!;
-      if(_earliest.compareTo(createdAt) <= 0){
-        _earliest = createdAt;
+    if(messageList.isNotEmpty){
+      _earliest = messageList.last.createdAt!;
+      if(messageList.length < 15) {
+        _stopLazyLoad = true;
       }
+    } else {
+      _stopLazyLoad = true;
     }
-
-    if(messageList.length < 15) _stopLazyLoad = true;
   }
 
   void leaveMessage(){

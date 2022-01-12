@@ -8,6 +8,7 @@ import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/chat_repo.dart';
 import 'package:forwa_app/di/chat_service.dart';
 import 'package:forwa_app/schema/chat/chat_handshake_auth.dart';
+import 'package:forwa_app/schema/chat/chat_room.dart';
 import 'package:forwa_app/schema/chat/chat_session_response.dart';
 import 'package:forwa_app/schema/chat/chat_socket_message.dart';
 import 'package:forwa_app/schema/chat/leave_socket_message.dart';
@@ -34,9 +35,13 @@ class ChatController extends GetxController with WidgetsBindingObserver {
 
   final StreamController _messageStreamController = StreamController<ChatSocketMessage>.broadcast();
   final StreamController _readMessageStreamController = StreamController<String>.broadcast();
+  final StreamController _lazyMessageStreamController = StreamController<Map<String, List<ChatSocketMessage>>>.broadcast();
+  final StreamController _roomStreamController = StreamController<ChatRoom>.broadcast();
 
-  Stream get messageStream => _messageStreamController.stream;
-  Stream get readMessageStream => _readMessageStreamController.stream;
+  Stream get messageStream => _messageStreamController.stream.cast<ChatSocketMessage>();
+  Stream get readMessageStream => _readMessageStreamController.stream.cast<String>();
+  Stream get lazyMessageStream => _lazyMessageStreamController.stream.cast<Map<String, List<ChatSocketMessage>>>();
+  Stream get roomStream => _roomStreamController.stream.cast<ChatRoom>();
 
 
   @override
@@ -84,11 +89,11 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     });
   }
 
-  void sendMessage(ChatSocketMessage message, String roomId, Function(ChatSocketMessage response)? onResponse) {
+  void sendMessage(ChatSocketMessage message, String roomId) {
     _socket.emitWithAck(CHANNEL_PRIVATE_MESSAGE, message, ack: (data) {
       if(data != null){
         final response = ChatSocketMessage.fromJson(data as Map<String, dynamic>);
-        onResponse?.call(response);
+        _messageStreamController.sink.add(response);
       }
     });
   }
@@ -119,6 +124,16 @@ class ChatController extends GetxController with WidgetsBindingObserver {
         _readMessageStreamController.sink.add(roomId);
       }
     });
+  }
+
+  void addMessages(String roomId, List<ChatSocketMessage> messages){
+    _lazyMessageStreamController.sink.add({ roomId: messages });
+  }
+
+  void addRoom(ChatRoom room){
+    room.name = room.users.firstWhere((element) => element.userID != _localStorage.getUserID()).username;
+    room.hasUnreadMessages = true;
+    _roomStreamController.sink.add(room);
   }
 
   @override

@@ -67,6 +67,7 @@ class MessageScreen extends GetView<MessageScreenController> {
 
             return DashChat(
               key: _chatViewKey,
+              inverted: true,
               messages: messages,
               onLoadEarlier: controller.lazyLoad,
               user: ChatUser(

@@ -43,84 +43,86 @@ class _ChatScreenState extends State<ChatScreen>
         _mainController.changeTab(HOME_SCREEN_INDEX);
         return false;
       },
-      child: RefreshIndicator(
-        onRefresh: _controller.main,
-        color: theme.colorScheme.secondary,
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              floating: true,
-              title: const Text('Tin nhắn'),
-              leading: Container(
-                margin: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(8.0),
+      child: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            floating: true,
+            title: const Text('Tin nhắn'),
+            leading: Container(
+              margin: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: IconButton(
+                icon: Icon(
+                  Icons.menu,
+                  color: theme.colorScheme.secondary,
                 ),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.menu,
-                    color: theme.colorScheme.secondary,
-                  ),
-                  iconSize: 20.0,
-                  onPressed: () => _mainController.openDrawer(),
-                ),
+                iconSize: 20.0,
+                onPressed: () => _mainController.openDrawer(),
               ),
             ),
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[600],
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                        child: const Text(
-                          'Tin nhắn gần đây',
-                          style: TextStyle(
-                              color: Colors.white
-                          ),
+          ),
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[600],
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      child: const Text(
+                        'Tin nhắn gần đây',
+                        style: TextStyle(
+                            color: Colors.white
                         ),
                       ),
-                    ]
-                  ),
-                ]
-              ),
+                    ),
+                  ]
+                ),
+              ]
             ),
-            _buildRecentMessages()
-          ],
-        ),
+          ),
+          _buildRecentMessages()
+        ],
       ),
     );
   }
 
   Widget _buildRecentMessages() {
+    final theme = Theme.of(Get.context!);
     return Obx(
       () => SliverFillRemaining(
-        child: ScrollablePositionedList.builder(
-          itemCount: _controller.roomMap.length,
-          itemPositionsListener: _controller.itemPositionsListener,
-          itemBuilder: (context, index) {
-            final roomId = _controller.roomMap.keys.elementAt(index);
-            final room = _controller.roomMap[roomId]!;
+        child: RefreshIndicator(
+          onRefresh: _controller.main,
+          color: theme.colorScheme.secondary,
+          child: ScrollablePositionedList.builder(
+            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            itemCount: _controller.roomMap.length,
+            itemPositionsListener: _controller.itemPositionsListener,
+            itemBuilder: (context, index) {
+              final roomId = _controller.roomMap.keys.elementAt(index);
+              final room = _controller.roomMap[roomId]!;
 
-            return ChatCard(
-              key: UniqueKey(),
-              chat: Chat(
-                name: room.name ?? '',
-                isActive: room.connected == 1,
-                image: '',
-                time: '',
-                lastMessage: _getLastMessage(room.messages),
-                isHighlight: room.hasUnreadMessages
-              ),
-              press: () => _goToMessageScreen(room.id),
-            );
-          }
+              return ChatCard(
+                key: UniqueKey(),
+                chat: Chat(
+                  name: room.name ?? '',
+                  isActive: room.connected == 1,
+                  image: '',
+                  time: '',
+                  lastMessage: _getLastMessage(room.messages),
+                  isHighlight: room.hasUnreadMessages
+                ),
+                press: () => _goToMessageScreen(room.id),
+              );
+            }
+          ),
         ),
       ),
     );
@@ -131,7 +133,7 @@ class _ChatScreenState extends State<ChatScreen>
       return '';
     }
 
-    final message = messages.last;
+    final message = messages.first;
 
     if(message.type == EnumToString.convertToString(MessageType.IMAGE)){
       return 'Image';

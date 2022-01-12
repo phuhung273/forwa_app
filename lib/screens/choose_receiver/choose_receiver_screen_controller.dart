@@ -10,6 +10,7 @@ import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
+import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/give_success/give_success_screen_controller.dart';
 import 'package:forwa_app/screens/my_givings/my_giving_screen_controller.dart';
 import 'package:get/get.dart';
@@ -34,6 +35,7 @@ class ChooseReceiverScreenController extends BaseController
 
   final OrderRepo _orderRepo = Get.find();
   final PersistentLocalStorage _persistentLocalStorage = Get.find();
+  final ChatController _chatController = Get.find();
 
   bool isNotificationStart = false;
   int? _productId;
@@ -143,6 +145,8 @@ class ChooseReceiverScreenController extends BaseController
     final index = orders.indexWhere((element) => element.id == orderId);
     orders[index].status = EnumToString.convertToString(OrderStatus.SELECTED).toLowerCase();
     orders.refresh();
+
+    _chatController.addRoom(response.data!);
   }
 
   Future orderToSuccess(int index) async {

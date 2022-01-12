@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:forwa_app/datasource/remote/order_service.dart';
 import 'package:forwa_app/datasource/repository/base_repo.dart';
 import 'package:forwa_app/schema/api_response.dart';
+import 'package:forwa_app/schema/chat/chat_room.dart';
 import 'package:forwa_app/schema/order/create_order_request.dart';
 import 'package:forwa_app/schema/order/lazy_receiving_request.dart';
 import 'package:forwa_app/schema/order/list_orders_of_product_response.dart';
@@ -83,24 +84,22 @@ class OrderRepo extends BaseRepo{
     });
   }
 
-  Future<ApiResponse<String>> selectOrder(int orderId) async {
-    return _service.selectOrder(orderId).then((value){
-      return ApiResponse<String>(data: value);
-    }).catchError((Object obj) {
+  Future<ApiResponse<ChatRoom>> selectOrder(int orderId) async {
+    return _service.selectOrder(orderId).catchError((Object obj) {
       // non-200 error goes here.
       switch (obj.runtimeType) {
         case DioError:
           final res = (obj as DioError).response;
-          if(res == null || res.statusCode == HttpStatus.internalServerError) return ApiResponse<String>.fromError();
+          if(res == null || res.statusCode == HttpStatus.internalServerError) return ApiResponse<ChatRoom>.fromError();
 
           final data = getErrorData(res);
           final error = data['message'] ?? res.statusMessage;
           debugPrint(error);
-          return ApiResponse<String>.fromError(error: data['message'] ?? 'Lỗi không xác định');
+          return ApiResponse<ChatRoom>.fromError(error: data['message'] ?? 'Lỗi không xác định');
         default:
           final error = obj.toString();
           debugPrint(error);
-          return ApiResponse<String>.fromError(error: error);
+          return ApiResponse<ChatRoom>.fromError(error: error);
       }
     });
   }

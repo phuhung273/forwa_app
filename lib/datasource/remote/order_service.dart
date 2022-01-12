@@ -1,4 +1,5 @@
 import 'package:forwa_app/schema/api_response.dart';
+import 'package:forwa_app/schema/chat/chat_room.dart';
 import 'package:forwa_app/schema/order/create_order_request.dart';
 import 'package:forwa_app/schema/order/lazy_receiving_request.dart';
 import 'package:forwa_app/schema/order/list_orders_of_product_response.dart';
@@ -24,7 +25,7 @@ abstract class OrderService {
   Future<ApiResponse<List<Order>>> lazyLoadMyOrders(@Body() LazyReceivingRequest request);
 
   @POST('/status/{orderId}')
-  Future<String> selectOrder(
+  Future<ApiResponse<ChatRoom>> selectOrder(
     @Path('orderId') int orderId,
   );
 

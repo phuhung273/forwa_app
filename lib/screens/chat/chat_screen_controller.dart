@@ -9,6 +9,7 @@ import 'package:forwa_app/schema/chat/chat_room_list_response.dart';
 import 'package:forwa_app/schema/chat/chat_socket_message.dart';
 import 'package:forwa_app/schema/chat/chat_socket_user.dart';
 import 'package:forwa_app/schema/chat/chat_user_disconnected_response.dart';
+import 'package:forwa_app/schema/chat/lazy_room_request.dart';
 import 'package:forwa_app/screens/base_controller/authorized_refreshable_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:get/get.dart';
@@ -38,6 +39,8 @@ class ChatScreenController extends AuthorizedRefreshableController
 
   @override
   int get listLength => roomMap.length;
+
+  late DateTime _earliestUpdatedAt;
 
   @override
   void onInit(){
@@ -82,6 +85,8 @@ class ChatScreenController extends AuthorizedRefreshableController
 
     _listenPrivateMessageStream();
     _listenReadMessageStream();
+    _listenLazyMessageStream();
+    _listenRoomStream();
 
     return true;
   }
@@ -101,13 +106,37 @@ class ChatScreenController extends AuthorizedRefreshableController
         roomMap[room.id] = room;
       }
 
+      if(roomResponse.rooms.length < 10){
+        stopLazyLoad();
+      } else {
+        _calculateEdgeId();
+        resetLazyLoad();
+      }
+
       hideDialog();
     });
   }
 
   @override
   Future onLazyLoad() async {
+    final request = LazyRoomRequest(updatedAt: _earliestUpdatedAt);
 
+    _socket.emitWithAck(CHANNEL_LAZY_ROOMS, request, ack: (data){
+      final response = ChatRoomListResponse.fromJson(data);
+      final newItems = response.rooms;
+      if(newItems.isEmpty){
+        stopLazyLoad();
+        return;
+      }
+
+      for (var element in newItems) {
+        final roomName = element.users.firstWhere((element) => element.userID != _localStorage.getUserID()).username;
+        element.name = roomName;
+        roomMap[element.id] = element;
+      }
+      roomMap.refresh();
+      _calculateEdgeId();
+    });
   }
 
   _listenPrivateMessageStream(){
@@ -136,7 +165,7 @@ class ChatScreenController extends AuthorizedRefreshableController
         roomMap[chatSocketMessage.roomId]?.hasUnreadMessages = true;
       }
 
-      roomMap[chatSocketMessage.roomId]?.messages.add(chatSocketMessage);
+      roomMap[chatSocketMessage.roomId]?.messages.insert(0, chatSocketMessage);
       roomMap.refresh();
     });
   }
@@ -153,9 +182,45 @@ class ChatScreenController extends AuthorizedRefreshableController
     });
   }
 
-  void sendMessage(ChatSocketMessage message, String roomId) {
-    roomMap[roomId]?.messages.add(message);
-    roomMap.refresh();
+  _listenLazyMessageStream(){
+    _chatController.lazyMessageStream.listen((event) {
+      final messageMap = event as Map<String, List<ChatSocketMessage>>;
+      messageMap.forEach((key, value) {
+        if(roomMap.keys.contains(key)){
+          roomMap[key]?.messages.addAll(value);
+        }
+      });
+    });
+  }
+
+  _listenRoomStream(){
+    _chatController.roomStream.listen((event) {
+      final room = event as ChatRoom;
+      if(roomMap.keys.contains(room.id)){
+        // Room already exists
+        final existTingRoom = roomMap[room.id]!;
+        existTingRoom.hasUnreadMessages = true;
+        final newRoomMap = { existTingRoom.id: existTingRoom };
+        roomMap.remove(existTingRoom.id);
+        newRoomMap.addAll(roomMap);
+        roomMap.assignAll(newRoomMap);
+        roomMap.refresh();
+      } else {
+        final newRoomMap = { room.id: room };
+        newRoomMap.addAll(roomMap);
+        roomMap.assignAll(newRoomMap);
+        roomMap.refresh();
+      }
+    });
+  }
+
+  void _calculateEdgeId(){
+    _earliestUpdatedAt = roomMap.values.first.updatedAt;
+    for (var item in roomMap.values) {
+      if(item.updatedAt.compareTo(_earliestUpdatedAt).isNegative){
+        _earliestUpdatedAt = item.updatedAt;
+      }
+    }
   }
 
   @override
