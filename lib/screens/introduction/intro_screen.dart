@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:forwa_app/screens/introduction/intro_screen_controller.dart';
@@ -21,25 +22,24 @@ class IntroScreen extends GetView<IntroScreenController> {
           'Forwa',
           'Nơi mà các bạn có thể cho và nhận những món đồ miễn phí',
           'undraw_empty_re_opql.svg',
-          context
         ),
         _buildPageView(
           'Cho Đi',
           'Đồ không còn nhu cầu dùng, bạn có thể cho đi',
           'undraw_add_post_re_174w.svg',
-          context,
+          description: 'Chụp hình - Nhập thông tin - Tải lên'
         ),
         _buildPageView(
           'Nhận Lấy',
           'Bạn có thể xin nhận tất cả các món đồ trên ứng dụng',
           'undraw_gift_card_re_5dyy.svg',
-          context,
+          description: 'Xem - Chọn và liên hệ người cho - Chờ xác nhận',
         ),
         _buildPageView(
           'Happy Sharing',
           'Chia sẻ nhiều hơn, quan tâm nhiều hơn, lãng phí ít hơn',
           'undraw_happy_announcement_re_tsm0.svg',
-          context,
+          description: 'Đánh giá để nhận quà'
         ),
       ],
       onDone: controller.done,
@@ -63,12 +63,34 @@ class IntroScreen extends GetView<IntroScreenController> {
     );
   }
 
-  PageViewModel _buildPageView(String title, String body, String imagePath, context){
-    final theme = Theme.of(context);
+  PageViewModel _buildPageView(
+    String title,
+    String body,
+    String imagePath,
+    {
+      String? description
+    }
+  ){
+    final theme = Theme.of(Get.context!);
 
     return PageViewModel(
       title: title,
-      body: body,
+      body: description == null ? body : null,
+      bodyWidget: description != null
+        ? Column(
+          children: [
+            Text(
+              body,
+              textAlign: TextAlign.center,
+            ),
+            const Divider(),
+            Text(
+              description,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        )
+        : null,
       image: SvgPicture.asset(
         'assets/images/$imagePath',
         height: IMAGE_HEIGHT
