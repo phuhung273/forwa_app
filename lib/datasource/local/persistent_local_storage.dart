@@ -5,6 +5,7 @@ const UNREAD_COUNT_KEY = 'UNREAD_COUNT_KEY';
 const BACKGROUND_PROCESSING_ORDER_LIST_KEY = 'BACKGROUND_PROCESSING_ORDER_LIST_KEY';
 const BACKGROUND_SELECTED_ORDER_LIST_KEY = 'BACKGROUND_SELECTED_ORDER_LIST_KEY';
 const BACKGROUND_UPLOAD_LIST_KEY = 'BACKGROUND_UPLOAD_LIST_KEY';
+const BACKGROUND_SELECTED_ROOM_LIST_KEY = 'BACKGROUND_SELECTED_ROOM_LIST_KEY';
 
 // This class is mainly use for background process
 class PersistentLocalStorage {
@@ -48,5 +49,14 @@ class PersistentLocalStorage {
 
   void eraseBackgroundUploadList(){
     prefs.setStringList(BACKGROUND_UPLOAD_LIST_KEY, []);
+  }
+
+  Future<List<String>?> getBackgroundSelectedRoomList() async {
+    await prefs.reload();
+    return prefs.getStringList(BACKGROUND_SELECTED_ROOM_LIST_KEY);
+  }
+
+  void eraseBackgroundSelectedRoomList(){
+    prefs.setStringList(BACKGROUND_SELECTED_ROOM_LIST_KEY, []);
   }
 }

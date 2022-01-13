@@ -1,3 +1,4 @@
+
 import 'package:dash_chat/dash_chat.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:forwa_app/constants.dart';
@@ -25,6 +26,8 @@ class ChatScreenBinding extends Bindings {
 class ChatScreenController extends AuthorizedRefreshableController
   with LazyLoad {
 
+  bool _initialized = false;
+
   final Socket _socket = Get.find();
 
   final LocalStorage _localStorage = Get.find();
@@ -48,6 +51,15 @@ class ChatScreenController extends AuthorizedRefreshableController
     _username = _localStorage.getCustomerName();
     userId = _localStorage.getUserID();
     _token = _localStorage.getAccessToken();
+  }
+
+  void changeTab() async {
+    if(!_initialized){
+      final result = await onReady();
+      if(result){
+        _initialized = true;
+      }
+    }
   }
 
   @override
@@ -93,6 +105,8 @@ class ChatScreenController extends AuthorizedRefreshableController
 
   @override
   Future main() async {
+
+    roomMap.clear();
 
     showLoadingDialog();
 

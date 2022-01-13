@@ -28,6 +28,7 @@ class MessageScreen extends GetView<MessageScreenController> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
 
     return WillPopScope(
       onWillPop: () async {
@@ -80,6 +81,9 @@ class MessageScreen extends GetView<MessageScreenController> {
               messageDecorationBuilder: _buildMessageDecoration,
               messageImageBuilder: _buildImage,
               messagePadding: const EdgeInsets.all(16.0),
+              scrollToBottomStyle: ScrollToBottomStyle(
+                textColor: theme.colorScheme.secondary
+              ),
               inputTextStyle: const TextStyle(fontSize: 16.0),
               inputContainerStyle: BoxDecoration(
                 border: Border.all(width: 0.0),

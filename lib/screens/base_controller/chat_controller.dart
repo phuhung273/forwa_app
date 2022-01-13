@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 
@@ -63,6 +64,15 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     if(lastState == AppLifecycleState.resumed){
       // print('Im alive');
       unreadMessageCount.value = await _persistentLocalStorage.getUnreadCount() ?? 0;
+
+      final backgroundNotificationList = await _persistentLocalStorage.getBackgroundSelectedRoomList();
+      if(backgroundNotificationList != null && backgroundNotificationList.isNotEmpty){
+        for (final element in backgroundNotificationList) {
+          final room = ChatRoom.fromJson(jsonDecode(element));
+          addRoom(room);
+        }
+        _persistentLocalStorage.eraseBackgroundSelectedRoomList();
+      }
     }
   }
 

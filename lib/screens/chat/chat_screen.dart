@@ -96,35 +96,43 @@ class _ChatScreenState extends State<ChatScreen>
 
   Widget _buildRecentMessages() {
     final theme = Theme.of(Get.context!);
-    return Obx(
-      () => SliverFillRemaining(
-        child: RefreshIndicator(
-          onRefresh: _controller.main,
-          color: theme.colorScheme.secondary,
-          child: ScrollablePositionedList.builder(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            itemCount: _controller.roomMap.length,
-            itemPositionsListener: _controller.itemPositionsListener,
-            itemBuilder: (context, index) {
-              final roomId = _controller.roomMap.keys.elementAt(index);
-              final room = _controller.roomMap[roomId]!;
 
-              return ChatCard(
-                key: UniqueKey(),
-                chat: Chat(
-                  name: room.name ?? '',
-                  isActive: room.connected == 1,
-                  image: '',
-                  time: '',
-                  lastMessage: _getLastMessage(room.messages),
-                  isHighlight: room.hasUnreadMessages
-                ),
-                press: () => _goToMessageScreen(room.id),
-              );
-            }
+
+    return Obx(
+      () {
+        if(_controller.roomMap.isEmpty){
+          return const SliverFillRemaining(child: SizedBox());
+        }
+
+        return SliverFillRemaining(
+          child: RefreshIndicator(
+            onRefresh: _controller.main,
+            color: theme.colorScheme.secondary,
+            child: ScrollablePositionedList.builder(
+            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              itemCount: _controller.roomMap.length,
+              itemPositionsListener: _controller.itemPositionsListener,
+              itemBuilder: (context, index) {
+                final roomId = _controller.roomMap.keys.elementAt(index);
+                final room = _controller.roomMap[roomId]!;
+
+                return ChatCard(
+                  key: UniqueKey(),
+                  chat: Chat(
+                    name: room.name ?? '',
+                    isActive: room.connected == 1,
+                    image: '',
+                    time: '',
+                    lastMessage: _getLastMessage(room.messages),
+                    isHighlight: room.hasUnreadMessages
+                  ),
+                  press: () => _goToMessageScreen(room.id),
+                );
+              }
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

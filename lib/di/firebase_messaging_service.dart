@@ -7,6 +7,7 @@ import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
+import 'package:forwa_app/schema/chat/chat_room.dart';
 import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
@@ -82,6 +83,8 @@ class FirebaseMessagingService {
     final notification = AppNotification.fromJson(jsonDecode(data['data']));
     _appNotificationController.increaseMyReceiving(notification);
     _myReceivingsScreenController.changeOrderToSelectedByProductId(notification.product.id!);
+    final room = ChatRoom.fromJson(jsonDecode(data['room']));
+    _chatController.addRoom(room);
   }
 
   _handleForegroundUploadNotification(Map<String, dynamic> data){
@@ -203,13 +206,24 @@ Future handleBackgroundProcessingOrderNotification(Map<String, dynamic> data) as
 
 Future handleBackgroundSelectedOrderNotification(Map<String, dynamic> data) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
+
   List<String>? orderStringList = prefs.getStringList(BACKGROUND_SELECTED_ORDER_LIST_KEY);
   if(orderStringList == null){
     orderStringList = [data['order']];
   } else {
     orderStringList.add(data['order']);
   }
-  return prefs.setStringList(BACKGROUND_SELECTED_ORDER_LIST_KEY, orderStringList);
+
+  List<String>? roomStringList = prefs.getStringList(BACKGROUND_SELECTED_ROOM_LIST_KEY);
+  if(roomStringList == null){
+    roomStringList = [data['room']];
+  } else {
+    roomStringList.add(data['room']);
+  }
+
+  final resultRoom = await prefs.setStringList(BACKGROUND_SELECTED_ROOM_LIST_KEY, roomStringList);
+  final resultOrder = await prefs.setStringList(BACKGROUND_SELECTED_ORDER_LIST_KEY, orderStringList);
+  return resultRoom && resultOrder;
 }
 
 Future handleBackgroundUploadNotification(Map<String, dynamic> data) async {
