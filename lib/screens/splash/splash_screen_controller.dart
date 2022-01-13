@@ -6,6 +6,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
+import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
 import 'package:forwa_app/di/firebase_messaging_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
@@ -31,6 +32,16 @@ class SplashScreenController extends GetxController {
   final LocalStorage _localStorage = Get.find();
 
   final ChatController _chatController = Get.find();
+
+  final PersistentLocalStorage _persistentLocalStorage = Get.find();
+
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    _persistentLocalStorage.init();
+  }
 
   @override
   void onReady() async {

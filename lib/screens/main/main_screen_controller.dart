@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
-import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
 import 'package:forwa_app/di/firebase_messaging_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
@@ -29,8 +28,8 @@ class MainScreenBinding extends Bindings {
     Get.put(AddressController());
     Get.lazyPut(() => AppNotificationController());
     Get.lazyPut(() => FirebaseMessagingService());
-    Get.lazyPut(() => MyGivingsScreenController());
-    Get.lazyPut(() => MyReceivingsScreenController());
+    Get.put(MyGivingsScreenController());
+    Get.put(MyReceivingsScreenController());
   }
 }
 
@@ -49,10 +48,6 @@ class MainScreenController extends BaseController {
 
   final FirebaseMessagingService _firebaseMessagingService = Get.find();
   final NotificationService _notificationService = Get.find();
-  final PersistentLocalStorage _persistentLocalStorage = Get.find();
-
-  final MyGivingsScreenController _myGivingsScreenController = Get.find();
-  final MyReceivingsScreenController _myReceivingsScreenController = Get.find();
 
   final drawerController = AdvancedDrawerController();
 
@@ -70,7 +65,6 @@ class MainScreenController extends BaseController {
 
     _notificationService.init();
     _firebaseMessagingService.init();
-    _persistentLocalStorage.init();
 
     _navigationController.tabStream.listen((event) async {
       final page = event as int;
