@@ -31,6 +31,23 @@ class _TimePickerInputFieldState extends State<TimePickerInputField> {
 
         final result = await showTimePicker(
           context: context,
+          builder: (context, child) {
+            return Theme(
+              data: theme.copyWith(
+                  colorScheme: theme.colorScheme.copyWith(
+                    primary: theme.colorScheme.secondaryVariant,
+                    onPrimary: theme.colorScheme.onSecondary,
+                  )
+              ),
+              child: child!,
+            );
+          },
+          helpText: 'Chọn giờ',
+          cancelText: 'Hủy',
+          confirmText: 'Chọn',
+          hourLabelText: 'Giờ',
+          minuteLabelText: 'Phút',
+          errorInvalidText: 'Không hợp lệ',
           initialTime: widget.initialTime ?? TimeOfDay.now()
         );
 
