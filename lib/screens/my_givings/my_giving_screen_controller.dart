@@ -9,13 +9,12 @@ import 'package:forwa_app/mixins/lazy_load.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/schema/product/lazy_giving_request.dart';
 import 'package:forwa_app/schema/product/product.dart';
-import 'package:forwa_app/screens/base_controller/authorized_refreshable_controller.dart';
+import 'package:forwa_app/screens/base_controller/main_tab_controller.dart';
+import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:get/get.dart';
 
-class MyGivingsScreenController extends AuthorizedRefreshableController
+class MyGivingsScreenController extends MainTabController
     with WidgetsBindingObserver, LazyLoad  {
-
-  bool _initialized = false;
 
   final ProductRepo _productRepo = Get.find();
 
@@ -27,6 +26,9 @@ class MyGivingsScreenController extends AuthorizedRefreshableController
   int? _userId;
 
   @override
+  int get pageIndex => MY_GIVINGS_SCREEN_INDEX;
+
+  @override
   int get listLength => products.length;
 
   late int _lowId;
@@ -35,16 +37,6 @@ class MyGivingsScreenController extends AuthorizedRefreshableController
   void onInit() {
     super.onInit();
     WidgetsBinding.instance?.addObserver(this);
-    _userId = _localStorage.getUserID();
-  }
-
-  void changeTab() async {
-    if(!_initialized){
-      final result = await super.onReady();
-      if(result){
-        _initialized = true;
-      }
-    }
   }
 
   @override
@@ -59,7 +51,7 @@ class MyGivingsScreenController extends AuthorizedRefreshableController
     if(lastState == AppLifecycleState.resumed){
       // print('Im alive');
       final backgroundNotificationList = await _persistentLocalStorage.getBackgroundProcessingOrderList();
-      if(backgroundNotificationList != null && backgroundNotificationList.isNotEmpty && _initialized){
+      if(backgroundNotificationList != null && backgroundNotificationList.isNotEmpty && loggedIn){
         for (final element in backgroundNotificationList) {
           final order = Order.fromJson(jsonDecode(element));
           increaseOrderOfProductId(order.productId);
@@ -81,6 +73,7 @@ class MyGivingsScreenController extends AuthorizedRefreshableController
 
   @override
   Future main() async {
+    _userId = _localStorage.getUserID();
     final response = await _productRepo.getMyProducts();
 
     if(!response.isSuccess || response.data == null){
@@ -99,7 +92,7 @@ class MyGivingsScreenController extends AuthorizedRefreshableController
   }
 
   void increaseOrderOfProductId(int productId){
-    if(_initialized){
+    if(loggedIn){
       final index = products.indexWhere((element) => element.id == productId);
       if(index > -1) {
         products[index].orderCount = products[index].orderCount == null
@@ -111,7 +104,7 @@ class MyGivingsScreenController extends AuthorizedRefreshableController
   }
 
   void changeProductIdToSuccess(int productId){
-    if(_initialized){
+    if(loggedIn){
       final index = products.indexWhere((element) => element.id == productId);
       if(index > -1) {
         products[index].statusString = EnumToString.convertToString(ProductStatus.FINISH).toLowerCase();
@@ -149,6 +142,11 @@ class MyGivingsScreenController extends AuthorizedRefreshableController
         _lowId = item.id!;
       }
     }
+  }
+
+  @override
+  void cleanData(){
+    products.clear();
   }
 
   @override

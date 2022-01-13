@@ -44,6 +44,7 @@ class LoginScreen extends GetView<LoginScreenController> {
                   const SizedBox(height: defaultSpacing * 5),
                   InputField(
                     hintText: 'Email hoặc Số điện thoại',
+                    autofillHints: const [AutofillHints.email, AutofillHints.telephoneNumber],
                     icon: Icons.person,
                     controller: controller.usernameController,
                     textCapitalization: TextCapitalization.none,

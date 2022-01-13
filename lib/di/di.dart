@@ -28,6 +28,7 @@ import 'package:forwa_app/datasource/repository/review_repo.dart';
 import 'package:forwa_app/datasource/repository/user_report_repo.dart';
 import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
+import 'package:forwa_app/screens/base_controller/navigation_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -70,6 +71,7 @@ Future configureDependencies() async {
   Get.put(AppNotificationRepo());
 
   Get.put(ChatController());
+  Get.put(NavigationController());
 
   Get.put(GoogleSignIn());
   Get.put(LocationService());

@@ -11,7 +11,6 @@ import 'package:forwa_app/screens/address_select/address_select_screen_controlle
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/home/home_screen_controller.dart';
 import 'package:get/get.dart';
-import 'package:time_range/time_range.dart';
 import 'package:uuid/uuid.dart';
 
 class GiveScreenBinding extends Bindings {
@@ -21,11 +20,6 @@ class GiveScreenBinding extends Bindings {
     Get.put(AddressSelectScreenController());
   }
 }
-
-final initialPickupTime = TimeRangeResult(
-    const TimeOfDay(hour: 8, minute: 00),
-    const TimeOfDay(hour: 16, minute: 00)
-);
 
 const DEFAULT_PRODUCT_ADD_QUANTITY = 5;
 
@@ -44,30 +38,26 @@ class GiveScreenController extends BaseController {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   String? _dueDate;
-  String? _pickupTime;
+  late String _from;
+  late String _to;
   int? _userId;
 
   final List<File> _imageData = [];
-
-  set time(TimeRangeResult? range){
-    if(range == null) return;
-    _setPickupTime(range);
-  }
 
   set dueDate(DateTime? date){
     if(date == null) return;
     _dueDate = DateFormat.yMMMd().format(date);
   }
 
-  void _setPickupTime(TimeRangeResult range){
-    _pickupTime = '${range.start.hour}:00 - ${range.end.hour}:00';
-  }
+  set from(String? time) => _from = time ?? _from;
+  set to(String? time) => _to = time ?? _to;
 
   @override
   void onInit() {
     super.onInit();
-    _setPickupTime(initialPickupTime);
     _userId = _localStorage.getUserID();
+    _from = '8:00 AM';
+    _to = '4:00 PM';
   }
 
 
@@ -100,7 +90,7 @@ class GiveScreenController extends BaseController {
         sku: uuid.v4(),
         description: descriptionController.text,
         quantity: DEFAULT_PRODUCT_ADD_QUANTITY,
-        pickupTime: _pickupTime!,
+        pickupTime: '$_from $_to',
         images: _imageData,
         dueDate: _dueDate,
         addressId: _addressSelectController.id.value

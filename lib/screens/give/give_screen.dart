@@ -3,15 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/screens/address_select/address_select_screen_controller.dart';
-import 'package:forwa_app/screens/edit_profile_address/edit_profile_address_screen_controller.dart';
-import 'package:forwa_app/widgets/app_container.dart';
 import 'package:forwa_app/widgets/app_level_action_container.dart';
 import 'package:forwa_app/widgets/body_with_persistent_bottom.dart';
 import 'package:forwa_app/widgets/date_picker_input_field.dart';
 import 'package:forwa_app/widgets/image_gallery_picker.dart';
 import 'package:forwa_app/widgets/input_field.dart';
+import 'package:forwa_app/widgets/time_picker_input_field.dart';
 import 'package:get/get.dart';
-import 'package:time_range/time_range.dart';
 
 import 'give_screen_controller.dart';
 
@@ -70,36 +68,60 @@ class GiveScreen extends GetView<GiveScreenController> {
                 ),
                 const Divider(),
                 AppLevelActionContainer(
-                  child: TimeRange(
-                    fromTitle: Text(
-                      'Có thể tới lấy từ',
-                      style: theme.textTheme.subtitle1,
-                    ),
-                    toTitle: Text(
-                      'Tới',
-                      style: theme.textTheme.subtitle1,
-                    ),
-                    textStyle: theme.textTheme.bodyText1,
-                    activeTextStyle: theme.textTheme.bodyText1?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                    backgroundColor: Colors.transparent,
-                    activeBackgroundColor: theme.colorScheme.secondary,
-                    firstTime: const TimeOfDay(hour: 0, minute: 00),
-                    lastTime: const TimeOfDay(hour: 23, minute: 00),
-                    timeStep: 60,
-                    timeBlock: 60,
-                    initialRange: initialPickupTime,
-                    onRangeCompleted: (range) => controller.time = range,
+                  margin: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Giờ có thể tới lấy',
+                        style: theme.textTheme.subtitle1,
+                      )
+                    ],
+                  )
+                ),
+                AppLevelActionContainer(
+                  margin: const EdgeInsets.symmetric(vertical: 2.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Từ (giờ)',
+                        style: theme.textTheme.bodyText1,
+                      )
+                    ],
+                  )
+                ),
+                AppLevelActionContainer(
+                  child: TimePickerInputField(
+                    hintText: 'Từ',
+                    onChange: (time) => controller.from = time,
+                  ),
+                ),
+                AppLevelActionContainer(
+                  margin: EdgeInsets.zero,
+                  child: Row(
+                    children: [
+                      Text(
+                        'Tới (giờ)',
+                        style: theme.textTheme.bodyText1,
+                      )
+                    ],
+                  )
+                ),
+                AppLevelActionContainer(
+                  child: TimePickerInputField(
+                    hintText: 'Tới',
+                    onChange: (time) => controller.from = time,
                   ),
                 ),
                 const Divider(),
-                AppContainer(
-                  child: Text(
-                    'Địa chỉ lấy đồ',
-                    style: theme.textTheme.subtitle1,
-                  )
+                AppLevelActionContainer(
+                    child: Row(
+                      children: [
+                        Text(
+                          'Địa chỉ lấy đồ',
+                          style: theme.textTheme.subtitle1,
+                        )
+                      ],
+                    )
                 ),
                 FutureBuilder<bool>(
                   future: _addressSelectController.fetchMyAddress(),

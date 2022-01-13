@@ -3,18 +3,23 @@ import 'package:flutter/material.dart';
 
 import 'text_field_container.dart';
 
-class DatePickerInputField extends StatelessWidget {
+class DatePickerInputField extends StatefulWidget {
   final String hintText;
   final IconData? icon;
   final Function(DateTime? date) onChange;
 
-  DatePickerInputField({
+  const DatePickerInputField({
     Key? key,
     this.hintText = 'Ngày',
     this.icon,
     required this.onChange,
   }) : super(key: key);
 
+  @override
+  State<DatePickerInputField> createState() => _DatePickerInputFieldState();
+}
+
+class _DatePickerInputFieldState extends State<DatePickerInputField> {
   final controller = TextEditingController();
 
   @override
@@ -52,17 +57,17 @@ class DatePickerInputField extends StatelessWidget {
 
         if(result != null){
           controller.text = DateFormat('dd-MM-yyyy').format(result);
-          onChange(result);
+          widget.onChange(result);
         }
       },
       child: TextFieldContainer(
         child: TextFormField(
           controller: controller,
           decoration: InputDecoration(
-            icon: icon != null ? Icon(
-              icon,
+            icon: widget.icon != null ? Icon(
+              widget.icon,
             ) : null,
-            hintText: hintText,
+            hintText: widget.hintText,
           ),
           readOnly: true,
           enabled: false,

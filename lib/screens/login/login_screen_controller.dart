@@ -14,6 +14,7 @@ import 'package:forwa_app/schema/auth/email_login_request.dart';
 import 'package:forwa_app/schema/auth/login_response.dart';
 import 'package:forwa_app/schema/auth/phone_login_request.dart';
 import 'package:forwa_app/schema/auth/social_email_login_request.dart';
+import 'package:forwa_app/screens/base_controller/navigation_controller.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
@@ -38,6 +39,8 @@ class LoginScreenController extends BaseController {
   final ChatController _chatController = Get.find();
 
   final LocalStorage _localStorage = Get.find();
+
+  final NavigationController _navigationController = Get.find();
 
   final GoogleSignIn _googleSignIn = Get.find();
   final uuid = const Uuid();
@@ -252,6 +255,7 @@ class LoginScreenController extends BaseController {
 
     _chatController.init();
     _chatController.fetchUnread();
+    _navigationController.resetAuth();
     Get.back();
   }
 

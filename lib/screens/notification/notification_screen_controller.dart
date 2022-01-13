@@ -4,10 +4,11 @@ import 'package:forwa_app/datasource/repository/app_notification_repo.dart';
 import 'package:forwa_app/mixins/lazy_load.dart';
 import 'package:forwa_app/schema/app_notification/lazy_app_notification_request.dart';
 import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
-import 'package:forwa_app/screens/base_controller/authorized_refreshable_controller.dart';
+import 'package:forwa_app/screens/base_controller/main_tab_controller.dart';
+import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:get/get.dart';
 
-class NotificationScreenController extends AuthorizedRefreshableController
+class NotificationScreenController extends MainTabController
     with LazyLoad {
 
   final AppNotificationRepo _appNotificationRepo = Get.find();
@@ -21,19 +22,15 @@ class NotificationScreenController extends AuthorizedRefreshableController
   DateTime now = DateTime.now();
 
   @override
+  int get pageIndex => NOTIFICATION_SCREEN_INDEX;
+
+  @override
   int get listLength => _appNotificationController.notifications.length;
 
   @override
   int get stepToLoad => 1;
 
   late int _lowId;
-
-  @override
-  void onInit() {
-    super.onInit();
-
-    _userId = _localStorage.getUserID();
-  }
 
   @override
   Future<bool> onReady() async {
@@ -49,6 +46,7 @@ class NotificationScreenController extends AuthorizedRefreshableController
 
   @override
   Future main() async {
+    _userId = _localStorage.getUserID();
     now = DateTime.now();
 
     final response = await _appNotificationRepo.readMyNoti();
@@ -97,6 +95,11 @@ class NotificationScreenController extends AuthorizedRefreshableController
         _lowId = item.id;
       }
     }
+  }
+
+  @override
+  void cleanData(){
+    _appNotificationController.clear();
   }
 
   @override

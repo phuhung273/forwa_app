@@ -27,7 +27,6 @@ class AppNotificationController extends GetxController
   void onInit() {
     super.onInit();
     WidgetsBinding.instance?.addObserver(this);
-    _userId = _localStorage.getUserID();
   }
 
   @override
@@ -60,6 +59,7 @@ class AppNotificationController extends GetxController
   }
 
   Future main() async {
+    _userId = _localStorage.getUserID();
     if(_userId == null) return;
 
     final response = await _appNotificationRepo.getMyNoti();
@@ -125,6 +125,13 @@ class AppNotificationController extends GetxController
 
   void assignAll(List<AppNotification> notifications){
     notifications.assignAll(notifications);
+  }
+
+  void clear(){
+    notifications.clear();
+    notificationCount.value = 0;
+    myReceivingCount.value = 0;
+    myGivingCount.value = 0;
   }
 
   @override

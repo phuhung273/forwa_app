@@ -11,8 +11,9 @@ import 'package:forwa_app/schema/chat/chat_socket_message.dart';
 import 'package:forwa_app/schema/chat/chat_socket_user.dart';
 import 'package:forwa_app/schema/chat/chat_user_disconnected_response.dart';
 import 'package:forwa_app/schema/chat/lazy_room_request.dart';
-import 'package:forwa_app/screens/base_controller/authorized_refreshable_controller.dart';
+import 'package:forwa_app/screens/base_controller/main_tab_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
+import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -23,10 +24,8 @@ class ChatScreenBinding extends Bindings {
   }
 }
 
-class ChatScreenController extends AuthorizedRefreshableController
+class ChatScreenController extends MainTabController
   with LazyLoad {
-
-  bool _initialized = false;
 
   final Socket _socket = Get.find();
 
@@ -39,6 +38,9 @@ class ChatScreenController extends AuthorizedRefreshableController
   String? _username;
   int? userId;
   String? _token;
+
+  @override
+  int get pageIndex => CHAT_SCREEN_INDEX;
 
   @override
   int get listLength => roomMap.length;
@@ -54,10 +56,10 @@ class ChatScreenController extends AuthorizedRefreshableController
   }
 
   void changeTab() async {
-    if(!_initialized){
+    if(!loggedIn){
       final result = await onReady();
       if(result){
-        _initialized = true;
+        loggedIn = true;
       }
     }
   }
@@ -235,6 +237,11 @@ class ChatScreenController extends AuthorizedRefreshableController
         _earliestUpdatedAt = item.updatedAt;
       }
     }
+  }
+
+  @override
+  void cleanData(){
+    roomMap.clear();
   }
 
   @override

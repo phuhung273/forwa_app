@@ -51,6 +51,7 @@ class RegisterScreen extends GetView<RegisterScreenController> {
                   ),
                   InputField(
                     hintText: 'Email hoặc Điện thoại',
+                    autofillHints: const [AutofillHints.email, AutofillHints.telephoneNumber],
                     icon: Icons.verified_user,
                     controller: controller.methodController,
                     textCapitalization: TextCapitalization.none,

@@ -10,16 +10,15 @@ import 'package:forwa_app/mixins/lazy_load.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/lazy_receiving_request.dart';
 import 'package:forwa_app/schema/order/order.dart';
-import 'package:forwa_app/screens/base_controller/authorized_refreshable_controller.dart';
+import 'package:forwa_app/screens/base_controller/main_tab_controller.dart';
+import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/take_success/take_success_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 
-class MyReceivingsScreenController extends AuthorizedRefreshableController
+class MyReceivingsScreenController extends MainTabController
     with WidgetsBindingObserver, LazyLoad {
-
-  bool _initialized = false;
 
   final LocalStorage _localStorage = Get.find();
 
@@ -31,11 +30,14 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController
 
   final PersistentLocalStorage _persistentLocalStorage = Get.find();
 
-  int? _customerId;
+  int? _userId;
 
   final orders = List<Order>.empty().obs;
 
   LocationData? here;
+
+  @override
+  int get pageIndex => MY_RECEIVINGS_SCREEN_INDEX;
 
   @override
   int get listLength => orders.length;
@@ -46,16 +48,6 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController
   void onInit() {
     super.onInit();
     WidgetsBinding.instance?.addObserver(this);
-    _customerId = _localStorage.getUserID();
-  }
-
-  void changeTab() async {
-    if(!_initialized){
-      final result = await super.onReady();
-      if(result){
-        _initialized = true;
-      }
-    }
   }
 
   @override
@@ -70,7 +62,7 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController
     if(lastState == AppLifecycleState.resumed){
       // print('Im alive');
       final backgroundNotificationList = await _persistentLocalStorage.getBackgroundSelectedOrderList();
-      if(backgroundNotificationList != null && backgroundNotificationList.isNotEmpty && _initialized){
+      if(backgroundNotificationList != null && backgroundNotificationList.isNotEmpty && loggedIn){
         for (final element in backgroundNotificationList) {
           final order = Order.fromJson(jsonDecode(element));
           changeOrderToSelectedByProductId(order.productId);
@@ -93,12 +85,14 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController
 
   @override
   bool isAuthorized() {
-    _customerId = _localStorage.getUserID();
-    return _customerId != null;
+    _userId = _localStorage.getUserID();
+    return _userId != null;
   }
 
   @override
   Future main() async {
+    _userId = _localStorage.getUserID();
+
     final response = await _orderRepo.getMyOrders();
     if(!response.isSuccess || response.data == null){
       return;
@@ -117,7 +111,7 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController
   }
 
   void changeOrderToSelectedByProductId(int id){
-    if(_initialized){
+    if(loggedIn){
       final index = orders.indexWhere((element) => element.productId == id);
       if(index > -1){
         orders[index].status = EnumToString.convertToString(OrderStatus.SELECTED).toLowerCase();
@@ -139,7 +133,7 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController
   }
 
   void setSuccessReviewId(int orderId, int reviewId){
-    if(_initialized){
+    if(loggedIn){
       final index = orders.indexWhere((element) => element.id == orderId);
 
       if(index > -1){
@@ -150,7 +144,7 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController
   }
 
   void insertOrder(Order order){
-    if(_initialized){
+    if(loggedIn){
       orders.insert(0, order);
       orders.refresh();
     }
@@ -185,6 +179,11 @@ class MyReceivingsScreenController extends AuthorizedRefreshableController
         _lowId = item.id;
       }
     }
+  }
+
+  @override
+  void cleanData(){
+    orders.clear();
   }
 
   @override

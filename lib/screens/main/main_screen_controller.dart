@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -10,6 +12,7 @@ import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/auth/logout_request.dart';
 import 'package:forwa_app/screens/base_controller/address_controller.dart';
 import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
+import 'package:forwa_app/screens/base_controller/navigation_controller.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
@@ -40,6 +43,7 @@ class MainScreenController extends BaseController {
   final AuthRepo _authRepo = Get.find();
 
   final ChatController _chatController = Get.find();
+  final NavigationController _navigationController = Get.find();
 
   final AppNotificationController _appNotificationController = Get.find();
 
@@ -48,7 +52,6 @@ class MainScreenController extends BaseController {
   final PersistentLocalStorage _persistentLocalStorage = Get.find();
 
   final MyGivingsScreenController _myGivingsScreenController = Get.find();
-
   final MyReceivingsScreenController _myReceivingsScreenController = Get.find();
 
   final drawerController = AdvancedDrawerController();
@@ -60,7 +63,6 @@ class MainScreenController extends BaseController {
   final avatar = ''.obs;
   final fullname = ''.obs;
 
-
   @override
   void onInit() {
     super.onInit();
@@ -69,6 +71,11 @@ class MainScreenController extends BaseController {
     _notificationService.init();
     _firebaseMessagingService.init();
     _persistentLocalStorage.init();
+
+    _navigationController.tabStream.listen((event) async {
+      final page = event as int;
+      _onChangeTab(page);
+    });
   }
 
   @override
@@ -84,6 +91,10 @@ class MainScreenController extends BaseController {
   }
 
   void changeTab(int value) {
+    _navigationController.changeTab(value);
+  }
+
+  void _onChangeTab(int value){
     drawerController.hideDrawer();
     pageIndex.value = value;
     pageController.jumpToPage(value);
@@ -94,11 +105,9 @@ class MainScreenController extends BaseController {
         break;
       case MY_RECEIVINGS_SCREEN_INDEX:
         _appNotificationController.readMyReceiving();
-        _myReceivingsScreenController.changeTab();
         break;
       case MY_GIVINGS_SCREEN_INDEX:
         _appNotificationController.readMyGiving();
-        _myGivingsScreenController.changeTab();
         break;
       default:
         break;
@@ -137,6 +146,7 @@ class MainScreenController extends BaseController {
     drawerController.hideDrawer();
     refreshCredential();
     _chatController.reset();
+    _navigationController.resetAuth();
   }
 
   void toGiveScreen(){

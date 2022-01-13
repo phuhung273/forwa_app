@@ -35,31 +35,34 @@ class PasswordForgotScreen extends GetView<PasswordForgotScreenController> {
           padding: const EdgeInsets.all(defaultPadding),
           child: Form(
             key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Obx(() => Text(controller.result.value, style: theme.textTheme.subtitle1)),
-                InputField(
-                  hintText: 'Email hoặc Số điện thoại',
-                  icon: Icons.person,
-                  controller: controller.usernameController,
-                  textCapitalization: TextCapitalization.none,
-                  validator: ValidationBuilder(requiredMessage: 'Vui lòng nhập tài khoản')
-                      .build(),
-                ),
-                const Divider(),
-                AppLevelActionContainer(
-                  child: ElevatedButton(
-                    onPressed: _validate,
-                    child: Text(
-                      'Xác Nhận',
-                      style: theme.textTheme.button!.copyWith(
-                        letterSpacing: 1.1,
+            child: AutofillGroup(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Obx(() => Text(controller.result.value, style: theme.textTheme.subtitle1)),
+                  InputField(
+                    hintText: 'Email hoặc Số điện thoại',
+                    autofillHints: const [AutofillHints.email, AutofillHints.telephoneNumber],
+                    icon: Icons.person,
+                    controller: controller.usernameController,
+                    textCapitalization: TextCapitalization.none,
+                    validator: ValidationBuilder(requiredMessage: 'Vui lòng nhập tài khoản')
+                        .build(),
+                  ),
+                  const Divider(),
+                  AppLevelActionContainer(
+                    child: ElevatedButton(
+                      onPressed: _validate,
+                      child: Text(
+                        'Xác Nhận',
+                        style: theme.textTheme.button!.copyWith(
+                          letterSpacing: 1.1,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
