@@ -34,130 +34,124 @@ class OrderScreen extends GetView<OrderScreenController> {
       },
       child: SafeArea(
         child: Scaffold(
-          body: CustomScrollView(
-            slivers: [
-              const SliverAppBar(
-                title: Text('Tình trạng nhận'),
-              ),
-              SliverFillRemaining(
-                child: Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: Column(
-                    children: [
-                      Obx(
-                        () {
-                          return Card(
-                            shape: roundedRectangleShape,
-                            elevation: 4.0,
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: IMAGE_WIDTH,
-                                  width: IMAGE_WIDTH,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                      borderRadius: roundedRectangleBorderRadius
-                                  ),
-                                  margin: const EdgeInsets.only(
-                                    right: 0.0,
-                                    left: 8.0,
-                                    top: 8.0,
-                                    bottom: 8.0,
-                                  ),
-                                  child: controller.productImageUrl.isNotEmpty
-                                      ? ExtendedImage.network(
-                                    resolveUrl(controller.productImageUrl.value, HOST_URL),
-                                    width: IMAGE_WIDTH,
-                                    fit: BoxFit.cover,
-                                  )
-                                      : const SizedBox(),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.only(
-                                        top: 0.0,
-                                        bottom: 4.0,
-                                        right: 4.0,
-                                        left: 12.0
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        ListTile(
-                                          minVerticalPadding: 0.0,
-                                          minLeadingWidth: 0.0,
-                                          horizontalTitleGap: 8.0,
-                                          contentPadding: EdgeInsets.zero,
-                                          dense: true,
-                                          onTap: () => Get.toNamed(
-                                              ROUTE_PUBLIC_PROFILE,
-                                              parameters: {
-                                                userIdParam: controller.sellerId.string
-                                              }
-                                          ),
-                                          leading: _buildAvatar(),
-                                          title: Text(
-                                            // shortWords.join(' '),
-                                            controller.sellerName.value,
-                                            style: theme.textTheme.bodyText1?.copyWith(
-                                                fontWeight: FontWeight.w600
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          subtitle: Rating(score: 5, size: 12.0),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(bottom: 12.0),
-                                          child: Text(
-                                            controller.productName.value,
-                                            style: theme.textTheme.bodyText1,
-                                          ),
-                                        ),
-                                        const Padding(
-                                          padding: EdgeInsets.only(bottom: 8.0),
-                                          child: StatusChip(),
-                                        ),
-                                        if(controller.status.value == OrderStatus.SELECTED && controller.buyerReviewId.value == 0)
-                                          Center(
-                                            child: SecondaryActionContainer(
-                                                child: ElevatedButton.icon(
-                                                  icon: const Icon(Icons.textsms),
-                                                  onPressed: () {
-
-                                                  },
-                                                  label: const Text('Nhắn tin'),
-                                                )
-                                            ),
-                                          ),
-                                        if(controller.status.value == OrderStatus.SELECTED)
-                                          _buildMainButton()
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
+          appBar: AppBar(
+            title: const Text('Tình trạng nhận'),
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(6.0),
+            child: Column(
+              children: [
+                Obx(
+                  () {
+                    return Card(
+                      shape: roundedRectangleShape,
+                      elevation: 4.0,
+                      child: Row(
+                        children: [
+                          Container(
+                            height: IMAGE_WIDTH,
+                            width: IMAGE_WIDTH,
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                                borderRadius: roundedRectangleBorderRadius
                             ),
-                          );
-                        },
-                      ),
-                      const Divider(),
-                      Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0,
+                            margin: const EdgeInsets.only(
+                              right: 0.0,
+                              left: 8.0,
+                              top: 8.0,
+                              bottom: 8.0,
+                            ),
+                            child: controller.productImageUrl.isNotEmpty
+                                ? ExtendedImage.network(
+                              resolveUrl(controller.productImageUrl.value, HOST_URL),
+                              width: IMAGE_WIDTH,
+                              fit: BoxFit.cover,
+                            )
+                                : const SizedBox(),
                           ),
-                          child: Text(
-                            'Các bước tiếp theo để nhận đồ',
-                            style: theme.textTheme.subtitle1?.copyWith(
-                              color: theme.colorScheme.secondary,
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                  top: 0.0,
+                                  bottom: 4.0,
+                                  right: 4.0,
+                                  left: 12.0
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ListTile(
+                                    minVerticalPadding: 0.0,
+                                    minLeadingWidth: 0.0,
+                                    horizontalTitleGap: 8.0,
+                                    contentPadding: EdgeInsets.zero,
+                                    dense: true,
+                                    onTap: () => Get.toNamed(
+                                        ROUTE_PUBLIC_PROFILE,
+                                        parameters: {
+                                          userIdParam: controller.sellerId.string
+                                        }
+                                    ),
+                                    leading: _buildAvatar(),
+                                    title: Text(
+                                      // shortWords.join(' '),
+                                      controller.sellerName.value,
+                                      style: theme.textTheme.bodyText1?.copyWith(
+                                          fontWeight: FontWeight.w600
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    subtitle: Rating(score: 5, size: 12.0),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 12.0),
+                                    child: Text(
+                                      controller.productName.value,
+                                      style: theme.textTheme.bodyText1,
+                                    ),
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(bottom: 8.0),
+                                    child: StatusChip(),
+                                  ),
+                                  if(controller.status.value == OrderStatus.SELECTED && controller.buyerReviewId.value == 0)
+                                    Center(
+                                      child: SecondaryActionContainer(
+                                          child: ElevatedButton.icon(
+                                            icon: const Icon(Icons.textsms),
+                                            onPressed: () {
+
+                                            },
+                                            label: const Text('Nhắn tin'),
+                                          )
+                                      ),
+                                    ),
+                                  if(controller.status.value == OrderStatus.SELECTED)
+                                    _buildMainButton()
+                                ],
+                              ),
                             ),
                           )
+                        ],
                       ),
-                      const PolicySection(),
-                    ]
-                  ),
+                    );
+                  },
                 ),
-              )
-            ],
+                const Divider(),
+                Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                    ),
+                    child: Text(
+                      'Các bước tiếp theo để nhận đồ',
+                      style: theme.textTheme.subtitle1?.copyWith(
+                        color: theme.colorScheme.secondary,
+                      ),
+                    )
+                ),
+                const PolicySection(),
+              ]
+            ),
           ),
         ),
       ),

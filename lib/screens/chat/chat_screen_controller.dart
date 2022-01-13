@@ -55,15 +55,6 @@ class ChatScreenController extends MainTabController
     _token = _localStorage.getAccessToken();
   }
 
-  void changeTab() async {
-    if(!loggedIn){
-      final result = await onReady();
-      if(result){
-        loggedIn = true;
-      }
-    }
-  }
-
   @override
   Future<bool> onReady() async {
     final result = await super.onReady();
@@ -107,7 +98,9 @@ class ChatScreenController extends MainTabController
 
   @override
   Future main() async {
-
+    _username = _localStorage.getCustomerName();
+    userId = _localStorage.getUserID();
+    _token = _localStorage.getAccessToken();
     roomMap.clear();
 
     showLoadingDialog();
@@ -246,6 +239,9 @@ class ChatScreenController extends MainTabController
 
   @override
   bool isAuthorized() {
+    _username = _localStorage.getCustomerName();
+    userId = _localStorage.getUserID();
+    _token = _localStorage.getAccessToken();
     return _username != null && userId != null || _token != null;
   }
 }
