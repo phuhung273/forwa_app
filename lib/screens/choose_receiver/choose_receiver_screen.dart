@@ -36,6 +36,15 @@ class ChooseReceiverScreen extends GetView<ChooseReceiverScreenController> {
             title: const Text(
               'Chọn người nhận',
             ),
+            leading: controller.isNotificationStart
+              ? IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                ),
+                iconSize: 20.0,
+                onPressed: () => Get.offAndToNamed(ROUTE_MAIN),
+              )
+              : null,
           ),
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(defaultPadding),

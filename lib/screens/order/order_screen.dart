@@ -123,18 +123,18 @@ class OrderScreen extends GetView<OrderScreenController> {
                                     padding: EdgeInsets.only(bottom: 8.0),
                                     child: StatusChip(),
                                   ),
-                                  if(controller.status.value == OrderStatus.SELECTED && controller.buyerReviewId.value == 0)
-                                    Center(
-                                      child: SecondaryActionContainer(
-                                          child: ElevatedButton.icon(
-                                            icon: const Icon(Icons.textsms),
-                                            onPressed: () {
-
-                                            },
-                                            label: const Text('Nhắn tin'),
-                                          )
-                                      ),
-                                    ),
+                                  // if(controller.status.value == OrderStatus.SELECTED && controller.buyerReviewId.value == 0)
+                                  //   Center(
+                                  //     child: SecondaryActionContainer(
+                                  //         child: ElevatedButton.icon(
+                                  //           icon: const Icon(Icons.textsms),
+                                  //           onPressed: () {
+                                  //
+                                  //           },
+                                  //           label: const Text('Nhắn tin'),
+                                  //         )
+                                  //     ),
+                                  //   ),
                                   if(controller.status.value == OrderStatus.SELECTED)
                                     _buildMainButton()
                                 ],

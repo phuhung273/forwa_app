@@ -20,6 +20,7 @@ class GiveSuccessScreen extends GetView<GiveSuccessScreenController> {
 
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(),
         body: BodyWithPersistentBottom(
             isKeyboard: isKeyboard,
             child: Column(

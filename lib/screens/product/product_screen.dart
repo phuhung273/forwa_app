@@ -43,6 +43,15 @@ class ProductScreen extends GetView<ProductScreenController> {
                     'Thông tin món đồ',
                     style: theme.textTheme.headline6
                   ),
+                  leading: controller.isNotificationStart
+                    ? IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                      ),
+                      iconSize: 20.0,
+                      onPressed: () => Get.offAndToNamed(ROUTE_MAIN),
+                    )
+                    : null,
                 ),
                 if(controller.name.isNotEmpty)
                   const SliverToBoxAdapter(
