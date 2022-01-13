@@ -36,6 +36,15 @@ class OrderScreen extends GetView<OrderScreenController> {
         child: Scaffold(
           appBar: AppBar(
             title: const Text('Tình trạng nhận'),
+            leading: controller.isNotificationStart
+              ? IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                ),
+                iconSize: 20.0,
+                onPressed: () => Get.offAndToNamed(ROUTE_MAIN),
+              )
+              : null,
           ),
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(6.0),

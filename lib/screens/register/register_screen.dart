@@ -30,6 +30,7 @@ class RegisterScreen extends GetView<RegisterScreenController> {
 
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(),
         body: KeyboardFriendlyBody(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: defaultPadding),
           child: Form(

@@ -32,6 +32,7 @@ class LoginScreen extends GetView<LoginScreenController> {
 
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(),
         body: KeyboardFriendlyBody(
           padding: const EdgeInsets.all(defaultPadding),
           child: Form(
@@ -41,7 +42,7 @@ class LoginScreen extends GetView<LoginScreenController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Obx(() => Text(controller.result.value, style: theme.textTheme.subtitle1)),
-                  const SizedBox(height: defaultSpacing * 5),
+                  const SizedBox(height: defaultSpacing * 3),
                   InputField(
                     hintText: 'Email hoặc Số điện thoại',
                     autofillHints: const [AutofillHints.email, AutofillHints.telephoneNumber],
