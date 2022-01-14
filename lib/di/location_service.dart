@@ -1,31 +1,28 @@
-import 'package:location/location.dart';
+
+import 'package:geolocator/geolocator.dart';
+
+const LOCATION_WARNING_MESSAGE = 'Quyền truy cập vị trí đã bị tắt';
+const LOCATION_WARNING_DESCRIPTION = 'Forwa không thể tìm các sản phẩm gần bạn!';
 
 class LocationService {
 
-  final Location _location = Location();
+  Future<Position?> here() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return null;
+    }
 
-  Future<LocationData?> here() async {
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-
-    _serviceEnabled = await _location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await _location.requestService();
-      if (!_serviceEnabled) {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
         return null;
       }
     }
 
-    _permissionGranted = await _location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await _location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return null;
-      }
+    if (permission == LocationPermission.deniedForever) {
+      return null;
     }
-
-    return _location.getLocation();
+    return await Geolocator.getCurrentPosition();
   }
-
-
 }

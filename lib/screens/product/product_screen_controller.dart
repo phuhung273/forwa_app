@@ -8,10 +8,10 @@ import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/take/take_screen_controller.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart';
 
 class ProductScreenBinding extends Bindings {
   @override
@@ -41,7 +41,7 @@ class ProductScreenController extends BaseController {
   final dueDate = ''.obs;
   final enabled = false.obs;
   final avatar = ''.obs;
-  LocationData? here;
+  Position? here;
 
   set page(int index) => current.value = index;
   int get page => current.value;

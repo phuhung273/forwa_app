@@ -347,7 +347,7 @@ class ProductCard extends GetView<HomeScreenController> {
     final here = controller.here;
     return here != null && product.location != null
         ? (controller.distance.as(LengthUnit.Meter,
-        LatLng(here.latitude!, here.longitude!), product.location!) / 1000)
+        LatLng(here.latitude, here.longitude), product.location!) / 1000)
         .toStringAsFixed(1)
         : '';
   }

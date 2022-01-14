@@ -39,10 +39,10 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   final StreamController _lazyMessageStreamController = StreamController<Map<String, List<ChatSocketMessage>>>.broadcast();
   final StreamController _roomStreamController = StreamController<ChatRoom>.broadcast();
 
-  Stream get messageStream => _messageStreamController.stream.cast<ChatSocketMessage>();
-  Stream get readMessageStream => _readMessageStreamController.stream.cast<String>();
-  Stream get lazyMessageStream => _lazyMessageStreamController.stream.cast<Map<String, List<ChatSocketMessage>>>();
-  Stream get roomStream => _roomStreamController.stream.cast<ChatRoom>();
+  Stream<ChatSocketMessage> get messageStream => _messageStreamController.stream.cast<ChatSocketMessage>();
+  Stream<String> get readMessageStream => _readMessageStreamController.stream.cast<String>();
+  Stream<Map<String, List<ChatSocketMessage>>> get lazyMessageStream => _lazyMessageStreamController.stream.cast<Map<String, List<ChatSocketMessage>>>();
+  Stream<ChatRoom> get roomStream => _roomStreamController.stream.cast<ChatRoom>();
 
 
   @override

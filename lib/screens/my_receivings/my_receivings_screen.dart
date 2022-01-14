@@ -291,7 +291,7 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
     final here = controller.here;
     return here != null && order.location != null
         ? (controller.distance.as(LengthUnit.Meter,
-        LatLng(here.latitude!, here.longitude!), order.location!) / 1000)
+        LatLng(here.latitude, here.longitude), order.location!) / 1000)
         .toStringAsFixed(1)
         : '';
   }

@@ -68,9 +68,8 @@ class MessageScreenController extends BaseController with WidgetsBindingObserver
     super.onReady();
 
     _chatController.messageStream.listen((event) {
-      final chatSocketMessage = event as ChatSocketMessage;
-      if(chatSocketMessage.roomId == destinationID){
-        messages.insert(0, chatSocketMessage);
+      if(event.roomId == destinationID){
+        messages.insert(0, event);
       }
     });
   }

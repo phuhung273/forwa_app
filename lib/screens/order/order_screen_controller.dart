@@ -6,8 +6,8 @@ import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/take_success/take_success_screen_controller.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:location/location.dart';
 
 class OrderScreenBinding extends Bindings {
   @override
@@ -36,7 +36,7 @@ class OrderScreenController extends BaseController {
   final buyerReviewId = 0.obs;
   final orderId = 0.obs;
 
-  LocationData? here;
+  Position? here;
 
   @override
   void onInit() {

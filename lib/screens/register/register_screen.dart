@@ -48,6 +48,7 @@ class RegisterScreen extends GetView<RegisterScreenController> {
                     controller: controller.nameController,
                     textCapitalization: TextCapitalization.words,
                     validator: ValidationBuilder(requiredMessage: 'Vui lòng nhập họ tên')
+                      .minLength(6, 'Họ tên quá ngắn')
                       .build(),
                   ),
                   InputField(

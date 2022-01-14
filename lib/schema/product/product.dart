@@ -2,7 +2,6 @@
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:forwa_app/schema/address/address.dart';
 import 'package:forwa_app/schema/image/image.dart';
-import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/schema/product/product_detail.dart';
 import 'package:forwa_app/schema/user/user.dart';
 import 'package:json_annotation/json_annotation.dart';

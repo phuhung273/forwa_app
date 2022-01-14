@@ -200,7 +200,7 @@ class MyDrawer extends GetView<MainScreenController> {
                   height: 128.0,
                   margin: const EdgeInsets.only(
                     top: 24.0,
-                    bottom: 64.0,
+                    bottom: 12.0,
                   ),
                   clipBehavior: Clip.antiAlias,
                   decoration: const BoxDecoration(
@@ -220,6 +220,7 @@ class MyDrawer extends GetView<MainScreenController> {
                     color: Colors.white,
                   ),
                 ),
+                const SizedBox(height: defaultSpacing),
                 ListTile(
                   onTap: () {
                     if(_localStorage.getAccessToken() == null){

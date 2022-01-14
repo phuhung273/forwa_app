@@ -72,7 +72,6 @@ class RegisterScreenController extends OtpController {
     verifyOtp(
       phone: phone,
       onSuccess: () {
-        hideDialog();
         phoneRegister();
       },
       previousRoute: ROUTE_REGISTER
@@ -80,7 +79,6 @@ class RegisterScreenController extends OtpController {
   }
 
   Future phoneRegister() async {
-    showLoadingDialog();
 
     final request = PhoneRegisterRequest(
       name: nameController.text,

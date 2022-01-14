@@ -13,9 +13,9 @@ import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/base_controller/main_tab_controller.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/take_success/take_success_screen_controller.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart';
 
 class MyReceivingsScreenController extends MainTabController
     with WidgetsBindingObserver, LazyLoad {
@@ -34,7 +34,7 @@ class MyReceivingsScreenController extends MainTabController
 
   final orders = List<Order>.empty().obs;
 
-  LocationData? here;
+  Position? here;
 
   @override
   int get pageIndex => MY_RECEIVINGS_SCREEN_INDEX;

@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/hidden_product_db.dart';
 import 'package:forwa_app/datasource/local/hidden_user_db.dart';
+import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/datasource/repository/product_report_repo.dart';
 import 'package:forwa_app/datasource/repository/user_report_repo.dart';
@@ -12,12 +14,12 @@ import 'package:forwa_app/schema/product/product_list_request.dart';
 import 'package:forwa_app/schema/report/product_report.dart';
 import 'package:forwa_app/schema/report/user_report.dart';
 import 'package:forwa_app/screens/base_controller/refreshable_controller.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart';
 
 class HomeScreenController extends RefreshableController
-    with Reportable, LazyLoad {
+    with WidgetsBindingObserver, Reportable, LazyLoad {
 
   final ProductRepo _productRepo = Get.find();
 
@@ -31,6 +33,8 @@ class HomeScreenController extends RefreshableController
 
   final HiddenUserDB _hiddenUserDB = Get.find();
 
+  final LocalStorage _localStorage = Get.find();
+
   final products = List<Product>.empty().obs;
 
   var _hiddenProductIds = List<int>.empty();
@@ -38,7 +42,7 @@ class HomeScreenController extends RefreshableController
 
   final Distance distance = Get.find();
 
-  LocationData? here;
+  Position? here;
 
   DateTime now = DateTime.now();
 
@@ -48,6 +52,33 @@ class HomeScreenController extends RefreshableController
   @override
   int get listLength => products.length;
 
+  String? _uniqueDeviceId;
+  String? _deviceName;
+
+  @override
+  void onInit() {
+    super.onInit();
+    WidgetsBinding.instance?.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+
+    if(state == AppLifecycleState.paused){
+      // print('Im dead');
+    }
+
+    final lastState = WidgetsBinding.instance?.lifecycleState;
+    if(lastState == AppLifecycleState.resumed){
+      // print('Im alive');
+      if(_willBackendSaveLocation()){
+        _tellBackendSaveLocation();
+        await main();
+      }
+    }
+  }
+
   @override
   Future onReady() async {
     super.onReady();
@@ -56,23 +87,30 @@ class HomeScreenController extends RefreshableController
 
     // await _getHiddenProductIds();
 
+
     initLazyLoad();
   }
 
   @override
   Future main() async {
     now = DateTime.now();
+
+    _decideToSaveLocation();
+
     await _getHiddenProductIds();
+
     here = await _locationService.here();
 
-    if(here == null || here?.latitude == null || here?.longitude == null){
-      return;
+    if(here == null){
+      await showLocationWarningDialog();
     }
 
     final request = ProductListRequest(
       hiddenUserIds: _hiddenUserIds,
-      latitude: here!.latitude!,
-      longitude: here!.longitude!,
+      latitude: here?.latitude,
+      longitude: here?.longitude,
+      uniqueDeviceId: _uniqueDeviceId,
+      deviceName: _deviceName,
     );
 
     final response = await _productRepo.getProducts(request);
@@ -91,6 +129,10 @@ class HomeScreenController extends RefreshableController
     } else {
       _calculateEdgeId();
       resetLazyLoad();
+    }
+
+    if(_didBackendSaveLocation()){
+      _handleOnBackendSaveLocation();
     }
   }
 
@@ -139,16 +181,11 @@ class HomeScreenController extends RefreshableController
   Future onLazyLoad() async {
     now = DateTime.now();
     await _getHiddenProductIds();
-    here = await _locationService.here();
-
-    if(here == null || here?.latitude == null || here?.longitude == null){
-      return;
-    }
 
     final request = LazyProductRequest(
       hiddenUserIds: _hiddenUserIds,
-      latitude: here!.latitude!,
-      longitude: here!.longitude!,
+      latitude: here?.latitude,
+      longitude: here?.longitude,
       lowId: _lowId,
       highId: _highId
     );
@@ -182,4 +219,40 @@ class HomeScreenController extends RefreshableController
     }
   }
 
+  _decideToSaveLocation() {
+    if(_willBackendSaveLocation()){
+      _tellBackendSaveLocation();
+    } else {
+      _tellBackendNotToSaveLocation();
+    }
+  }
+
+  bool _willBackendSaveLocation() {
+    final lastLocationTime = _localStorage.getLocationTime();
+    return lastLocationTime == null ||
+        DateTime.now().difference(lastLocationTime).inDays > 0;
+  }
+
+  bool _didBackendSaveLocation() => _uniqueDeviceId != null && _deviceName != null && here != null;
+
+  _handleOnBackendSaveLocation(){
+    _localStorage.saveLocationTime(now);
+    _tellBackendNotToSaveLocation();
+  }
+
+  _tellBackendSaveLocation(){
+    _uniqueDeviceId = _localStorage.getUniqueDeviceId();
+    _deviceName = _localStorage.getDeviceName();
+  }
+
+  _tellBackendNotToSaveLocation(){
+    _uniqueDeviceId = null;
+    _deviceName = null;
+  }
+
+  @override
+  void onClose(){
+    WidgetsBinding.instance?.removeObserver(this);
+    super.onClose();
+  }
 }

@@ -11,6 +11,8 @@ const FIREBASE_TOKEN_KEY = 'FIREBASE_TOKEN_KEY';
 const AGREE_TERM_KEY = 'AGREE_TERM_KEY';
 const AGREE_UPLOAD_TERM_KEY = 'AGREE_UPLOAD_TERM_KEY';
 const SKIP_INTRO_KEY = 'SKIP_INTRO_KEY';
+const UNIQUE_DEVICE_ID_KEY = 'UNIQUE_DEVICE_ID_KEY';
+const LOCATION_TIME_KEY = 'LOCATION_TIME_KEY';
 
 class LocalStorage {
   final box = GetStorage();
@@ -93,6 +95,22 @@ class LocalStorage {
 
   String? getSkipIntro() {
     return box.read(SKIP_INTRO_KEY);
+  }
+
+  void saveUniqueDeviceId(String value){
+    box.write(UNIQUE_DEVICE_ID_KEY, value);
+  }
+
+  String? getUniqueDeviceId() {
+    return box.read(UNIQUE_DEVICE_ID_KEY);
+  }
+
+  void saveLocationTime(DateTime value){
+    box.write(LOCATION_TIME_KEY, value);
+  }
+
+  DateTime? getLocationTime() {
+    return box.read(LOCATION_TIME_KEY);
   }
 
   void removeCredentials(){

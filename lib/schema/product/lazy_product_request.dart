@@ -9,10 +9,10 @@ class LazyProductRequest {
   List<int> hiddenUserIds;
 
   @JsonKey(name: 'latitude')
-  double latitude;
+  double? latitude;
 
   @JsonKey(name: 'longitude')
-  double longitude;
+  double? longitude;
 
   @JsonKey(name: 'take')
   int take;
@@ -25,8 +25,8 @@ class LazyProductRequest {
 
   LazyProductRequest({
     required this.hiddenUserIds,
-    required this.latitude,
-    required this.longitude,
+    this.latitude,
+    this.longitude,
     this.take = 10,
     required this.lowId,
     required this.highId,

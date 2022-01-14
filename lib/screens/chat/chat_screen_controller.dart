@@ -150,42 +150,40 @@ class ChatScreenController extends MainTabController
 
   _listenPrivateMessageStream(){
     _chatController.messageStream.listen((event) {
-      final chatSocketMessage = event as ChatSocketMessage;
       final newMessage = ChatMessage(
-        id: chatSocketMessage.id,
-        text: chatSocketMessage.content,
+        id: event.id,
+        text: event.content,
         user: ChatUser(
-          uid: chatSocketMessage.from.toString(),
+          uid: event.from.toString(),
         ),
       );
 
-      if(chatSocketMessage.type == EnumToString.convertToString(MessageType.IMAGE)){
+      if(event.type == EnumToString.convertToString(MessageType.IMAGE)){
         newMessage.image = '$CHAT_PUBLIC_URL/${newMessage.text}';
         newMessage.text = '';
-      } else if(chatSocketMessage.type == EnumToString.convertToString(MessageType.LOCATION)){
+      } else if(event.type == EnumToString.convertToString(MessageType.LOCATION)){
         newMessage.image = '';
       }
 
-      if(!chatSocketMessage.readBy!.contains(userId!)){
+      if(!event.readBy!.contains(userId!)){
         // Please keep this line here commented
         // This was commented not because of error
         // But because firebase messaging service has already handle the case
         // _chatController.increase(1);sid
-        roomMap[chatSocketMessage.roomId]?.hasUnreadMessages = true;
+        roomMap[event.roomId]?.hasUnreadMessages = true;
       }
 
-      roomMap[chatSocketMessage.roomId]?.messages.insert(0, chatSocketMessage);
+      roomMap[event.roomId]?.messages.insert(0, event);
       roomMap.refresh();
     });
   }
 
   _listenReadMessageStream(){
     _chatController.readMessageStream.listen((event) {
-      final roomId = event as String;
-      final room = roomMap[roomId];
+      final room = roomMap[event];
 
       if(room != null){
-        roomMap[roomId]?.hasUnreadMessages = false;
+        roomMap[event]?.hasUnreadMessages = false;
         roomMap.refresh();
       }
     });
@@ -193,8 +191,7 @@ class ChatScreenController extends MainTabController
 
   _listenLazyMessageStream(){
     _chatController.lazyMessageStream.listen((event) {
-      final messageMap = event as Map<String, List<ChatSocketMessage>>;
-      messageMap.forEach((key, value) {
+      event.forEach((key, value) {
         if(roomMap.keys.contains(key)){
           roomMap[key]?.messages.addAll(value);
         }
@@ -204,10 +201,9 @@ class ChatScreenController extends MainTabController
 
   _listenRoomStream(){
     _chatController.roomStream.listen((event) {
-      final room = event as ChatRoom;
-      if(roomMap.keys.contains(room.id)){
+      if(roomMap.keys.contains(event.id)){
         // Room already exists
-        final existTingRoom = roomMap[room.id]!;
+        final existTingRoom = roomMap[event.id]!;
         existTingRoom.hasUnreadMessages = true;
         final newRoomMap = { existTingRoom.id: existTingRoom };
         roomMap.remove(existTingRoom.id);
@@ -215,7 +211,7 @@ class ChatScreenController extends MainTabController
         roomMap.assignAll(newRoomMap);
         roomMap.refresh();
       } else {
-        final newRoomMap = { room.id: room };
+        final newRoomMap = { event.id: event };
         newRoomMap.addAll(roomMap);
         roomMap.assignAll(newRoomMap);
         roomMap.refresh();

@@ -7,8 +7,8 @@ class NavigationController extends GetxController {
   final _authController = StreamController<bool>.broadcast();
   final _tabController = StreamController<int>.broadcast();
 
-  Stream get authStream => _authController.stream.cast<bool>();
-  Stream get tabStream => _tabController.stream.cast<int>();
+  Stream<bool> get authStream => _authController.stream.cast<bool>();
+  Stream<int> get tabStream => _tabController.stream.cast<int>();
 
   void resetAuth(){
     _authController.sink.add(true);

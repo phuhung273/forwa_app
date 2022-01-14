@@ -17,6 +17,7 @@ import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
 import 'package:forwa_app/screens/order/order_screen_controller.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 
 class SplashScreenBinding extends Bindings {
   @override
@@ -153,6 +154,11 @@ class SplashScreenController extends GetxController {
         final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
         _localStorage.saveDeviceName(androidInfo.model!);
       }
+    }
+
+    // This id will be used to recognize guest user
+    if(_localStorage.getUniqueDeviceId() == null){
+      _localStorage.saveUniqueDeviceId(const Uuid().v4());
     }
 
   }

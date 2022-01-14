@@ -2,7 +2,6 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/route/route.dart';
@@ -28,7 +27,6 @@ class FirebaseOtpScreen extends StatefulWidget {
 }
 
 class _FirebaseOtpScreenState extends State<FirebaseOtpScreen> {
-  var onTapRecognizer;
 
   final auth = FirebaseAuth.instance;
 
@@ -43,10 +41,6 @@ class _FirebaseOtpScreenState extends State<FirebaseOtpScreen> {
 
   @override
   void initState() {
-    onTapRecognizer = TapGestureRecognizer()
-      ..onTap = () {
-        Navigator.pop(context);
-      };
     errorController = StreamController<ErrorAnimationType>();
     super.initState();
   }

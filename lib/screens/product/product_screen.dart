@@ -326,7 +326,7 @@ class ProductPrimaryInfoSection extends GetView<ProductScreenController> {
     final here = controller.here;
     return here != null && controller.location != null
         ? (controller.distance.as(LengthUnit.Meter,
-        LatLng(here.latitude!, here.longitude!), controller.location!) / 1000)
+        LatLng(here.latitude, here.longitude), controller.location!) / 1000)
         .toStringAsFixed(1)
         : '';
   }

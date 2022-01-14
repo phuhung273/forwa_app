@@ -67,8 +67,7 @@ class MainScreenController extends BaseController {
     _firebaseMessagingService.init();
 
     _navigationController.tabStream.listen((event) async {
-      final page = event as int;
-      _onChangeTab(page);
+      _onChangeTab(event);
     });
   }
 

@@ -17,16 +17,14 @@ abstract class MainTabController extends BaseController{
     super.onInit();
 
     _navigationController.authStream.listen((event) {
-      final willReset = event as bool;
-      if(willReset){
+      if(event){
         cleanData();
         loggedIn = false;
       }
     });
 
     _navigationController.tabStream.listen((event) async {
-      final page = event as int;
-      if(page == pageIndex){
+      if(event == pageIndex){
         if(!loggedIn){
           final result = await authCheck();
           if(result){
