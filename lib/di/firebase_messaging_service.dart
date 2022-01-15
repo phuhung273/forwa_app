@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
@@ -26,6 +27,7 @@ class FirebaseMessagingService {
   final AppNotificationController _appNotificationController = Get.find();
   final MyReceivingsScreenController _myReceivingsScreenController = Get.find();
   final MyGivingsScreenController _myGivingsScreenController = Get.find();
+  final LocalStorage _localStorage = Get.find();
 
   void init() {
     _setup();
@@ -49,21 +51,25 @@ class FirebaseMessagingService {
         );
       }
 
-      switch(data['type']){
-        case MESSAGE_TYPE_CHAT:
-          _handleForegroundChatNotification(data);
-          break;
-        case APP_NOTIFICATION_TYPE_PROCESSING:
-          _handleForegroundProcessingOrderNotification(data);
-          break;
-        case APP_NOTIFICATION_TYPE_SELECTED:
-          _handleForegroundSelectedOrderNotification(data);
-          break;
-        case APP_NOTIFICATION_TYPE_UPLOAD:
-          _handleForegroundUploadNotification(data);
-          break;
-        default:
-          break;
+      if(_localStorage.getUserID() != null){
+
+        switch(data['type']){
+          case MESSAGE_TYPE_CHAT:
+            _handleForegroundChatNotification(data);
+            break;
+          case APP_NOTIFICATION_TYPE_PROCESSING:
+            _handleForegroundProcessingOrderNotification(data);
+            break;
+          case APP_NOTIFICATION_TYPE_SELECTED:
+            _handleForegroundSelectedOrderNotification(data);
+            break;
+          case APP_NOTIFICATION_TYPE_UPLOAD:
+            _handleForegroundUploadNotification(data);
+            break;
+          default:
+            break;
+        }
+
       }
     });
   }
@@ -172,13 +178,15 @@ Future firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       await handleBackgroundChatNotification(data);
       break;
     case APP_NOTIFICATION_TYPE_PROCESSING:
+      await handleBackgroundNotification(data);
       await handleBackgroundProcessingOrderNotification(data);
       break;
     case APP_NOTIFICATION_TYPE_SELECTED:
+      await handleBackgroundNotification(data);
       await handleBackgroundSelectedOrderNotification(data);
       break;
     case APP_NOTIFICATION_TYPE_UPLOAD:
-      await handleBackgroundUploadNotification(data);
+      await handleBackgroundNotification(data);
       break;
     default:
       break;
@@ -225,14 +233,14 @@ Future handleBackgroundSelectedOrderNotification(Map<String, dynamic> data) asyn
   return resultRoom && resultOrder;
 }
 
-Future handleBackgroundUploadNotification(Map<String, dynamic> data) async {
+Future handleBackgroundNotification(Map<String, dynamic> data) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  List<String>? uploadStringList = prefs.getStringList(BACKGROUND_UPLOAD_LIST_KEY);
+  List<String>? uploadStringList = prefs.getStringList(BACKGROUND_NOTIFICATION_LIST_KEY);
   if(uploadStringList == null){
     uploadStringList = [data['data']];
   } else {
     uploadStringList.add(data['data']);
   }
-  return prefs.setStringList(BACKGROUND_UPLOAD_LIST_KEY, uploadStringList);
+  return prefs.setStringList(BACKGROUND_NOTIFICATION_LIST_KEY, uploadStringList);
 }
 

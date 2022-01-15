@@ -114,7 +114,7 @@ class _NotificationScreenState extends State<NotificationScreen>
 
 const IMAGE_SIZE = 80.0;
 
-class NotificationItem extends GetView<NotificationScreenController> {
+class NotificationItem extends StatelessWidget {
   final AppNotification notification;
 
   const NotificationItem({
@@ -204,7 +204,8 @@ class NotificationItem extends GetView<NotificationScreenController> {
   }
 
   String _buildTime(AppNotification notification){
-    final resultDuration = controller.now.difference(notification.createdAt);
+    final now = DateTime.now();
+    final resultDuration = now.difference(notification.createdAt);
 
     if(resultDuration.inHours < 1){
       return '${resultDuration.inMinutes} phút trước';

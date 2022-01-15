@@ -1,26 +1,23 @@
-import 'dart:convert';
 
 import 'package:enum_to_string/enum_to_string.dart';
-import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
-import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/mixins/lazy_load.dart';
-import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/schema/product/lazy_giving_request.dart';
 import 'package:forwa_app/schema/product/product.dart';
+import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/base_controller/main_tab_controller.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:get/get.dart';
 
 class MyGivingsScreenController extends MainTabController
-    with WidgetsBindingObserver, LazyLoad  {
+    with LazyLoad  {
 
   final ProductRepo _productRepo = Get.find();
 
   final LocalStorage _localStorage = Get.find();
 
-  final PersistentLocalStorage _persistentLocalStorage = Get.find();
+  final AppNotificationController _appNotificationController = Get.find();
 
   final products = List<Product>.empty().obs;
   int? _userId;
@@ -34,31 +31,14 @@ class MyGivingsScreenController extends MainTabController
   late int _lowId;
 
   @override
-  void onInit() {
+  void onInit(){
     super.onInit();
-    WidgetsBinding.instance?.addObserver(this);
-  }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-
-    if(state == AppLifecycleState.paused){
-      // print('Im dead');
-    }
-
-    final lastState = WidgetsBinding.instance?.lifecycleState;
-    if(lastState == AppLifecycleState.resumed){
-      // print('Im alive');
-      final backgroundNotificationList = await _persistentLocalStorage.getBackgroundProcessingOrderList();
-      if(backgroundNotificationList != null && backgroundNotificationList.isNotEmpty && loggedIn){
-        for (final element in backgroundNotificationList) {
-          final order = Order.fromJson(jsonDecode(element));
-          increaseOrderOfProductId(order.productId);
-        }
-        _persistentLocalStorage.eraseBackgroundProcessingOrderList();
+    _appNotificationController.processingOrderStream.listen((event) {
+      if(loggedIn){
+        increaseOrderOfProductId(event.productId);
       }
-    }
+    });
   }
 
   @override
@@ -153,11 +133,5 @@ class MyGivingsScreenController extends MainTabController
   bool isAuthorized() {
     _userId = _localStorage.getUserID();
     return _userId != null;
-  }
-
-  @override
-  void onClose(){
-    WidgetsBinding.instance?.removeObserver(this);
-    super.onClose();
   }
 }

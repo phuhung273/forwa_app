@@ -54,6 +54,7 @@ class HomeScreenController extends RefreshableController
 
   String? _uniqueDeviceId;
   String? _deviceName;
+  String? _firebaseToken;
 
   @override
   void onInit() {
@@ -111,6 +112,7 @@ class HomeScreenController extends RefreshableController
       longitude: here?.longitude,
       uniqueDeviceId: _uniqueDeviceId,
       deviceName: _deviceName,
+      firebaseToken: _firebaseToken,
     );
 
     final response = await _productRepo.getProducts(request);
@@ -233,21 +235,24 @@ class HomeScreenController extends RefreshableController
         DateTime.now().difference(lastLocationTime).inDays > 0;
   }
 
-  bool _didBackendSaveLocation() => _uniqueDeviceId != null && _deviceName != null && here != null;
+  bool _didBackendSaveLocation() =>
+      _uniqueDeviceId != null && _deviceName != null && _firebaseToken != null && here != null;
 
   _handleOnBackendSaveLocation(){
-    _localStorage.saveLocationTime(now);
+    _localStorage.saveLocationTime(DateTime.now());
     _tellBackendNotToSaveLocation();
   }
 
   _tellBackendSaveLocation(){
     _uniqueDeviceId = _localStorage.getUniqueDeviceId();
     _deviceName = _localStorage.getDeviceName();
+    _firebaseToken = _localStorage.getFirebaseToken();
   }
 
   _tellBackendNotToSaveLocation(){
     _uniqueDeviceId = null;
     _deviceName = null;
+    _firebaseToken = null;
   }
 
   @override

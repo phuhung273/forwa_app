@@ -1,15 +1,13 @@
-import 'dart:convert';
 
 import 'package:enum_to_string/enum_to_string.dart';
-import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
-import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/mixins/lazy_load.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/lazy_receiving_request.dart';
 import 'package:forwa_app/schema/order/order.dart';
+import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/base_controller/main_tab_controller.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/take_success/take_success_screen_controller.dart';
@@ -18,7 +16,7 @@ import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 
 class MyReceivingsScreenController extends MainTabController
-    with WidgetsBindingObserver, LazyLoad {
+    with LazyLoad {
 
   final LocalStorage _localStorage = Get.find();
 
@@ -26,9 +24,9 @@ class MyReceivingsScreenController extends MainTabController
 
   final LocationService _locationService = Get.find();
 
-  final Distance distance = Get.find();
+  final AppNotificationController _appNotificationController = Get.find();
 
-  final PersistentLocalStorage _persistentLocalStorage = Get.find();
+  final Distance distance = Get.find();
 
   int? _userId;
 
@@ -45,31 +43,14 @@ class MyReceivingsScreenController extends MainTabController
   late int _lowId;
 
   @override
-  void onInit() {
+  void onInit(){
     super.onInit();
-    WidgetsBinding.instance?.addObserver(this);
-  }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-
-    if(state == AppLifecycleState.paused){
-      // print('Im dead');
-    }
-
-    final lastState = WidgetsBinding.instance?.lifecycleState;
-    if(lastState == AppLifecycleState.resumed){
-      // print('Im alive');
-      final backgroundNotificationList = await _persistentLocalStorage.getBackgroundSelectedOrderList();
-      if(backgroundNotificationList != null && backgroundNotificationList.isNotEmpty && loggedIn){
-        for (final element in backgroundNotificationList) {
-          final order = Order.fromJson(jsonDecode(element));
-          changeOrderToSelectedByProductId(order.productId);
-        }
-        _persistentLocalStorage.eraseBackgroundProcessingOrderList();
+    _appNotificationController.selectedOrderStream.listen((event) {
+      if(loggedIn){
+        changeOrderToSelectedByProductId(event.productId);
       }
-    }
+    });
   }
 
   @override
@@ -184,11 +165,5 @@ class MyReceivingsScreenController extends MainTabController
   @override
   void cleanData(){
     orders.clear();
-  }
-
-  @override
-  void onClose(){
-    WidgetsBinding.instance?.removeObserver(this);
-    super.onClose();
   }
 }

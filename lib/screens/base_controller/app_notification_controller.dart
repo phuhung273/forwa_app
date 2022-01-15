@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/app_notification_repo.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
+import 'package:forwa_app/schema/order/order.dart';
 import 'package:get/get.dart';
 
 class AppNotificationController extends GetxController
@@ -23,6 +25,12 @@ class AppNotificationController extends GetxController
   final myReceivingCount = 0.obs;
   final notificationCount = 0.obs;
 
+  final _processingOrderStreamController = StreamController<Order>.broadcast();
+  final _selectedOrderStreamController = StreamController<Order>.broadcast();
+
+  Stream<Order> get processingOrderStream => _processingOrderStreamController.stream.cast<Order>();
+  Stream<Order> get selectedOrderStream => _selectedOrderStreamController.stream.cast<Order>();
+
   @override
   void onInit() {
     super.onInit();
@@ -40,14 +48,9 @@ class AppNotificationController extends GetxController
     final lastState = WidgetsBinding.instance?.lifecycleState;
     if(lastState == AppLifecycleState.resumed){
       // print('Im alive');
-      final backgroundNotificationList = await _persistentLocalStorage.getBackgroundUploadList();
-      if(backgroundNotificationList != null && backgroundNotificationList.isNotEmpty){
-        for (final element in backgroundNotificationList) {
-          final notification = AppNotification.fromJson(jsonDecode(element));
-          increaseMyNotification(notification);
-        }
-        _persistentLocalStorage.eraseBackgroundUploadList();
-      }
+      _handleOnBackgroundOpenNotificationList();
+      _handleOnBackgroundOpenProcessingOrderList();
+      _handleOnBackgroundOpenSelectedOrderList();
     }
   }
 
@@ -90,6 +93,62 @@ class AppNotificationController extends GetxController
     );
   }
 
+  void _handleOnBackgroundOpenNotificationList() async {
+    final backgroundNotificationList = await _persistentLocalStorage.getBackgroundNotificationList();
+
+    if(_localStorage.getUserID() != null
+        && backgroundNotificationList != null
+        && backgroundNotificationList.isNotEmpty
+    ){
+      for (final element in backgroundNotificationList) {
+        final notification = AppNotification.fromJson(jsonDecode(element));
+
+        switch(notification.type){
+          case AppNotificationType.PROCESSING:
+            increaseMyGiving(notification);
+            break;
+          case AppNotificationType.SELECTED:
+            increaseMyReceiving(notification);
+            break;
+          case AppNotificationType.UPLOAD:
+            increaseMyNotification(notification);
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    _persistentLocalStorage.eraseBackgroundNotificationList();
+  }
+
+  void _handleOnBackgroundOpenProcessingOrderList() async {
+    final backgroundNotificationList = await _persistentLocalStorage.getBackgroundProcessingOrderList();
+    if(_localStorage.getUserID() != null
+        && backgroundNotificationList != null
+        && backgroundNotificationList.isNotEmpty
+    ){
+      for (final element in backgroundNotificationList) {
+        final order = Order.fromJson(jsonDecode(element));
+        _processingOrderStreamController.sink.add(order);
+      }
+    }
+    _persistentLocalStorage.eraseBackgroundProcessingOrderList();
+  }
+
+  void _handleOnBackgroundOpenSelectedOrderList() async {
+    final backgroundNotificationList = await _persistentLocalStorage.getBackgroundSelectedOrderList();
+    if(_localStorage.getUserID() != null
+        && backgroundNotificationList != null
+        && backgroundNotificationList.isNotEmpty
+    ){
+      for (final element in backgroundNotificationList) {
+        final order = Order.fromJson(jsonDecode(element));
+        _selectedOrderStreamController.sink.add(order);
+      }
+    }
+    _persistentLocalStorage.eraseBackgroundProcessingOrderList();
+  }
+
   void readMyGiving(){
     myGivingCount.value = 0;
   }
@@ -123,8 +182,8 @@ class AppNotificationController extends GetxController
     notifications.insert(0, notification);
   }
 
-  void assignAll(List<AppNotification> notifications){
-    notifications.assignAll(notifications);
+  void assignAll(List<AppNotification> items){
+    notifications.assignAll(items);
   }
 
   void clear(){

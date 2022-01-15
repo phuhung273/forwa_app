@@ -19,8 +19,6 @@ class NotificationScreenController extends MainTabController
 
   int? _userId;
 
-  DateTime now = DateTime.now();
-
   @override
   int get pageIndex => NOTIFICATION_SCREEN_INDEX;
 
@@ -47,7 +45,6 @@ class NotificationScreenController extends MainTabController
   @override
   Future main() async {
     _userId = _localStorage.getUserID();
-    now = DateTime.now();
 
     final response = await _appNotificationRepo.readMyNoti();
 

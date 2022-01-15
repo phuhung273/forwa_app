@@ -106,11 +106,14 @@ class LocalStorage {
   }
 
   void saveLocationTime(DateTime value){
-    box.write(LOCATION_TIME_KEY, value);
+    final string = value.toIso8601String();
+    box.write(LOCATION_TIME_KEY, string);
   }
 
   DateTime? getLocationTime() {
-    return box.read(LOCATION_TIME_KEY);
+    final String? string = box.read(LOCATION_TIME_KEY);
+    if(string == null) return null;
+    return DateTime.tryParse(string);
   }
 
   void removeCredentials(){

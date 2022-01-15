@@ -34,10 +34,10 @@ class ChatController extends GetxController with WidgetsBindingObserver {
 
   void reset() => unreadMessageCount.value = 0;
 
-  final StreamController _messageStreamController = StreamController<ChatSocketMessage>.broadcast();
-  final StreamController _readMessageStreamController = StreamController<String>.broadcast();
-  final StreamController _lazyMessageStreamController = StreamController<Map<String, List<ChatSocketMessage>>>.broadcast();
-  final StreamController _roomStreamController = StreamController<ChatRoom>.broadcast();
+  final _messageStreamController = StreamController<ChatSocketMessage>.broadcast();
+  final _readMessageStreamController = StreamController<String>.broadcast();
+  final _lazyMessageStreamController = StreamController<Map<String, List<ChatSocketMessage>>>.broadcast();
+  final _roomStreamController = StreamController<ChatRoom>.broadcast();
 
   Stream<ChatSocketMessage> get messageStream => _messageStreamController.stream.cast<ChatSocketMessage>();
   Stream<String> get readMessageStream => _readMessageStreamController.stream.cast<String>();

@@ -20,12 +20,16 @@ class ProductListRequest {
   @JsonKey(name: 'device_name')
   String? deviceName;
 
+  @JsonKey(name: 'firebase_token')
+  String? firebaseToken;
+
   ProductListRequest({
     required this.hiddenUserIds,
     this.latitude,
     this.longitude,
     this.uniqueDeviceId,
     this.deviceName,
+    this.firebaseToken,
   });
 
   factory ProductListRequest.fromJson(Map<String, dynamic> json) =>
