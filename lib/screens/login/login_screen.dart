@@ -133,14 +133,14 @@ class LoginScreen extends GetView<LoginScreenController> {
                           ),
                           onTap: controller.googleLogin,
                         ),
-                        SocialButton(
-                          text: 'Facebook',
-                          icon: const FaIcon(
-                            FontAwesomeIcons.facebook,
-                            color: Color(0xff39579A),
-                          ),
-                          onTap: controller.facebookLogin,
-                        ),
+                        // SocialButton(
+                        //   text: 'Facebook',
+                        //   icon: const FaIcon(
+                        //     FontAwesomeIcons.facebook,
+                        //     color: Color(0xff39579A),
+                        //   ),
+                        //   onTap: controller.facebookLogin,
+                        // ),
                         if(Platform.isIOS)
                           SocialButton(
                             text: 'Apple',
