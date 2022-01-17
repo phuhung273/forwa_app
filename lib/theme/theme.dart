@@ -51,6 +51,15 @@ final appTheme = _base.copyWith(
     color: Colors.white,
     space: defaultSpacing,
   ),
+  appBarTheme: AppBarTheme(
+    titleTextStyle: TextStyle(
+      color: secondaryColor,
+      fontSize: _textTheme.subtitle1?.fontSize
+    ),
+    iconTheme: const IconThemeData(
+      color: secondaryColor
+    )
+  )
 );
 
 final _textTheme = _base.textTheme.copyWith(

@@ -21,6 +21,8 @@ mixin LazyLoad {
 
   bool _checkLazyCondition(){
     final positions = itemPositionsListener.itemPositions.value;
+    if(positions.isEmpty) return false;
+
     return positions.last.index + stepToLoad >= listLength // User almost reach end of list
       && !_isLoading // Lazy load is not fetching
       && listLength != 0 // list has been initialized

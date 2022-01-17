@@ -37,6 +37,9 @@ class Order {
   @JsonKey(name: 'buyer_review_id')
   int? buyerReviewId;
 
+  @JsonKey(name: 'chat_room_id')
+  String? chatRoomId;
+
   @JsonKey(name: 'user')
   User? user;
 
@@ -51,6 +54,7 @@ class Order {
     required this.userId,
     this.sellerReviewId,
     this.buyerReviewId,
+    this.chatRoomId,
     this.user,
     this.product,
   });

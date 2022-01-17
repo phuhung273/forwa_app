@@ -71,15 +71,20 @@ class _MyGivingsScreenState extends State<MyGivingsScreen>
               SliverFillRemaining(
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    Container(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Obx(
                             () => Text(
                               'Bạn đã cho đi: ${_controller.products.length}',
-                              style: theme.textTheme.subtitle1,
+                              style: theme.textTheme.subtitle1?.copyWith(
+                                color: theme.colorScheme.secondary,
+                              ),
                             ),
                           ),
                           // ElevatedButton(
@@ -280,11 +285,12 @@ class StatusChip extends StatelessWidget {
   }
 
   _buildColor(ProductStatus status){
+    final theme = Theme.of(Get.context!);
     switch(status){
       case ProductStatus.PROCESSING:
-        return Colors.blueGrey;
+        return theme.colorScheme.secondary;
       case ProductStatus.FINISH:
-        return Colors.green;
+        return Colors.blueGrey;
       default:
         return Colors.blueGrey;
     }

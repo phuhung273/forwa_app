@@ -69,7 +69,6 @@ class _HomeScreenState extends State<HomeScreen>
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
               color: Colors.grey[100],
-              // borderRadius: roundedRectangleBorderRadius,
             ),
             child: Obx(
               () {

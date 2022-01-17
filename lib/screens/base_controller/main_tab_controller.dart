@@ -16,7 +16,7 @@ abstract class MainTabController extends BaseController{
   void onInit(){
     super.onInit();
 
-    _navigationController.authStream.listen((event) {
+    _navigationController.reloadStream.listen((event) {
       if(event){
         cleanData();
         loggedIn = false;

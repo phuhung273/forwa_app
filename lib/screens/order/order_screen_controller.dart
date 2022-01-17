@@ -35,6 +35,7 @@ class OrderScreenController extends BaseController {
   final status = OrderStatus.PROCESSING.obs;
   final buyerReviewId = 0.obs;
   final orderId = 0.obs;
+  final chatRoomId = ''.obs;
 
   Position? here;
 
@@ -69,6 +70,7 @@ class OrderScreenController extends BaseController {
     productName.value = order.product!.name;
     buyerReviewId.value = order.buyerReviewId ?? 0;
     status.value = order.statusType ?? OrderStatus.PROCESSING;
+    chatRoomId.value = order.chatRoomId ?? '';
   }
 
   Future takeSuccess() async {

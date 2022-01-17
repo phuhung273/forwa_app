@@ -30,14 +30,8 @@ class TakeScreen extends GetView<TakeScreenController> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(
-            color: theme.colorScheme.secondary,
-          ),
-          title: Text(
+          title: const Text(
             'Soạn tin nhắn',
-            style: theme.textTheme.headline6?.copyWith(
-              color: theme.colorScheme.secondary
-            ),
           ),
         ),
         body: Form(

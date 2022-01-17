@@ -255,7 +255,7 @@ class LoginScreenController extends BaseController {
 
     _chatController.init();
     _chatController.fetchUnread();
-    _navigationController.resetAuth();
+    _navigationController.reset();
     Get.back();
   }
 

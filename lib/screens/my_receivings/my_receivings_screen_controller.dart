@@ -48,7 +48,7 @@ class MyReceivingsScreenController extends MainTabController
 
     _appNotificationController.selectedOrderStream.listen((event) {
       if(loggedIn){
-        changeOrderToSelectedByProductId(event.productId);
+        changeOrderToSelected(event);
       }
     });
   }
@@ -91,11 +91,12 @@ class MyReceivingsScreenController extends MainTabController
     }
   }
 
-  void changeOrderToSelectedByProductId(int id){
+  void changeOrderToSelected(Order order){
     if(loggedIn){
-      final index = orders.indexWhere((element) => element.productId == id);
+      final index = orders.indexWhere((element) => element.productId == order.productId);
       if(index > -1){
         orders[index].status = EnumToString.convertToString(OrderStatus.SELECTED).toLowerCase();
+        orders[index].chatRoomId = order.chatRoomId;
         orders.refresh();
       }
     }

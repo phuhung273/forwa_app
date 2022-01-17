@@ -226,6 +226,10 @@ class ChooseReceiverScreenController extends BaseController
     }
   }
 
+  bool canFinish(){
+    return orders.any((element) => element.statusType == OrderStatus.SELECTED);
+  }
+
   @override
   void onClose(){
     WidgetsBinding.instance?.removeObserver(this);

@@ -72,17 +72,26 @@ class _NotificationScreenState extends State<NotificationScreen>
                   ],
                 ),
                 SliverFillRemaining(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Thông báo',
-                          style: theme.textTheme.headline6,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
                         ),
-                        const Divider(),
-                        Expanded(
+                        child: Text(
+                          'Thông báo',
+                          style: theme.textTheme.subtitle1?.copyWith(
+                            color: theme.colorScheme.secondary,
+                          ),
+                        ),
+                      ),
+                      const Divider(),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: RefreshIndicator(
                             color: theme.colorScheme.secondary,
                             onRefresh: _controller.authorizedMain,
@@ -99,9 +108,9 @@ class _NotificationScreenState extends State<NotificationScreen>
                               ),
                             ),
                           ),
-                        )
-                      ],
-                    ),
+                        ),
+                      )
+                    ],
                   ),
                 )
               ],

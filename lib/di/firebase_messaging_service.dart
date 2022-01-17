@@ -9,6 +9,7 @@ import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:forwa_app/schema/chat/chat_room.dart';
+import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
@@ -86,8 +87,9 @@ class FirebaseMessagingService {
 
   _handleForegroundSelectedOrderNotification(Map<String, dynamic> data){
     final notification = AppNotification.fromJson(jsonDecode(data['data']));
+    final order = Order.fromJson(jsonDecode(data['order']));
     _appNotificationController.increaseMyReceiving(notification);
-    _myReceivingsScreenController.changeOrderToSelectedByProductId(notification.product.id!);
+    _myReceivingsScreenController.changeOrderToSelected(order);
     final room = ChatRoom.fromJson(jsonDecode(data['room']));
     _chatController.addRoom(room);
   }

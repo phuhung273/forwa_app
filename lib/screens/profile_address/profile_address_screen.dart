@@ -20,13 +20,7 @@ class ProfileAddressScreen extends GetView<ProfileAddressScreenController> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            'Quản lý địa chỉ',
-            style: theme.textTheme.headline6
-          ),
-          iconTheme: IconThemeData(
-            color: theme.colorScheme.secondary,
-          ),
+          title: const Text('Quản lý địa chỉ'),
         ),
         body: SingleChildScrollView(
           child: Column(

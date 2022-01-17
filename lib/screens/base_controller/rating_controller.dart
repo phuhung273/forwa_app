@@ -30,7 +30,7 @@ abstract class RatingController extends BaseController {
         width: LOGO_SIZE,
         height: LOGO_SIZE,
       ),
-      commentHint: 'Nhập đánh giá',
+      commentHint: 'Viết nhận xét',
       submitButtonText: 'Gửi',
       onSubmitted: (ratingDialogResponse) async {
         await onRating(ratingDialogResponse);

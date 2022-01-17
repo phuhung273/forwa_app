@@ -65,9 +65,13 @@ class _TimePickerInputFieldState extends State<TimePickerInputField> {
                 widget.icon,
               ) : null,
               hintText: widget.hintText,
+              hintStyle: TextStyle(
+                fontSize: theme.textTheme.bodyText1!.fontSize!
+              ),
             ),
             readOnly: true,
             enabled: false,
+            style: theme.textTheme.bodyText1,
           )
       ),
     );

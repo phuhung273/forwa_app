@@ -35,9 +35,8 @@ class GiveScreen extends GetView<GiveScreenController> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            'Tải lên',
-            style: theme.textTheme.headline6
+          title: const Text(
+            'Tải lên'
           ),
         ),
         body: BodyWithPersistentBottom(
@@ -59,7 +58,7 @@ class GiveScreen extends GetView<GiveScreenController> {
                       .build(),
                 ),
                 InputField(
-                  hintText: 'Mô tả',
+                  hintText: 'Mô tả đồ vật',
                   icon: Icons.edit,
                   controller: controller.descriptionController,
                   maxLines: 3,

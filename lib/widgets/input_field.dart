@@ -42,9 +42,13 @@ class InputField extends StatelessWidget {
               icon,
             ) : null,
             hintText: hintText,
+            hintStyle: TextStyle(
+              fontSize: theme.textTheme.bodyText1!.fontSize!
+            ),
           ),
           maxLines: maxLines,
           validator: validator,
+          style: theme.textTheme.bodyText1,
         ),
       ),
     );

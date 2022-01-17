@@ -1,6 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
+import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
@@ -75,11 +76,17 @@ class _MyReceivingsScreenState extends State<MyReceivingsScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(6.0),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                      ),
                       child: Text(
                         'Danh sách nhận',
-                        style: theme.textTheme.subtitle1,
+                        style: theme.textTheme.subtitle1?.copyWith(
+                          color: theme.colorScheme.secondary,
+                        ),
                       ),
                     ),
                     const Divider(),
@@ -123,9 +130,7 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
   final Order order;
   final VoidCallback onTakeSuccess;
 
-  final MainScreenController _mainController = Get.find();
-
-  ReceivingCard({
+  const ReceivingCard({
     Key? key,
     required this.order,
     required this.onTakeSuccess,
@@ -218,17 +223,26 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: StatusChip(order: order),
                     ),
-                    if(order.statusType == OrderStatus.SELECTED && order.buyerReviewId == null)
+                    if(order.statusType != OrderStatus.PROCESSING && order.chatRoomId != null)
                       Center(
                         child: SecondaryActionContainer(
                           child: ElevatedButton.icon(
                             icon: const Icon(Icons.textsms),
-                            onPressed: () => _mainController.changeTab(CHAT_SCREEN_INDEX),
+                            onPressed: () {
+                              if(order.chatRoomId == null) return;
+
+                              Get.toNamed(ROUTE_MESSAGE,
+                                arguments: order.chatRoomId,
+                                parameters: {
+                                  notificationStartParam: NOTIFICATION_START_TRUE
+                                }
+                              );
+                            },
                             label: const Text('Nhắn tin'),
                           )
                         ),
                       ),
-                    if(order.statusType == OrderStatus.SELECTED)
+                    if(order.statusType != OrderStatus.PROCESSING)
                       _buildMainButton()
                   ],
                 ),
@@ -269,7 +283,7 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
   }
 
   Widget _buildMainButton(){
-    if(order.buyerReviewId == null) {
+    if(order.statusType == OrderStatus.SELECTED && order.buyerReviewId == null){
       return Center(
         child: SecondaryActionContainer(
             child: ElevatedButton.icon(
@@ -329,9 +343,6 @@ class StatusChip extends StatelessWidget {
       case OrderStatus.PROCESSING:
         return Icons.pending;
       case OrderStatus.SELECTED:
-        if(item.buyerReviewId == null){
-          return Icons.pending;
-        }
         return Icons.done;
       default:
         return Icons.pending;
@@ -339,16 +350,14 @@ class StatusChip extends StatelessWidget {
   }
 
   _buildColor(Order item){
+    final theme = Theme.of(Get.context!);
     final status = item.statusType;
 
     switch(status){
       case OrderStatus.PROCESSING:
         return Colors.blueGrey;
       case OrderStatus.SELECTED:
-        if(item.buyerReviewId == null){
-          return Colors.amber;
-        }
-        return Colors.green;
+        return theme.colorScheme.secondary;
       default:
         return Colors.blueGrey;
     }
@@ -361,10 +370,10 @@ class StatusChip extends StatelessWidget {
         return 'Chờ xác nhận';
 
       case OrderStatus.SELECTED:
-        if(item.buyerReviewId == null){
-          return 'Hãy tới lấy';
+        if(item.buyerReviewId != null){
+          return 'Đã đánh giá';
         }
-        return 'Đã đánh giá';
+        return 'Hãy tới lấy';
 
       default:
         return 'Chờ xác nhận';

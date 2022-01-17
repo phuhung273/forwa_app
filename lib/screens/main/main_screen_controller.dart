@@ -139,7 +139,7 @@ class MainScreenController extends BaseController {
     drawerController.hideDrawer();
     refreshCredential();
     _chatController.reset();
-    _navigationController.resetAuth();
+    _navigationController.reset();
   }
 
   void toGiveScreen(){

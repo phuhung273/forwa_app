@@ -13,6 +13,7 @@ const AGREE_UPLOAD_TERM_KEY = 'AGREE_UPLOAD_TERM_KEY';
 const SKIP_INTRO_KEY = 'SKIP_INTRO_KEY';
 const UNIQUE_DEVICE_ID_KEY = 'UNIQUE_DEVICE_ID_KEY';
 const LOCATION_TIME_KEY = 'LOCATION_TIME_KEY';
+const LAST_OPEN_TIME_KEY = 'LAST_OPEN_TIME_KEY';
 
 class LocalStorage {
   final box = GetStorage();
@@ -112,6 +113,17 @@ class LocalStorage {
 
   DateTime? getLocationTime() {
     final String? string = box.read(LOCATION_TIME_KEY);
+    if(string == null) return null;
+    return DateTime.tryParse(string);
+  }
+
+  void saveLastOpenTime(DateTime value){
+    final string = value.toIso8601String();
+    box.write(LAST_OPEN_TIME_KEY, string);
+  }
+
+  DateTime? getLastOpenTime() {
+    final String? string = box.read(LAST_OPEN_TIME_KEY);
     if(string == null) return null;
     return DateTime.tryParse(string);
   }

@@ -83,6 +83,10 @@ class ChooseReceiverScreen extends GetView<ChooseReceiverScreenController> {
   _buildMainButton(){
     return Obx(
       () {
+        if(!controller.canFinish()) {
+          return const SizedBox();
+        }
+
         if(controller.finish.isFalse){
           return OutlinedButton(
             onPressed: controller.productToSuccess,
@@ -90,10 +94,7 @@ class ChooseReceiverScreen extends GetView<ChooseReceiverScreenController> {
           );
         }
 
-        return const TextButton(
-          onPressed: null,
-          child: Text('Đã hoàn thành')
-        );
+        return const SizedBox();
       }
     );
   }
@@ -202,32 +203,37 @@ class ReceiverCard extends GetView<ChooseReceiverScreenController> {
   Widget _buildMainButton(Order item){
     final status = item.statusType!;
 
-    if(status == OrderStatus.PROCESSING){
-      return ElevatedButton(
-        onPressed: onPick,
-        child: const Text('Chọn'),
-      );
-    } else if(status == OrderStatus.SELECTED){
-
-      if(item.sellerReviewId == null){
+    switch(status){
+      case OrderStatus.PROCESSING:
         return ElevatedButton(
-          onPressed: onSuccess,
-          style: ElevatedButton.styleFrom(
-            primary: Colors.green,
-          ),
-          child: const Text('Đánh giá'),
+          onPressed: onPick,
+          child: const Text('Chọn'),
         );
-      }
-
-      return const TextButton(
-        onPressed: null,
-        child: Text('Đã đánh giá'),
-      );
+      case OrderStatus.SELECTED:
+        return const TextButton(
+            onPressed: null,
+            child: Text('Đã chọn')
+        );
+      case OrderStatus.FINISH:
+        if(item.sellerReviewId == null){
+          return ElevatedButton(
+            onPressed: onSuccess,
+            style: ElevatedButton.styleFrom(
+              primary: Colors.green,
+            ),
+            child: const Text('Đánh giá'),
+          );
+        } else {
+          return const TextButton(
+            onPressed: null,
+            child: Text('Đã đánh giá'),
+          );
+        }
+      default:
+        return const TextButton(
+          onPressed: null,
+          child: Text('')
+        );
     }
-
-    return const TextButton(
-      onPressed: null,
-      child: Text('')
-    );
   }
 }

@@ -1,11 +1,13 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
+import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/public_profile/public_profile_screen_controller.dart';
 import 'package:forwa_app/widgets/app_container.dart';
+import 'package:forwa_app/widgets/app_level_action_container.dart';
 import 'package:forwa_app/widgets/rating.dart';
 import 'package:forwa_app/widgets/secondary_action_container.dart';
 import 'package:get/get.dart';
@@ -48,118 +50,122 @@ class OrderScreen extends GetView<OrderScreenController> {
           ),
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(6.0),
-            child: Column(
-              children: [
-                Obx(
-                  () {
-                    return Card(
-                      shape: roundedRectangleShape,
-                      elevation: 4.0,
-                      child: Row(
-                        children: [
-                          Container(
-                            height: IMAGE_WIDTH,
-                            width: IMAGE_WIDTH,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                                borderRadius: roundedRectangleBorderRadius
-                            ),
-                            margin: const EdgeInsets.only(
-                              right: 0.0,
-                              left: 8.0,
-                              top: 8.0,
-                              bottom: 8.0,
-                            ),
-                            child: controller.productImageUrl.isNotEmpty
-                                ? ExtendedImage.network(
-                              resolveUrl(controller.productImageUrl.value, HOST_URL),
-                              width: IMAGE_WIDTH,
-                              fit: BoxFit.cover,
-                            )
-                                : const SizedBox(),
+            child: Obx(
+              () => Column(
+                children: [
+                  Card(
+                    shape: roundedRectangleShape,
+                    elevation: 4.0,
+                    child: Row(
+                      children: [
+                        Container(
+                          height: IMAGE_WIDTH,
+                          width: IMAGE_WIDTH,
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                              borderRadius: roundedRectangleBorderRadius
                           ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.only(
-                                  top: 0.0,
-                                  bottom: 4.0,
-                                  right: 4.0,
-                                  left: 12.0
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ListTile(
-                                    minVerticalPadding: 0.0,
-                                    minLeadingWidth: 0.0,
-                                    horizontalTitleGap: 8.0,
-                                    contentPadding: EdgeInsets.zero,
-                                    dense: true,
-                                    onTap: () => Get.toNamed(
-                                        ROUTE_PUBLIC_PROFILE,
-                                        parameters: {
-                                          userIdParam: controller.sellerId.string
-                                        }
-                                    ),
-                                    leading: _buildAvatar(),
-                                    title: Text(
-                                      // shortWords.join(' '),
-                                      controller.sellerName.value,
-                                      style: theme.textTheme.bodyText1?.copyWith(
-                                          fontWeight: FontWeight.w600
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    subtitle: Rating(score: 5, size: 12.0),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 12.0),
-                                    child: Text(
-                                      controller.productName.value,
-                                      style: theme.textTheme.bodyText1,
-                                    ),
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(bottom: 8.0),
-                                    child: StatusChip(),
-                                  ),
-                                  // if(controller.status.value == OrderStatus.SELECTED && controller.buyerReviewId.value == 0)
-                                  //   Center(
-                                  //     child: SecondaryActionContainer(
-                                  //         child: ElevatedButton.icon(
-                                  //           icon: const Icon(Icons.textsms),
-                                  //           onPressed: () {
-                                  //
-                                  //           },
-                                  //           label: const Text('Nhắn tin'),
-                                  //         )
-                                  //     ),
-                                  //   ),
-                                  if(controller.status.value == OrderStatus.SELECTED)
-                                    _buildMainButton()
-                                ],
-                              ),
-                            ),
+                          margin: const EdgeInsets.only(
+                            right: 0.0,
+                            left: 8.0,
+                            top: 8.0,
+                            bottom: 8.0,
+                          ),
+                          child: controller.productImageUrl.isNotEmpty
+                              ? ExtendedImage.network(
+                            resolveUrl(controller.productImageUrl.value, HOST_URL),
+                            width: IMAGE_WIDTH,
+                            fit: BoxFit.cover,
                           )
-                        ],
-                      ),
-                    );
-                  },
-                ),
-                const Divider(),
-                Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
+                              : const SizedBox(),
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(
+                                top: 0.0,
+                                bottom: 4.0,
+                                right: 4.0,
+                                left: 12.0
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ListTile(
+                                  minVerticalPadding: 0.0,
+                                  minLeadingWidth: 0.0,
+                                  horizontalTitleGap: 8.0,
+                                  contentPadding: EdgeInsets.zero,
+                                  dense: true,
+                                  onTap: () => Get.toNamed(
+                                      ROUTE_PUBLIC_PROFILE,
+                                      parameters: {
+                                        userIdParam: controller.sellerId.string
+                                      }
+                                  ),
+                                  leading: _buildAvatar(),
+                                  title: Text(
+                                    // shortWords.join(' '),
+                                    controller.sellerName.value,
+                                    style: theme.textTheme.bodyText1?.copyWith(
+                                        fontWeight: FontWeight.w600
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  subtitle: Rating(score: 5, size: 12.0),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 12.0),
+                                  child: Text(
+                                    controller.productName.value,
+                                    style: theme.textTheme.bodyText1,
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(bottom: 8.0),
+                                  child: StatusChip(),
+                                ),
+                                if(controller.status.value == OrderStatus.SELECTED)
+                                  _buildMainButton()
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                    child: Text(
-                      'Các bước tiếp theo để nhận đồ',
-                      style: theme.textTheme.subtitle1?.copyWith(
-                        color: theme.colorScheme.secondary,
+                  ),
+                  const Divider(),
+                  Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                      ),
+                      child: Text(
+                        'Các bước tiếp theo để nhận đồ',
+                        style: theme.textTheme.subtitle1?.copyWith(
+                          color: theme.colorScheme.secondary,
+                        ),
+                      )
+                  ),
+                  const PolicySection(),
+                  const Divider(),
+                  if(controller.chatRoomId.isNotEmpty)
+                    AppLevelActionContainer(
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.textsms),
+                        onPressed: () {
+                          if(controller.chatRoomId.isEmpty) return;
+
+                          Get.toNamed(ROUTE_MESSAGE,
+                              arguments: controller.chatRoomId.value,
+                              parameters: {
+                                notificationStartParam: NOTIFICATION_START_TRUE
+                              }
+                          );
+                        },
+                        label: const Text('Nhắn tin'),
                       ),
                     )
-                ),
-                const PolicySection(),
-              ]
+                ]
+              ),
             ),
           ),
         ),
@@ -305,9 +311,6 @@ class StatusChip extends GetView<OrderScreenController> {
       case OrderStatus.PROCESSING:
         return Icons.pending;
       case OrderStatus.SELECTED:
-        if(buyerReviewId == 0){
-          return Icons.pending;
-        }
         return Icons.done;
       default:
         return Icons.pending;
@@ -315,14 +318,13 @@ class StatusChip extends GetView<OrderScreenController> {
   }
 
   _buildColor(OrderStatus status, int buyerReviewId){
+    final theme = Theme.of(Get.context!);
+
     switch(status){
       case OrderStatus.PROCESSING:
         return Colors.blueGrey;
       case OrderStatus.SELECTED:
-        if(buyerReviewId == 0){
-          return Colors.amber;
-        }
-        return Colors.green;
+        return theme.colorScheme.secondary;
       default:
         return Colors.blueGrey;
     }
