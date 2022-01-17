@@ -42,6 +42,9 @@ class _PasswordFieldState extends State<PasswordField> {
           controller: widget.controller,
           decoration: InputDecoration(
             hintText: widget.hintText,
+            hintStyle: TextStyle(
+              fontSize: theme.textTheme.bodyText1!.fontSize!
+            ),
             icon: const Icon(
               Icons.lock,
             ),
@@ -53,6 +56,7 @@ class _PasswordFieldState extends State<PasswordField> {
             ),
           ),
           validator: widget.validator,
+          style: theme.textTheme.bodyText1,
         ),
       ),
     );
