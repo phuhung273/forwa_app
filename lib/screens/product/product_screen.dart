@@ -39,9 +39,8 @@ class ProductScreen extends GetView<ProductScreenController> {
               slivers: [
                 SliverAppBar(
                   floating: true,
-                  title: Text(
+                  title: const Text(
                     'Thông tin món đồ',
-                    style: theme.textTheme.headline6
                   ),
                   leading: controller.isNotificationStart
                     ? IconButton(
@@ -189,14 +188,14 @@ class SellerInfoSection extends GetView<ProductScreenController> {
         leading: _buildAvatar(),
         title: Text(
           sellerName,
-          style: theme.textTheme.subtitle1,
+          style: theme.textTheme.bodyText1,
           // overflow: TextOverflow.ellipsis,
         ),
         subtitle: Column(
           children: [
             Row(
               children: [
-                const Rating(score: 3),
+                const Rating(score: 5),
               ],
             ),
             Row(

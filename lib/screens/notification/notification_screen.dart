@@ -184,7 +184,9 @@ class NotificationItem extends StatelessWidget {
               children: [
                 Text(
                   _buildMessage(notification),
-                  style: theme.textTheme.subtitle1,
+                  style: theme.textTheme.bodyText1?.copyWith(
+                    fontWeight: FontWeight.w600
+                  ),
                 ),
                 const SizedBox(height: 4.0),
                 Text(

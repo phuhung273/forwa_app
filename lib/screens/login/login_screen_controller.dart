@@ -1,6 +1,5 @@
 
 
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
@@ -8,6 +7,7 @@ import 'package:forwa_app/datasource/repository/auth_repo.dart';
 import 'package:forwa_app/helpers/email_helper.dart';
 import 'package:forwa_app/schema/api_response.dart';
 import 'package:forwa_app/schema/auth/apple_login_request.dart';
+import 'package:forwa_app/schema/auth/facebook_login_request.dart';
 import 'package:forwa_app/schema/auth/facebook_user.dart';
 import 'package:forwa_app/schema/auth/firebase_token.dart';
 import 'package:forwa_app/schema/auth/email_login_request.dart';
@@ -65,11 +65,7 @@ class LoginScreenController extends BaseController {
     final email = usernameController.text;
     final pwd = passwordController.text;
 
-    final firebaseToken = await _prepareFirebaseToken();
-    if(firebaseToken == null){
-      hideDialog();
-      return;
-    }
+    final firebaseToken = _prepareFirebaseToken();
 
     final request = EmailLoginRequest(
       email: email,
@@ -90,11 +86,7 @@ class LoginScreenController extends BaseController {
     final phone = usernameController.text;
     final pwd = passwordController.text;
 
-    final firebaseToken = await _prepareFirebaseToken();
-    if(firebaseToken == null){
-      hideDialog();
-      return;
-    }
+    final firebaseToken = _prepareFirebaseToken();
 
     final request = PhoneLoginRequest(
       phone: phone,
@@ -139,11 +131,13 @@ class LoginScreenController extends BaseController {
       String? username;
       String? email;
       String? avatar;
+      String? facebookId;
       try{
         final facebookAccount = FacebookUser.fromJson(data);
         username = facebookAccount.name;
         email = facebookAccount.email;
         avatar = facebookAccount.picture?.data.url;
+        facebookId = facebookAccount.id!;
       } catch(e) {
         username = data['name'];
         email = data['email'];
@@ -154,17 +148,38 @@ class LoginScreenController extends BaseController {
         result.value = 'Đăng nhập Facebook thất bại';
         return;
       }
-      if(email == null){
-        result.value = 'Tài khoản Facebook thiếu email';
-        return;
+
+      if(email != null){
+        _socialEmailLogin(username, email, avatar);
+      } else {
+        _facebookLoginWithoutEmail(username, facebookId!, avatar);
       }
 
-      _socialEmailLogin(username, email, avatar);
+
     } else {
       debugPrint(response.status.toString());
       debugPrint(response.message);
     }
+  }
 
+  Future _facebookLoginWithoutEmail(String username, String facebookId, String? avatar) async {
+    showLoadingDialog();
+
+    final firebaseToken = _prepareFirebaseToken();
+
+    final request = FacebookLoginRequest(
+      facebookId: facebookId,
+      name: username,
+      firebaseToken: firebaseToken.value,
+      device: firebaseToken.deviceName,
+      avatar: avatar,
+    );
+
+    final response = await _authRepo.facebookLogin(request);
+
+    hideDialog();
+
+    _processLoginResponse(response, avatar: avatar);
   }
 
   Future appleLogin() async {
@@ -176,17 +191,9 @@ class LoginScreenController extends BaseController {
       ],
     );
 
-    if(credential.userIdentifier == null){
-      return;
-    }
-
     showLoadingDialog();
 
-    final firebaseToken = await _prepareFirebaseToken();
-    if(firebaseToken == null){
-      hideDialog();
-      return;
-    }
+    final firebaseToken = _prepareFirebaseToken();
 
     final name = credential.familyName != null
                   ? '${credential.familyName} ${credential.givenName}'
@@ -210,11 +217,7 @@ class LoginScreenController extends BaseController {
   Future _socialEmailLogin(String username, String email, String? avatar) async {
     showLoadingDialog();
 
-    final firebaseToken = await _prepareFirebaseToken();
-    if(firebaseToken == null){
-      hideDialog();
-      return;
-    }
+    final firebaseToken = _prepareFirebaseToken();
 
     final request = SocialEmailLoginRequest(
       email: email,
@@ -259,13 +262,9 @@ class LoginScreenController extends BaseController {
     Get.back();
   }
 
-  Future<FirebaseToken?> _prepareFirebaseToken() async{
-    final firebaseTokenValue = await FirebaseMessaging.instance.getToken();
-    final deviceName = _localStorage.getDeviceName();
-
-    if(firebaseTokenValue == null || deviceName == null){
-      return null;
-    }
+  FirebaseToken _prepareFirebaseToken(){
+    final firebaseTokenValue = _localStorage.getFirebaseToken()!;
+    final deviceName = _localStorage.getDeviceName()!;
 
     return FirebaseToken(value: firebaseTokenValue, deviceName: deviceName);
   }

@@ -133,7 +133,7 @@ class ReceiverCard extends GetView<ChooseReceiverScreenController> {
                     name,
                     style: theme.textTheme.subtitle1,
                   ),
-                  const Rating(score: 3, size: 12.0),
+                  const Rating(score: 5, size: 12.0),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
@@ -210,11 +210,6 @@ class ReceiverCard extends GetView<ChooseReceiverScreenController> {
           child: const Text('Chọn'),
         );
       case OrderStatus.SELECTED:
-        return const TextButton(
-            onPressed: null,
-            child: Text('Đã chọn')
-        );
-      case OrderStatus.FINISH:
         if(item.sellerReviewId == null){
           return ElevatedButton(
             onPressed: onSuccess,
@@ -223,12 +218,12 @@ class ReceiverCard extends GetView<ChooseReceiverScreenController> {
             ),
             child: const Text('Đánh giá'),
           );
-        } else {
-          return const TextButton(
-            onPressed: null,
-            child: Text('Đã đánh giá'),
-          );
         }
+
+        return const TextButton(
+            onPressed: null,
+            child: Text('Đã đánh giá')
+        );
       default:
         return const TextButton(
           onPressed: null,
