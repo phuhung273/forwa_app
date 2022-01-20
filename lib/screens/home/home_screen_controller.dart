@@ -5,15 +5,19 @@ import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/datasource/repository/product_report_repo.dart';
 import 'package:forwa_app/datasource/repository/user_report_repo.dart';
+import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/mixins/lazy_load.dart';
 import 'package:forwa_app/mixins/reportable.dart';
+import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/lazy_product_request.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/schema/product/product_list_request.dart';
 import 'package:forwa_app/schema/report/product_report.dart';
 import 'package:forwa_app/schema/report/user_report.dart';
+import 'package:forwa_app/screens/base_controller/navigation_controller.dart';
 import 'package:forwa_app/screens/base_controller/refreshable_controller.dart';
+import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
@@ -22,18 +26,14 @@ class HomeScreenController extends RefreshableController
     with WidgetsBindingObserver, Reportable, LazyLoad {
 
   final ProductRepo _productRepo = Get.find();
-
   final ProductReportRepo _productReportRepo = Get.find();
-
   final UserReportRepo _userReportRepo = Get.find();
-
   final LocationService _locationService = Get.find();
-
   final HiddenProductDB _hiddenProductDB = Get.find();
-
   final HiddenUserDB _hiddenUserDB = Get.find();
-
   final LocalStorage _localStorage = Get.find();
+  final NavigationController _navigationController = Get.find();
+  final AnalyticService _analyticService = Get.find();
 
   final products = List<Product>.empty().obs;
 
@@ -56,10 +56,18 @@ class HomeScreenController extends RefreshableController
   String? _deviceName;
   String? _firebaseToken;
 
+  int get pageIndex => HOME_SCREEN_INDEX;
+
   @override
   void onInit() {
     super.onInit();
     WidgetsBinding.instance?.addObserver(this);
+
+    _navigationController.tabStream.listen((event) async {
+      if(event == pageIndex){
+        _analyticService.setCurrentScreen(ROUTE_HOME);
+      }
+    });
   }
 
   @override
@@ -83,11 +91,10 @@ class HomeScreenController extends RefreshableController
   @override
   Future onReady() async {
     super.onReady();
-
     _locationService.here().then((value) => here = value);
+    _analyticService.setCurrentScreen(ROUTE_HOME);
 
     // await _getHiddenProductIds();
-
 
     initLazyLoad();
   }

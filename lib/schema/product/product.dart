@@ -10,10 +10,10 @@ import 'package:latlong2/latlong.dart';
 part 'product.g.dart';
 
 enum ProductStatus {
-  PROCESSING,
-  SELECTED,
-  FINISH,
-  CANCEL,
+  processing,
+  selected,
+  finish,
+  cancel,
 }
 
 @JsonSerializable()
@@ -110,7 +110,7 @@ class Product{
   }
 
   ProductStatus? get status => statusString != null
-      ? EnumToString.fromString(ProductStatus.values, statusString!.toUpperCase())
+      ? EnumToString.fromString(ProductStatus.values, statusString!)
       : null;
 
   bool get haveOrders => orderCount != null && orderCount! > 0;

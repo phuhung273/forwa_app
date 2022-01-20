@@ -21,6 +21,9 @@ const orderIdParam = 'order_id';
 
 class TakeSuccessScreenController extends RatingController {
 
+  @override
+  String get screenName => ROUTE_GIVE;
+
   final ReviewRepo _reviewRepo = Get.find();
 
   late MyReceivingsScreenController _myReceivingsController;

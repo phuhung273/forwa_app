@@ -26,6 +26,7 @@ import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/datasource/repository/review_repo.dart';
 import 'package:forwa_app/datasource/repository/user_report_repo.dart';
+import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/screens/base_controller/navigation_controller.dart';
@@ -36,7 +37,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
-Future configureDependencies() async {
+Future configureDependenciesBeforeFirebase() async {
   await GetStorage.init();
 
   Get.put(LocalStorage());
@@ -77,8 +78,12 @@ Future configureDependencies() async {
   Get.put(LocationService());
   Get.put(const Distance());
   Get.put(FlutterLocalNotificationsPlugin());
-  Get.put(NotificationService());
 
+}
+
+Future configureDependenciesAfterFirebase() async {
+  Get.put(AnalyticService());
+  Get.put(NotificationService());
 }
 
 void _configureSocketIO() {

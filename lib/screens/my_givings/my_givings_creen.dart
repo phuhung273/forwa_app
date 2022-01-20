@@ -275,9 +275,9 @@ class StatusChip extends StatelessWidget {
 
   IconData _buildIcon(ProductStatus status){
     switch(status){
-      case ProductStatus.PROCESSING:
+      case ProductStatus.processing:
         return Icons.pending;
-      case ProductStatus.FINISH:
+      case ProductStatus.finish:
         return Icons.done;
       default:
         return Icons.pending;
@@ -287,9 +287,9 @@ class StatusChip extends StatelessWidget {
   _buildColor(ProductStatus status){
     final theme = Theme.of(Get.context!);
     switch(status){
-      case ProductStatus.PROCESSING:
+      case ProductStatus.processing:
         return theme.colorScheme.secondary;
-      case ProductStatus.FINISH:
+      case ProductStatus.finish:
         return Colors.blueGrey;
       default:
         return Colors.blueGrey;
@@ -298,9 +298,9 @@ class StatusChip extends StatelessWidget {
 
   _buildMessage(ProductStatus status){
     switch(status){
-      case ProductStatus.PROCESSING:
+      case ProductStatus.processing:
         return 'Đang cho đi';
-      case ProductStatus.FINISH:
+      case ProductStatus.finish:
         return 'Đã xong';
       default:
         return 'Đang cho đi';

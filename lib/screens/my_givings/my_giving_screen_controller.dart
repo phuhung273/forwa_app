@@ -87,7 +87,7 @@ class MyGivingsScreenController extends MainTabController
     if(loggedIn){
       final index = products.indexWhere((element) => element.id == productId);
       if(index > -1) {
-        products[index].statusString = EnumToString.convertToString(ProductStatus.FINISH).toLowerCase();
+        products[index].statusString = EnumToString.convertToString(ProductStatus.finish);
         products.refresh();
       }
     }

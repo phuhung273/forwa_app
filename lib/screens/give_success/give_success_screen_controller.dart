@@ -1,4 +1,5 @@
 import 'package:forwa_app/datasource/repository/review_repo.dart';
+import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/review/review.dart';
 import 'package:forwa_app/screens/base_controller/rating_controller.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
@@ -17,6 +18,9 @@ const toIdParam = 'to_id';
 const orderIdParam = 'order_id';
 
 class GiveSuccessScreenController extends RatingController {
+
+  @override
+  String get screenName => ROUTE_GIVE_SUCCESS;
 
   final ReviewRepo _reviewRepo = Get.find();
 

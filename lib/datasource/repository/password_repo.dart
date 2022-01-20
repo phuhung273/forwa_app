@@ -20,8 +20,8 @@ const errorCodeMap = {
 };
 
 const successMessageMap = {
-  ForgotPasswordMethod.EMAIL: 'Thành công, vui lòng truy cập email để đặt lại mật khẩu',
-  ForgotPasswordMethod.PHONE: 'Khôi phục mật khẩu thành công',
+  ForgotPasswordMethod.email: 'Thành công, vui lòng truy cập email để đặt lại mật khẩu',
+  ForgotPasswordMethod.phone: 'Khôi phục mật khẩu thành công',
 };
 
 class PasswordRepo extends BaseRepo {

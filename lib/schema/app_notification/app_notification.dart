@@ -7,10 +7,10 @@ import '../product/product.dart';
 part 'app_notification.g.dart';
 
 enum AppNotificationType {
-  PROCESSING,
-  SELECTED,
-  UPLOAD,
-  CANCEL,
+  processing,
+  selected,
+  upload,
+  cancel,
 }
 
 const APP_NOTIFICATION_TYPE_PROCESSING = 'processing';
@@ -19,9 +19,9 @@ const APP_NOTIFICATION_TYPE_UPLOAD = 'upload';
 const APP_NOTIFICATION_TYPE_CANCEL = 'cancel';
 
 enum AppNotificationStatus {
-  READ,
-  UNREAD,
-  CLICKED,
+  read,
+  unread,
+  clicked,
 }
 
 @JsonSerializable()
@@ -59,7 +59,7 @@ class AppNotification {
 
   Map<String, dynamic> toJson() => _$AppNotificationToJson(this);
 
-  AppNotificationType? get type => EnumToString.fromString(AppNotificationType.values, typeString.toUpperCase());
+  AppNotificationType? get type => EnumToString.fromString(AppNotificationType.values, typeString);
 
-  AppNotificationStatus? get status => EnumToString.fromString(AppNotificationStatus.values, statusString.toUpperCase());
+  AppNotificationStatus? get status => EnumToString.fromString(AppNotificationStatus.values, statusString);
 }

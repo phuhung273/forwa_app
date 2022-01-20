@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:forwa_app/constants.dart';
+import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/screens/public_profile/public_profile_screen_controller.dart';
@@ -53,7 +54,7 @@ class ProductScreen extends GetView<ProductScreenController> {
                     : null,
                 ),
                 if(controller.name.isNotEmpty)
-                  const SliverToBoxAdapter(
+                  SliverToBoxAdapter(
                     child: ProductRender(),
                   ),
               ]
@@ -66,7 +67,10 @@ class ProductScreen extends GetView<ProductScreenController> {
 }
 
 class ProductRender extends GetView<ProductScreenController> {
-  const ProductRender({Key? key}) : super(key: key);
+
+  final AnalyticService _analyticService = Get.find();
+
+  ProductRender({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -94,13 +98,12 @@ class ProductRender extends GetView<ProductScreenController> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
-                  onPressed: (){
-                    Clipboard.setData(ClipboardData(text: 'http://forwa.co?id=${controller.id}'))
-                      .then(
-                        (_) => ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Đã lưu vào khay nhớ'))
-                      )
+                  onPressed: () async {
+                    Clipboard.setData(ClipboardData(text: 'http://forwa.co?id=${controller.id}'));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Đã lưu vào khay nhớ'))
                     );
+                    _analyticService.logShareByCopyToClipboard(controller.id.toString());
                   },
                   child: const Text('Chia sẻ'),
                 )

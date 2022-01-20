@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:forwa_app/di/analytics/analytic_service.dart';
+import 'package:forwa_app/route/route.dart';
+import 'package:get/get.dart';
 
 import '../../constants.dart';
 
@@ -11,6 +14,17 @@ class SupportScreen extends StatefulWidget {
 }
 
 class _SupportScreenState extends State<SupportScreen> {
+
+  final AnalyticService _analyticService = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _analyticService.setCurrentScreen(ROUTE_SUPPORT);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -58,7 +72,7 @@ class _SupportScreenState extends State<SupportScreen> {
   }
 
   _buildPrimaryTitle(String text){
-    final theme = Theme.of(context);
+    final theme = Theme.of(Get.context!);
     return Row(
       children: [
         Expanded(
@@ -72,7 +86,7 @@ class _SupportScreenState extends State<SupportScreen> {
   }
 
   _buildSecondaryTitle(String text){
-    final theme = Theme.of(context);
+    final theme = Theme.of(Get.context!);
     return Row(
       children: [
         Expanded(
@@ -86,7 +100,7 @@ class _SupportScreenState extends State<SupportScreen> {
   }
 
   _buildListItem(String text){
-    final theme = Theme.of(context);
+    final theme = Theme.of(Get.context!);
     return Row(
       children: [
         Expanded(

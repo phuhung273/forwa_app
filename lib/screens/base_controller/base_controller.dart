@@ -7,8 +7,6 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 class BaseController extends GetxController{
 
-  final LocationService _locationService = Get.find();
-
   void showLoadingDialog(){
     if(Get.isDialogOpen == false){
       Get.dialog(

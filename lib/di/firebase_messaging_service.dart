@@ -19,7 +19,7 @@ import 'package:forwa_app/screens/order/order_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const MESSAGE_TYPE_CHAT = 'chat';
+const NOTIFICATION_TYPE_CHAT = 'chat';
 
 class FirebaseMessagingService {
 
@@ -55,7 +55,7 @@ class FirebaseMessagingService {
       if(_localStorage.getUserID() != null){
 
         switch(data['type']){
-          case MESSAGE_TYPE_CHAT:
+          case NOTIFICATION_TYPE_CHAT:
             _handleForegroundChatNotification(data);
             break;
           case APP_NOTIFICATION_TYPE_PROCESSING:
@@ -130,7 +130,7 @@ class FirebaseMessagingService {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       final data = message.data;
       switch(data['type']){
-        case MESSAGE_TYPE_CHAT:
+        case NOTIFICATION_TYPE_CHAT:
           Get.toNamed(
             ROUTE_MESSAGE,
             arguments: data['room'],
@@ -176,7 +176,7 @@ Future firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   final data = message.data;
   switch(data['type']){
-    case MESSAGE_TYPE_CHAT:
+    case NOTIFICATION_TYPE_CHAT:
       await handleBackgroundChatNotification(data);
       break;
     case APP_NOTIFICATION_TYPE_PROCESSING:

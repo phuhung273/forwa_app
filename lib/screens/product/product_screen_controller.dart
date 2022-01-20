@@ -6,7 +6,7 @@ import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
-import 'package:forwa_app/screens/base_controller/base_controller.dart';
+import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
 import 'package:forwa_app/screens/take/take_screen_controller.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -20,7 +20,18 @@ class ProductScreenBinding extends Bindings {
   }
 }
 
-class ProductScreenController extends BaseController {
+enum ShareContentType {
+  link
+}
+
+enum ShareMethod {
+  copyToClipboard
+}
+
+class ProductScreenController extends IndividualScreenController {
+
+  @override
+  String get screenName => ROUTE_PRODUCT;
 
   final LocalStorage _localStorage = Get.find();
 
@@ -72,7 +83,6 @@ class ProductScreenController extends BaseController {
     hideDialog();
 
     if(!response.isSuccess || response.data == null){
-      // TODO: show error popup
       return;
     }
     final product = response.data!;

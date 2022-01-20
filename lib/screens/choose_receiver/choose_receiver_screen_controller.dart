@@ -68,7 +68,7 @@ class ChooseReceiverScreenController extends BaseController
     }
 
     orders.assignAll(response.data?.orders ?? []);
-    finish.value = response.data?.product.status == ProductStatus.FINISH;
+    finish.value = response.data?.product.status == ProductStatus.finish;
   }
 
   @override

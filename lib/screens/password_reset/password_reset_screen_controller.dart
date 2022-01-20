@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:forwa_app/datasource/repository/password_repo.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/password/reset_password_phone_request.dart';
-import 'package:forwa_app/screens/base_controller/base_controller.dart';
+import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
 import 'package:forwa_app/screens/password_forgot/password_forgot_screen_controller.dart';
 import 'package:get/get.dart';
 
@@ -16,7 +16,10 @@ class PasswordResetScreenBinding extends Bindings {
 const tokenParam = 'token';
 const phoneParam = 'phone';
 
-class PasswordResetScreenController extends BaseController {
+class PasswordResetScreenController extends IndividualScreenController {
+
+  @override
+  String get screenName => ROUTE_PASSWORD_RESET;
 
   final PasswordRepo _passwordRepo = Get.find();
 
@@ -58,7 +61,7 @@ class PasswordResetScreenController extends BaseController {
       return;
     }
 
-    final message = successMessageMap[ForgotPasswordMethod.PHONE] ?? 'Khôi phục mật khẩu thành công';
+    final message = successMessageMap[ForgotPasswordMethod.phone] ?? 'Khôi phục mật khẩu thành công';
     await showSuccessDialog(message: message);
 
     Get.until((route) => route.settings.name == ROUTE_LOGIN);

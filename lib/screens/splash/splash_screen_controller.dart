@@ -85,7 +85,7 @@ class SplashScreenController extends GetxController {
     if (message != null) {
       final data = message.data;
       switch(data['type']){
-        case MESSAGE_TYPE_CHAT:
+        case NOTIFICATION_TYPE_CHAT:
           Get.toNamed(
             ROUTE_MESSAGE,
             arguments: data['room'],
@@ -160,6 +160,8 @@ class SplashScreenController extends GetxController {
     if(_localStorage.getUniqueDeviceId() == null){
       _localStorage.saveUniqueDeviceId(const Uuid().v4());
     }
+
+    debugPrint('Unique Device Id: ${ _localStorage.getUniqueDeviceId()}');
 
   }
 

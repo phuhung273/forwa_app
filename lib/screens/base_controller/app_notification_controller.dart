@@ -75,19 +75,19 @@ class AppNotificationController extends GetxController
     notifications.assignAll(data);
 
     myGivingCount.value = data.fold(0, (previousValue, element) =>
-      element.status != AppNotificationStatus.CLICKED && element.type == AppNotificationType.PROCESSING
+      element.status != AppNotificationStatus.clicked && element.type == AppNotificationType.processing
         ? previousValue + 1
         : previousValue
     );
 
     myReceivingCount.value = data.fold(0, (previousValue, element) =>
-      element.status != AppNotificationStatus.CLICKED && element.type == AppNotificationType.SELECTED
+      element.status != AppNotificationStatus.clicked && element.type == AppNotificationType.selected
           ? previousValue + 1
           : previousValue
     );
 
     notificationCount.value = data.fold(0, (previousValue, element) =>
-      element.status == AppNotificationStatus.UNREAD
+      element.status == AppNotificationStatus.unread
           ? previousValue + 1
           : previousValue
     );
@@ -104,13 +104,13 @@ class AppNotificationController extends GetxController
         final notification = AppNotification.fromJson(jsonDecode(element));
 
         switch(notification.type){
-          case AppNotificationType.PROCESSING:
+          case AppNotificationType.processing:
             increaseMyGiving(notification);
             break;
-          case AppNotificationType.SELECTED:
+          case AppNotificationType.selected:
             increaseMyReceiving(notification);
             break;
-          case AppNotificationType.UPLOAD:
+          case AppNotificationType.upload:
             increaseMyNotification(notification);
             break;
           default:

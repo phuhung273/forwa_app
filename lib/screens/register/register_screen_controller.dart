@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
+import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/helpers/phone_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/api_response.dart';
@@ -17,13 +18,18 @@ class RegisterScreenBinding extends Bindings {
 }
 
 enum RegisterMethod{
-  PHONE,
-  EMAIL,
+  phone,
+  email,
 }
 
 class RegisterScreenController extends OtpController {
 
+  @override
+  String get screenName => ROUTE_REGISTER;
+
   final AuthRepo _authRepo = Get.find();
+
+  final AnalyticService _analyticService = Get.find();
 
   var result = ''.obs;
 
@@ -41,8 +47,10 @@ class RegisterScreenController extends OtpController {
 
     final method = methodController.text;
     if(ValidationBuilder().email().test(method) == null){
+      _analyticService.logSignUpByEmail();
       await emailRegister();
     } else if(ValidationBuilder().phone().test(method) == null) {
+      _analyticService.logSignUpByPhone();
       phoneVerify();
     }
 
@@ -62,12 +70,11 @@ class RegisterScreenController extends OtpController {
 
     hideDialog();
 
-    _processRegisterResponse(response, RegisterMethod.EMAIL);
+    _processRegisterResponse(response, RegisterMethod.email);
   }
 
   void phoneVerify() {
     final phone = formatPhoneNumber(methodController.text);
-    showLoadingDialog();
 
     verifyOtp(
       phone: phone,
@@ -79,6 +86,7 @@ class RegisterScreenController extends OtpController {
   }
 
   Future phoneRegister() async {
+    showLoadingDialog();
 
     final request = PhoneRegisterRequest(
       name: nameController.text,
@@ -91,7 +99,7 @@ class RegisterScreenController extends OtpController {
 
     hideDialog();
 
-    _processRegisterResponse(response, RegisterMethod.PHONE);
+    _processRegisterResponse(response, RegisterMethod.phone);
   }
 
   Future _processRegisterResponse(ApiResponse response, RegisterMethod method) async{

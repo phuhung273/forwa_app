@@ -21,11 +21,14 @@ class PasswordForgotScreenBinding extends Bindings {
 }
 
 enum ForgotPasswordMethod{
-  EMAIL,
-  PHONE,
+  email,
+  phone,
 }
 
 class PasswordForgotScreenController extends OtpController {
+
+  @override
+  String get screenName => ROUTE_PASSWORD_FORGOT;
 
   final PasswordRepo _passwordRepo = Get.find();
 
@@ -53,7 +56,7 @@ class PasswordForgotScreenController extends OtpController {
     final response = await _passwordRepo.forgotPasswordByEmail(request);
 
     hideDialog();
-    _processForgotResponse(response, ForgotPasswordMethod.EMAIL);
+    _processForgotResponse(response, ForgotPasswordMethod.email);
   }
 
   Future forgotByPhone() async {
@@ -92,7 +95,7 @@ class PasswordForgotScreenController extends OtpController {
     );
   }
 
-  Future _processForgotResponse(ApiResponse response, ForgotPasswordMethod method) async{
+  Future _processForgotResponse(ApiResponse response, ForgotPasswordMethod method) async {
     if(!response.isSuccess){
       final message = errorCodeMap[response.statusCode] ?? 'Lỗi không xác định';
       result.value = message;

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
+import 'package:forwa_app/di/analytics/analytic_service.dart';
+import 'package:forwa_app/route/route.dart';
 import 'package:get/get.dart';
 
 class PolicyScreen extends StatefulWidget {
@@ -17,8 +19,17 @@ class PolicyScreen extends StatefulWidget {
 class _PolicyScreenState extends State<PolicyScreen> {
 
   final LocalStorage _localStorage = Get.find();
+  final AnalyticService _analyticService = Get.find();
 
   bool agree = false;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    _analyticService.setCurrentScreen(ROUTE_POLICY);
+  }
 
   @override
   Widget build(BuildContext context) {

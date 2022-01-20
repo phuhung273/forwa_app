@@ -5,6 +5,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
 import 'package:forwa_app/helpers/email_helper.dart';
+import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/api_response.dart';
 import 'package:forwa_app/schema/auth/apple_login_request.dart';
 import 'package:forwa_app/schema/auth/facebook_login_request.dart';
@@ -14,6 +15,7 @@ import 'package:forwa_app/schema/auth/email_login_request.dart';
 import 'package:forwa_app/schema/auth/login_response.dart';
 import 'package:forwa_app/schema/auth/phone_login_request.dart';
 import 'package:forwa_app/schema/auth/social_email_login_request.dart';
+import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
 import 'package:forwa_app/screens/base_controller/navigation_controller.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
@@ -30,7 +32,10 @@ class LoginScreenBinding extends Bindings {
   }
 }
 
-class LoginScreenController extends BaseController {
+class LoginScreenController extends IndividualScreenController {
+
+  @override
+  String get screenName => ROUTE_LOGIN;
 
   final AuthRepo _authRepo = Get.find();
 
@@ -256,6 +261,7 @@ class LoginScreenController extends BaseController {
     _localStorage.saveCustomerName(data.username);
     _mainController.refreshCredential();
 
+    analyticService.setUserId(data.userId);
     _chatController.init();
     _chatController.fetchUnread();
     _navigationController.reset();

@@ -1,6 +1,7 @@
 import 'package:forwa_app/datasource/repository/address_repo.dart';
+import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/address/address.dart';
-import 'package:forwa_app/screens/base_controller/base_controller.dart';
+import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
 import 'package:get/get.dart';
 
 class ProfileAddressBinding extends Bindings {
@@ -10,7 +11,10 @@ class ProfileAddressBinding extends Bindings {
   }
 }
 
-class ProfileAddressScreenController extends BaseController {
+class ProfileAddressScreenController extends IndividualScreenController {
+
+  @override
+  String get screenName => ROUTE_PROFILE_ADDRESS;
 
   final AddressRepo _addressRepo = Get.find();
 

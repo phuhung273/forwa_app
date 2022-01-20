@@ -31,8 +31,8 @@ const errorCodeMap = {
 };
 
 const successMessageMap = {
-  RegisterMethod.EMAIL: 'Đăng ký thành công, vui lòng kích hoạt email để đăng nhập',
-  RegisterMethod.PHONE: 'Đăng ký thành công',
+  RegisterMethod.email: 'Đăng ký thành công, vui lòng kích hoạt email để đăng nhập',
+  RegisterMethod.phone: 'Đăng ký thành công',
 };
 
 class AuthRepo extends BaseRepo{

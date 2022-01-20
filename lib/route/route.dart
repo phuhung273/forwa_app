@@ -66,6 +66,16 @@ const ROUTE_MESSAGE = '/message';
 const ROUTE_SUPPORT = '/support';
 const ROUTE_ORDER = '/order';
 
+/// Below are not route, they're here just to define constant
+/// Used for analytics purpose
+const ROUTE_HOME = '/home';
+const ROUTE_MY_GIVING = '/my_giving';
+const ROUTE_MY_RECEIVING = '/my_receiving';
+const ROUTE_NOTIFICATION = '/notification';
+const ROUTE_CHAT = '/chat';
+const ROUTE_POLICY = '/policy';
+
+
 const previousRouteParam = 'previous_route';
 
 var appRoute = [

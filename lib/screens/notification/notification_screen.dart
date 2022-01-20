@@ -138,7 +138,7 @@ class NotificationItem extends StatelessWidget {
     return InkWell(
       onTap: () {
         switch(notification.type){
-          case AppNotificationType.PROCESSING:
+          case AppNotificationType.processing:
             Get.toNamed(
               ROUTE_CHOOSE_RECEIVER,
               parameters: {
@@ -146,7 +146,7 @@ class NotificationItem extends StatelessWidget {
               }
             );
             break;
-          case AppNotificationType.SELECTED:
+          case AppNotificationType.selected:
             Get.toNamed(
               ROUTE_ORDER,
               parameters: {
@@ -154,7 +154,7 @@ class NotificationItem extends StatelessWidget {
               }
             );
             break;
-          case AppNotificationType.UPLOAD:
+          case AppNotificationType.upload:
             Get.toNamed(
               ROUTE_PRODUCT,
               arguments: notification.product.id!
@@ -203,11 +203,11 @@ class NotificationItem extends StatelessWidget {
 
   String _buildMessage(AppNotification notification){
     switch(notification.type){
-      case AppNotificationType.PROCESSING:
+      case AppNotificationType.processing:
         return 'Đã có người xin ${notification.product.name} của bạn !';
-      case AppNotificationType.SELECTED:
+      case AppNotificationType.selected:
         return 'Bạn đã được chọn. Mau tới lấy ${notification.product.name}';
-      case AppNotificationType.UPLOAD:
+      case AppNotificationType.upload:
         return 'Vừa có người đăng ${notification.product.name} ở gần bạn';
       default:
         return '';

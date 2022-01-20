@@ -1,13 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/widgets/app_level_action_container.dart';
 import 'package:get/get.dart';
 
 import 'address_select_screen_controller.dart';
 
-class AddressSelectScreen extends GetView<AddressSelectScreenController> {
+class AddressSelectScreen extends StatefulWidget {
 
   const AddressSelectScreen({Key? key}) : super(key: key);
+
+  @override
+  State<AddressSelectScreen> createState() => _AddressSelectScreenState();
+}
+
+class _AddressSelectScreenState extends State<AddressSelectScreen> {
+
+  final AddressSelectScreenController _controller = Get.find();
+  final AnalyticService _analyticService = Get.find();
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    _analyticService.setCurrentScreen(ROUTE_SELECT_ADDRESS);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +46,9 @@ class AddressSelectScreen extends GetView<AddressSelectScreenController> {
                 () => ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: controller.addresses.length,
+                  itemCount: _controller.addresses.length,
                   itemBuilder: (context, index) {
-                    final address = controller.addresses[index];
+                    final address = _controller.addresses[index];
 
                     final header = '${address.street} ${address.ward} ${address.district} ${address.city}';
                     final subtitle = '${address.name} ${address.phone}';
@@ -45,10 +63,10 @@ class AddressSelectScreen extends GetView<AddressSelectScreenController> {
                       subtitle: Text(
                         subtitle
                       ),
-                      value: address.id == controller.id.value,
+                      value: address.id == _controller.id.value,
                       onChanged: (checked){
                         if(checked == true){
-                          controller.selectAddress(index);
+                          _controller.selectAddress(index);
                         }
                       }
                     );
