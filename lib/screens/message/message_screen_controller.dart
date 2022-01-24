@@ -211,7 +211,7 @@ class MessageScreenController extends IndividualScreenController with WidgetsBin
   }
 
   static void openScreenOnTerminatedNotificationClick(String roomId) {
-    Get.toNamed(
+    Get.offAllNamed(
       ROUTE_MESSAGE,
       arguments: roomId,
       parameters: {

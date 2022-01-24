@@ -44,6 +44,15 @@ class MessageScreen extends GetView<MessageScreenController> {
       child: Scaffold(
         appBar: AppBar(
           title: Obx(() => Text(controller.roomName.value)),
+          leading: controller.isNotificationStartFromTerminated
+            ? IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+              ),
+              iconSize: 20.0,
+              onPressed: () => Get.offAndToNamed(ROUTE_MAIN),
+            )
+            : null,
         ),
         body: Obx(
           () {
