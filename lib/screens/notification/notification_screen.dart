@@ -11,6 +11,7 @@ import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:forwa_app/screens/notification/notification_screen_controller.dart';
 import 'package:forwa_app/screens/order/order_screen_controller.dart';
+import 'package:forwa_app/screens/product/product_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -139,27 +140,17 @@ class NotificationItem extends StatelessWidget {
       onTap: () {
         switch(notification.type){
           case AppNotificationType.processing:
-            Get.toNamed(
-              ROUTE_CHOOSE_RECEIVER,
-              parameters: {
-                productIdParamChooseReceiver: notification.product.id.toString()
-              }
-            );
+            ChooseReceiverScreenController.openScreen(notification.product.id!);
             break;
+
           case AppNotificationType.selected:
-            Get.toNamed(
-              ROUTE_ORDER,
-              parameters: {
-                productIdParamOrderScreen: notification.product.id.toString()
-              }
-            );
+            OrderScreenController.openScreen(notification.product.id!);
             break;
+
           case AppNotificationType.upload:
-            Get.toNamed(
-              ROUTE_PRODUCT,
-              arguments: notification.product.id!
-            );
+            ProductScreenController.openScreen(notification.product.id!);
             break;
+
           default:
             break;
         }

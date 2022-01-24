@@ -2,7 +2,6 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
-import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
 import 'package:forwa_app/screens/components/appbar_chat_action.dart';
@@ -136,14 +135,9 @@ class _MyGivingsScreenState extends State<MyGivingsScreen>
     );
   }
 
-  Future? _buildOnTapCard(Product product){
+  _buildOnTapCard(Product product){
     if(product.haveOrders){
-      return Get.toNamed(
-          ROUTE_CHOOSE_RECEIVER,
-          parameters: {
-            productIdParamChooseReceiver: product.id.toString(),
-          }
-      );
+      return ChooseReceiverScreenController.openScreen(product.id!);
     }
   }
 }

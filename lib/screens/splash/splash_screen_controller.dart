@@ -13,10 +13,12 @@ import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:forwa_app/schema/auth/refresh_token_request.dart';
+import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
 import 'package:forwa_app/screens/message/message_screen_controller.dart';
 import 'package:forwa_app/screens/order/order_screen_controller.dart';
+import 'package:forwa_app/screens/product/product_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
@@ -89,36 +91,30 @@ class SplashScreenController extends GetxController {
         case NOTIFICATION_TYPE_CHAT:
           MessageScreenController.openScreenOnTerminatedNotificationClick(data['room']);
           break;
+
         case APP_NOTIFICATION_TYPE_PROCESSING:
           final notification = AppNotification.fromJson(jsonDecode(data['data']));
-          Get.offAndToNamed(
-            ROUTE_CHOOSE_RECEIVER,
-            parameters: {
-              productIdParamChooseReceiver: notification.product.id.toString(),
-              notificationStartParam: NOTIFICATION_START_TRUE,
-            }
+          final order = Order.fromJson(jsonDecode(data['order']));
+          ChooseReceiverScreenController.openScreenOnTerminatedNotificationClick(
+            notification.product.id!,
+            order.id
           );
           break;
+
         case APP_NOTIFICATION_TYPE_SELECTED:
           final notification = AppNotification.fromJson(jsonDecode(data['data']));
-          Get.offAndToNamed(
-            ROUTE_ORDER,
-            parameters: {
-              productIdParamOrderScreen: notification.product.id.toString(),
-              notificationStartParam: NOTIFICATION_START_TRUE,
-            }
+          final order = Order.fromJson(jsonDecode(data['order']));
+          OrderScreenController.openScreenOnTerminatedNotificationClick(
+            notification.product.id!,
+            order.id
           );
           break;
+
         case APP_NOTIFICATION_TYPE_UPLOAD:
           final notification = AppNotification.fromJson(jsonDecode(data['data']));
-          Get.toNamed(
-            ROUTE_PRODUCT,
-            arguments: notification.product.id!,
-            parameters: {
-              notificationStartParam: NOTIFICATION_START_TRUE,
-            }
-          );
+          ProductScreenController.openScreenOnTerminatedNotificationClick(notification.product.id!);
           break;
+
         default:
           _normalStart();
           break;

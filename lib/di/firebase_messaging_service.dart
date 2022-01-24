@@ -17,6 +17,7 @@ import 'package:forwa_app/screens/message/message_screen_controller.dart';
 import 'package:forwa_app/screens/my_givings/my_giving_screen_controller.dart';
 import 'package:forwa_app/screens/my_receivings/my_receivings_screen_controller.dart';
 import 'package:forwa_app/screens/order/order_screen_controller.dart';
+import 'package:forwa_app/screens/product/product_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -134,31 +135,24 @@ class FirebaseMessagingService {
         case NOTIFICATION_TYPE_CHAT:
           MessageScreenController.openScreenOnNotificationClick(data['room']);
           break;
+
         case APP_NOTIFICATION_TYPE_PROCESSING:
           final notification = AppNotification.fromJson(jsonDecode(data['data']));
-          Get.toNamed(
-            ROUTE_CHOOSE_RECEIVER,
-            parameters: {
-              productIdParamChooseReceiver: notification.product.id.toString(),
-            }
-          );
+          final order = Order.fromJson(jsonDecode(data['order']));
+          ChooseReceiverScreenController.openScreenOnNotificationClick(notification.product.id!, order.id);
           break;
+
         case APP_NOTIFICATION_TYPE_SELECTED:
           final notification = AppNotification.fromJson(jsonDecode(data['data']));
-          Get.toNamed(
-            ROUTE_ORDER,
-            parameters: {
-              productIdParamOrderScreen: notification.product.id.toString(),
-            }
-          );
+          final order = Order.fromJson(jsonDecode(data['order']));
+          OrderScreenController.openScreenOnNotificationClick(notification.product.id!, order.id);
           break;
+
         case APP_NOTIFICATION_TYPE_UPLOAD:
           final notification = AppNotification.fromJson(jsonDecode(data['data']));
-          Get.toNamed(
-            ROUTE_PRODUCT,
-            arguments: notification.product.id!
-          );
+          ProductScreenController.openScreenOnNotificationClick(notification.product.id!);
           break;
+
         default:
           break;
       }

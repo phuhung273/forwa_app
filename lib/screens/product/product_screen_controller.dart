@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_controller.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
+import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
@@ -117,5 +118,32 @@ class ProductScreenController extends IndividualScreenController {
         }
       );
     }
+  }
+
+  static void openScreen(int productId){
+    Get.toNamed(ROUTE_PRODUCT, arguments: productId);
+  }
+
+  static void openScreenOnNotificationClick(int productId){
+    Get.toNamed(
+        ROUTE_PRODUCT,
+        arguments: productId
+    );
+
+    final AnalyticService analyticService = Get.find();
+    analyticService.logClickUploadNotification(productId);
+  }
+
+  static void openScreenOnTerminatedNotificationClick(int productId){
+    Get.offAllNamed(
+      ROUTE_PRODUCT,
+      arguments: productId,
+      parameters: {
+        notificationStartParam: NOTIFICATION_START_TRUE,
+      }
+    );
+
+    final AnalyticService analyticService = Get.find();
+    analyticService.logClickUploadNotification(productId);
   }
 }

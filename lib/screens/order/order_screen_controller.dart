@@ -1,5 +1,6 @@
 
 import 'package:forwa_app/datasource/repository/order_repo.dart';
+import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
@@ -92,5 +93,39 @@ class OrderScreenController extends IndividualScreenController {
 
   void setReviewId(int id){
     buyerReviewId.value = id;
+  }
+
+  static void openScreen(int productId){
+    Get.toNamed(
+      ROUTE_ORDER,
+      parameters: {
+        productIdParamOrderScreen: productId.toString()
+      }
+    );
+  }
+
+  static void openScreenOnNotificationClick(int productId, int orderId){
+    Get.toNamed(
+      ROUTE_ORDER,
+      parameters: {
+        productIdParamOrderScreen: productId.toString(),
+      }
+    );
+
+    final AnalyticService analyticService = Get.find();
+    analyticService.logClickSelectedNotification(orderId, productId);
+  }
+
+  static void openScreenOnTerminatedNotificationClick(int productId, int orderId){
+    Get.offAllNamed(
+      ROUTE_ORDER,
+      parameters: {
+        productIdParamOrderScreen: productId.toString(),
+        notificationStartParam: NOTIFICATION_START_TRUE,
+      }
+    );
+
+    final AnalyticService analyticService = Get.find();
+    analyticService.logClickSelectedNotification(orderId, productId);
   }
 }

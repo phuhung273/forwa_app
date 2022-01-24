@@ -7,6 +7,7 @@ import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/components/appbar_chat_action.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
+import 'package:forwa_app/screens/product/product_screen_controller.dart';
 import 'package:forwa_app/screens/public_profile/public_profile_screen_controller.dart';
 import 'package:forwa_app/widgets/rating.dart';
 import 'package:get/get.dart';
@@ -183,7 +184,7 @@ class ProductCard extends GetView<HomeScreenController> {
         child: Row(
           children: [
             InkWell(
-              onTap: () => Get.toNamed(ROUTE_PRODUCT, arguments: product.id),
+              onTap: () => ProductScreenController.openScreen(product.id!),
               child: Container(
                 height: IMAGE_WIDTH,
                 width: IMAGE_WIDTH,
@@ -260,7 +261,7 @@ class ProductCard extends GetView<HomeScreenController> {
                       ),
                       Expanded(
                         child: InkWell(
-                          onTap: () => Get.toNamed(ROUTE_PRODUCT, arguments: product.id),
+                          onTap: () => ProductScreenController.openScreen(product.id!),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

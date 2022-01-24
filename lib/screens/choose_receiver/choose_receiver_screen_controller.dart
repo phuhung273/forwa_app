@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart' hide errorCodeMap;
 import 'package:forwa_app/datasource/repository/product_repo.dart';
+import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
@@ -228,6 +229,40 @@ class ChooseReceiverScreenController extends BaseController
 
   bool canFinish(){
     return orders.any((element) => element.statusType == OrderStatus.SELECTED);
+  }
+
+  static void openScreen(int productId){
+    Get.toNamed(
+      ROUTE_CHOOSE_RECEIVER,
+      parameters: {
+        productIdParamChooseReceiver: productId.toString(),
+      }
+    );
+  }
+
+  static void openScreenOnNotificationClick(int productId, int orderId){
+    Get.toNamed(
+      ROUTE_CHOOSE_RECEIVER,
+      parameters: {
+        productIdParamChooseReceiver: productId.toString(),
+      }
+    );
+
+    final AnalyticService analyticService = Get.find();
+    analyticService.logClickProcessingNotification(orderId, productId);
+  }
+
+  static void openScreenOnTerminatedNotificationClick(int productId, int orderId){
+    Get.offAllNamed(
+      ROUTE_CHOOSE_RECEIVER,
+      parameters: {
+        productIdParamChooseReceiver: productId.toString(),
+        notificationStartParam: NOTIFICATION_START_TRUE,
+      }
+    );
+
+    final AnalyticService analyticService = Get.find();
+    analyticService.logClickProcessingNotification(orderId, productId);
   }
 
   @override
