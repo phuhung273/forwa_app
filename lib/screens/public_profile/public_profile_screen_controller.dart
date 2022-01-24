@@ -1,6 +1,7 @@
 import 'package:forwa_app/datasource/local/hidden_user_db.dart';
 import 'package:forwa_app/datasource/repository/user_repo.dart';
 import 'package:forwa_app/datasource/repository/user_report_repo.dart';
+import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/mixins/reportable.dart';
 import 'package:forwa_app/route/route.dart';
@@ -102,5 +103,30 @@ class PublicProfileScreenController extends IndividualScreenController
     if(!isNotificationStart){
       _homeController.products.removeWhere((element) => element.user?.id == report.toUserId);
     }
+  }
+
+  static void openScreen(int id){
+    Get.toNamed(
+      ROUTE_PUBLIC_PROFILE,
+      parameters: {
+        userIdParam: id.toString()
+      }
+    );
+
+    final AnalyticService analyticService = Get.find();
+    analyticService.logSelectUserItem(id);
+  }
+
+  static void openScreenWithNotificationClickBefore(int id){
+    Get.toNamed(
+      ROUTE_PUBLIC_PROFILE,
+      parameters: {
+        userIdParam: id.toString(),
+        notificationStartParam: NOTIFICATION_START_TRUE
+      }
+    );
+
+    final AnalyticService analyticService = Get.find();
+    analyticService.logSelectUserItem(id);
   }
 }

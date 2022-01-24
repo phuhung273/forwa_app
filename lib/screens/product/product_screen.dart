@@ -182,12 +182,7 @@ class SellerInfoSection extends GetView<ProductScreenController> {
         minVerticalPadding: 0.0,
         minLeadingWidth: 0.0,
         contentPadding: EdgeInsets.zero,
-        onTap: () => Get.toNamed(
-          ROUTE_PUBLIC_PROFILE,
-          parameters: {
-            userIdParam: controller.userId.toString()
-          }
-        ),
+        onTap: () => PublicProfileScreenController.openScreen(controller.userId!),
         leading: _buildAvatar(),
         title: Text(
           sellerName,

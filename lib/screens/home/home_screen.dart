@@ -242,12 +242,7 @@ class ProductCard extends GetView<HomeScreenController> {
                         horizontalTitleGap: 8.0,
                         contentPadding: EdgeInsets.zero,
                         dense: true,
-                        onTap: () => Get.toNamed(
-                          ROUTE_PUBLIC_PROFILE,
-                          parameters: {
-                          userIdParam: product.user!.id.toString()
-                          }
-                        ),
+                        onTap: () => PublicProfileScreenController.openScreen(product.user!.id!),
                         leading: _buildAvatar(),
                         title: Text(
                           // shortWords.join(' '),

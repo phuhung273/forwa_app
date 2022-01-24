@@ -238,6 +238,9 @@ class ChooseReceiverScreenController extends BaseController
         productIdParamChooseReceiver: productId.toString(),
       }
     );
+
+    final AnalyticService analyticService = Get.find();
+    analyticService.logSelectProductItem(productId);
   }
 
   static void openScreenOnNotificationClick(int productId, int orderId){

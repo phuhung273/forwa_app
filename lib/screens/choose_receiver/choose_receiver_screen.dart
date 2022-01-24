@@ -151,14 +151,13 @@ class ReceiverCard extends GetView<ChooseReceiverScreenController> {
           children: [
             SecondaryActionContainer(
               child: OutlinedButton(
-                onPressed: () =>
-                  Get.toNamed(
-                    ROUTE_PUBLIC_PROFILE,
-                    parameters: {
-                      userIdParam: order.userId.toString(),
-                      notificationStartParam: controller.isNotificationStart ? NOTIFICATION_START_TRUE : ''
-                    }
-                  ),
+                onPressed: () {
+                  if(controller.isNotificationStart){
+                    PublicProfileScreenController.openScreenWithNotificationClickBefore(order.userId);
+                  } else {
+                    PublicProfileScreenController.openScreen(order.userId);
+                  }
+                },
                 child: const Text('Xem thêm'),
               ),
             ),

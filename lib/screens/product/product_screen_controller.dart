@@ -122,6 +122,9 @@ class ProductScreenController extends IndividualScreenController {
 
   static void openScreen(int productId){
     Get.toNamed(ROUTE_PRODUCT, arguments: productId);
+
+    final AnalyticService analyticService = Get.find();
+    analyticService.logSelectProductItem(productId);
   }
 
   static void openScreenOnNotificationClick(int productId){

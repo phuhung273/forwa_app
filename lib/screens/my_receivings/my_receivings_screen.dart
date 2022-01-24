@@ -186,12 +186,7 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
                       horizontalTitleGap: 8.0,
                       contentPadding: EdgeInsets.zero,
                       dense: true,
-                      onTap: () => Get.toNamed(
-                          ROUTE_PUBLIC_PROFILE,
-                          parameters: {
-                            userIdParam: order.product!.user!.id.toString()
-                          }
-                      ),
+                      onTap: () => PublicProfileScreenController.openScreen(order.product!.user!.id!),
                       leading: _buildAvatar(),
                       title: Text(
                         // shortWords.join(' '),

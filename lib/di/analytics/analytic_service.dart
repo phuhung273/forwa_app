@@ -52,6 +52,36 @@ class AnalyticService {
     );
   }
 
+  Future logSelectProductItem(int id){
+    return analytics.logEvent(
+      name: EVENT_ITEM_CLICK,
+      parameters: {
+        'type': ITEM_TYPE_PRODUCT,
+        'id': id,
+      }
+    );
+  }
+
+  Future logSelectUserItem(int id){
+    return analytics.logEvent(
+      name: EVENT_ITEM_CLICK,
+      parameters: {
+        'type': ITEM_TYPE_USER,
+        'id': id,
+      }
+    );
+  }
+
+  Future logSelectOrderItem(int id){
+    return analytics.logEvent(
+      name: EVENT_ITEM_CLICK,
+      parameters: {
+        'type': ITEM_TYPE_ORDER,
+        'id': id,
+      }
+    );
+  }
+
   Future logShareByCopyToClipboard(String id) {
     return analytics.logShare(
       contentType: EnumToString.convertToString(ShareContentType.link),
