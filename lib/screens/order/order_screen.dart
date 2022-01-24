@@ -1,10 +1,10 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
-import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
+import 'package:forwa_app/screens/message/message_screen_controller.dart';
 import 'package:forwa_app/screens/public_profile/public_profile_screen_controller.dart';
 import 'package:forwa_app/widgets/app_container.dart';
 import 'package:forwa_app/widgets/app_level_action_container.dart';
@@ -153,13 +153,7 @@ class OrderScreen extends GetView<OrderScreenController> {
                         icon: const Icon(Icons.textsms),
                         onPressed: () {
                           if(controller.chatRoomId.isEmpty) return;
-
-                          Get.toNamed(ROUTE_MESSAGE,
-                              arguments: controller.chatRoomId.value,
-                              parameters: {
-                                notificationStartParam: NOTIFICATION_START_TRUE
-                              }
-                          );
+                          MessageScreenController.openScreenOnOtherScreen(controller.chatRoomId.value);
                         },
                         label: const Text('Nhắn tin'),
                       ),

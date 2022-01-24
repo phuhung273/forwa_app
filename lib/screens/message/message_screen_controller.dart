@@ -3,6 +3,7 @@ import 'package:dash_chat/dash_chat.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
+import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/di/chat_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
@@ -180,6 +181,47 @@ class MessageScreenController extends IndividualScreenController with WidgetsBin
 
   void readMessage(){
     _chatController.readMessage(destinationID);
+  }
+
+  static void openScreenOnChatScreen(String roomId){
+    Get.toNamed(ROUTE_MESSAGE, arguments: roomId);
+  }
+
+  static void openScreenOnOtherScreen(String roomId){
+    Get.toNamed(
+      ROUTE_MESSAGE,
+      arguments: roomId,
+      parameters: {
+        notificationStartParam: NOTIFICATION_START_TRUE
+      }
+    );
+  }
+
+  static void openScreenOnNotificationClick(String roomId){
+    Get.toNamed(
+      ROUTE_MESSAGE,
+      arguments: roomId,
+      parameters: {
+        notificationStartParam: NOTIFICATION_START_TRUE
+      }
+    );
+
+    final AnalyticService analyticService = Get.find();
+    analyticService.logClickChatNotification(roomId);
+  }
+
+  static void openScreenOnTerminatedNotificationClick(String roomId) {
+    Get.toNamed(
+      ROUTE_MESSAGE,
+      arguments: roomId,
+      parameters: {
+        notificationStartParam: NOTIFICATION_START_TRUE,
+        notificationStartFromTerminatedParam: NOTIFICATION_START_FROM_TERMINATED_TRUE
+      }
+    );
+
+    final AnalyticService analyticService = Get.find();
+    analyticService.logClickChatNotification(roomId);
   }
 
   @override

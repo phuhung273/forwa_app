@@ -7,6 +7,7 @@ import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/chat/chat_screen_controller.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
+import 'package:forwa_app/screens/message/message_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -152,7 +153,7 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   void _goToMessageScreen(String id){
-    Get.toNamed(ROUTE_MESSAGE, arguments: id);
+    MessageScreenController.openScreenOnChatScreen(id);
     _chatController.readMessage(id);
   }
 }

@@ -1,13 +1,13 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
-import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/components/appbar_chat_action.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
+import 'package:forwa_app/screens/message/message_screen_controller.dart';
 import 'package:forwa_app/screens/public_profile/public_profile_screen_controller.dart';
 import 'package:forwa_app/widgets/rating.dart';
 import 'package:forwa_app/widgets/secondary_action_container.dart';
@@ -230,13 +230,7 @@ class ReceivingCard extends GetView<MyReceivingsScreenController> {
                             icon: const Icon(Icons.textsms),
                             onPressed: () {
                               if(order.chatRoomId == null) return;
-
-                              Get.toNamed(ROUTE_MESSAGE,
-                                arguments: order.chatRoomId,
-                                parameters: {
-                                  notificationStartParam: NOTIFICATION_START_TRUE
-                                }
-                              );
+                              MessageScreenController.openScreenOnOtherScreen(order.chatRoomId!);
                             },
                             label: const Text('Nhắn tin'),
                           )
