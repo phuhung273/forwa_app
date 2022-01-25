@@ -12,7 +12,12 @@ class RoutingObserver {
 
     final AnalyticService _analyticService = Get.find();
 
-    if (!routing.isBottomSheet! && !routing.isDialog! && routing.current != ROUTE_MAIN) {
+    if (
+      !routing.isBottomSheet! &&
+      !routing.isDialog! &&
+      routing.current != ROUTE_MAIN &&
+      routing.current.isNotEmpty
+    ) {
       _analyticService.setCurrentScreen(routing.current);
     }
   }

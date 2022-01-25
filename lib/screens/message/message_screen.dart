@@ -8,6 +8,7 @@ import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/chat/chat_socket_message.dart';
+import 'package:forwa_app/widgets/hero_widget.dart';
 import 'package:forwa_app/widgets/transparent_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -141,16 +142,22 @@ class MessageScreen extends GetView<MessageScreenController> {
 
   Widget _buildImage(String? image, [ChatMessage? message]){
     if(message == null) return const SizedBox();
-    return ImageContainer(image: image);
+
+    return ImageMessageContainer(
+      image: image,
+      messageId: message.id!,
+    );
   }
 }
 
-class ImageContainer extends StatelessWidget {
+class ImageMessageContainer extends StatelessWidget {
   final String? image;
+  final String messageId;
 
-  const ImageContainer({
+  const ImageMessageContainer({
     Key? key,
     required this.image,
+    required this.messageId,
   }) : super(key: key);
 
   @override
@@ -159,12 +166,40 @@ class ImageContainer extends StatelessWidget {
             maxHeight: MediaQuery.of(context).size.height,
             maxWidth: MediaQuery.of(context).size.width);
 
-    return FadeInImage.memoryNetwork(
-      height: constraints.maxHeight * 0.3,
-      width: constraints.maxWidth * 0.7,
-      fit: BoxFit.contain,
-      placeholder: kTransparentImage,
-      image: image!,
+    return HeroWidget(
+      tag: messageId,
+      onTap: _zoomImage,
+      child: FadeInImage.memoryNetwork(
+        height: constraints.maxHeight * 0.3,
+        width: constraints.maxWidth * 0.7,
+        fit: BoxFit.contain,
+        placeholder: kTransparentImage,
+        image: image!,
+      ),
     );
+  }
+
+  void _zoomImage() {
+    Navigator.of(Get.context!).push(MaterialPageRoute<void>(
+      builder: (BuildContext context) => Scaffold(
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
+        ),
+        body: Hero(
+          tag: messageId,
+          child: FadeInImage.memoryNetwork(
+            width: double.infinity,
+            height: double.infinity,
+            fit: BoxFit.cover,
+            placeholder: kTransparentImage,
+            image: image!,
+          ),
+        ),
+      ),
+    ));
   }
 }

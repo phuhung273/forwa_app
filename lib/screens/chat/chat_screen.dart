@@ -145,9 +145,9 @@ class _ChatScreenState extends State<ChatScreen>
     final message = messages.first;
 
     if(message.type == EnumToString.convertToString(MessageType.IMAGE)){
-      return 'Image';
+      return 'Hình ảnh';
     } else if(message.type == EnumToString.convertToString(MessageType.LOCATION)){
-      return 'Location';
+      return 'Vị trí';
     }
     return message.content;
   }
