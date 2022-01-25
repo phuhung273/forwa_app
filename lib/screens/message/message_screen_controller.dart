@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:dash_chat/dash_chat.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +49,8 @@ class MessageScreenController extends BaseController with WidgetsBindingObserver
 
   late DateTime _earliest;
 
+  StreamSubscription? _messageStreamSubscription;
+
   @override
   void onInit() {
     super.onInit();
@@ -69,7 +73,7 @@ class MessageScreenController extends BaseController with WidgetsBindingObserver
   void onReady(){
     super.onReady();
 
-    _chatController.messageStream.listen((event) {
+    _messageStreamSubscription = _chatController.messageStream.listen((event) {
       if(event.roomId == destinationID){
         messages.insert(0, event);
       }
@@ -223,6 +227,7 @@ class MessageScreenController extends BaseController with WidgetsBindingObserver
 
   @override
   void onClose(){
+    _messageStreamSubscription?.cancel();
     WidgetsBinding.instance?.removeObserver(this);
     super.onClose();
   }

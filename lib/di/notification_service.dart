@@ -116,7 +116,7 @@ class NotificationService {
 
       case APP_NOTIFICATION_TYPE_UPLOAD:
         final notification = AppNotification.fromJson(jsonDecode(data['data']));
-        ProductScreenController.openScreenOnNotificationClick(notification.product.id!);
+        ProductScreenController.openOrReloadScreenOnNotificationClick(notification.product.id!);
         break;
 
       default:

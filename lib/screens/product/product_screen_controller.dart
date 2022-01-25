@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_controller.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
@@ -7,7 +8,8 @@ import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
-import 'package:forwa_app/screens/base_controller/base_controller.dart';
+import 'package:forwa_app/screens/base_controller/navigation_controller.dart';
+import 'package:forwa_app/screens/base_controller/notification_openable_controller.dart';
 import 'package:forwa_app/screens/take/take_screen_controller.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -29,7 +31,14 @@ enum ShareMethod {
   copyToClipboard
 }
 
-class ProductScreenController extends BaseController {
+const MAP_ZOOM_LEVEL = 17.0;
+
+const PARAM_PRODUCT_ID = 'product_id';
+
+class ProductScreenController extends NotificationOpenableController {
+
+  @override
+  String get screenName => ROUTE_PRODUCT;
 
   final LocalStorage _localStorage = Get.find();
 
@@ -50,24 +59,24 @@ class ProductScreenController extends BaseController {
   final dueDate = ''.obs;
   final enabled = false.obs;
   final avatar = ''.obs;
+  final latitude = 0.0.obs; // This is used only to trigger map reactivity
   Position? here;
 
   set page(int index) => current.value = index;
   int get page => current.value;
 
-  bool isNotificationStart = false;
-  final int id = Get.arguments;
+  int id = Get.arguments;
   late int? userId;
 
   LatLng? location;
   LatLng? wardLocation;
 
+  final mapController = MapController();
+
   @override
-  void onInit() {
-    super.onInit();
-    if(Get.parameters[notificationStartParam] == NOTIFICATION_START_TRUE){
-      isNotificationStart = true;
-    }
+  void onNotificationReload(Map parameters){
+    id = parameters[PARAM_PRODUCT_ID];
+    onReady();
   }
 
   @override
@@ -99,6 +108,9 @@ class ProductScreenController extends BaseController {
         : '';
     userId = product.user?.id;
     avatar.value = product.user?.imageUrl ?? '';
+    page = 0;
+    latitude.value = double.tryParse(product.address!.wardLatitude) ?? 0.0;
+    mapController.move(wardLocation!, MAP_ZOOM_LEVEL);
   }
 
   void toTakeScreen(){
@@ -124,10 +136,21 @@ class ProductScreenController extends BaseController {
     analyticService.logSelectProductItem(productId);
   }
 
+  static void openOrReloadScreenOnNotificationClick(int productId){
+    if(Get.currentRoute == ROUTE_PRODUCT){
+      final NavigationController navigationController = Get.find();
+      navigationController.resetScreen(ROUTE_PRODUCT, {
+        PARAM_PRODUCT_ID: productId
+      });
+    } else {
+      openScreen(productId);
+    }
+  }
+
   static void openScreenOnNotificationClick(int productId){
     Get.toNamed(
-        ROUTE_PRODUCT,
-        arguments: productId
+      ROUTE_PRODUCT,
+      arguments: productId
     );
 
     final AnalyticService analyticService = Get.find();

@@ -84,12 +84,12 @@ class ProductRender extends GetView<ProductScreenController> {
           Container(
             padding: const EdgeInsets.all(8.0),
             child: Card(
-              clipBehavior: Clip.antiAlias,
-              elevation: 4.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-              child: const SellerInfoSection()
+                clipBehavior: Clip.antiAlias,
+                elevation: 4.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
+                child: const SellerInfoSection()
             ),
           ),
           Container(
@@ -111,27 +111,27 @@ class ProductRender extends GetView<ProductScreenController> {
             ),
           ),
           AppContainer(
-            padding: const EdgeInsets.only(
-              left: 12.0,
-              top: 24.0
-            ),
-            child: Text(
-              'Thông Tin Chi tiết',
-              style: theme.textTheme.subtitle1?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.secondary
+              padding: const EdgeInsets.only(
+                  left: 12.0,
+                  top: 24.0
               ),
-            )
+              child: Text(
+                'Thông Tin Chi tiết',
+                style: theme.textTheme.subtitle1?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.secondary
+                ),
+              )
           ),
           Container(
             padding: const EdgeInsets.all(8.0),
             child: Card(
-              clipBehavior: Clip.antiAlias,
-              elevation: 4.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-              child: const ProductPrimaryInfoSection()
+                clipBehavior: Clip.antiAlias,
+                elevation: 4.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
+                child: const ProductPrimaryInfoSection()
             ),
           ),
           Container(
@@ -151,16 +151,18 @@ class ProductRender extends GetView<ProductScreenController> {
   }
 
   _buildTakeButton(){
-    if(!controller.enabled.value){
-      return const TextButton(
-        onPressed: null,
-        child: Text('Không thể nhận'),
+    return Obx((){
+      if(!controller.enabled.value){
+        return const TextButton(
+          onPressed: null,
+          child: Text('Không thể nhận'),
+        );
+      }
+      return ElevatedButton(
+        onPressed: controller.toTakeScreen,
+        child: const Text('Tôi muốn nhận'),
       );
-    }
-    return ElevatedButton(
-      onPressed: controller.toTakeScreen,
-      child: const Text('Tôi muốn nhận'),
-    );
+    });
   }
 }
 
@@ -172,43 +174,44 @@ class SellerInfoSection extends GetView<ProductScreenController> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final sellerName = controller.sellerName.value;
 
     return AppContainer(
       decoration: BoxDecoration(
         color: Colors.grey[200]
       ),
-      child: ListTile(
-        minVerticalPadding: 0.0,
-        minLeadingWidth: 0.0,
-        contentPadding: EdgeInsets.zero,
-        onTap: () => PublicProfileScreenController.openScreen(controller.userId!),
-        leading: _buildAvatar(),
-        title: Text(
-          sellerName,
-          style: theme.textTheme.bodyText1,
-          // overflow: TextOverflow.ellipsis,
-        ),
-        subtitle: Column(
-          children: [
-            Row(
-              children: [
-                const Rating(score: 5),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  'Muốn cho đi',
-                  style: theme.textTheme.bodyText1?.copyWith(
-                      color: Colors.grey[600]
+      child: Obx(
+        () => ListTile(
+          minVerticalPadding: 0.0,
+          minLeadingWidth: 0.0,
+          contentPadding: EdgeInsets.zero,
+          onTap: () => PublicProfileScreenController.openScreen(controller.userId!),
+          leading: _buildAvatar(),
+          title: Text(
+            controller.sellerName.value,
+            style: theme.textTheme.bodyText1,
+            // overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Column(
+            children: [
+              Row(
+                children: [
+                  const Rating(score: 5),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'Muốn cho đi',
+                    style: theme.textTheme.bodyText1?.copyWith(
+                        color: Colors.grey[600]
+                    ),
+                    textAlign: TextAlign.end,
                   ),
-                  textAlign: TextAlign.end,
-                ),
-              ],
-            )
-          ],
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -216,30 +219,32 @@ class SellerInfoSection extends GetView<ProductScreenController> {
 
   Widget _buildAvatar(){
     final theme = Theme.of(Get.context!);
-    final sellerName = controller.sellerName.value;
-    final List<String> words = sellerName.split(' ');
-    final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
+    return Obx((){
+      final sellerName = controller.sellerName.value;
+      final List<String> words = sellerName.split(' ');
+      final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
 
-    if(controller.avatar.isEmpty){
-      return CircleAvatar(
-        radius: AVATAR_SIZE,
-        backgroundColor: theme.colorScheme.secondary,
-        child: Text(
-          shortWords.map((e) => e[0]).join(),
-          style: theme.textTheme.headline6!.copyWith(
-            color: Colors.white,
+      if(controller.avatar.isEmpty){
+        return CircleAvatar(
+          radius: AVATAR_SIZE,
+          backgroundColor: theme.colorScheme.secondary,
+          child: Text(
+            shortWords.map((e) => e[0]).join(),
+            style: theme.textTheme.headline6!.copyWith(
+              color: Colors.white,
+            ),
           ),
-        ),
-      );
-    }
+        );
+      }
 
-    return ExtendedImage.network(
-      resolveUrl(controller.avatar.value, HOST_URL),
-      fit: BoxFit.cover,
-      shape: BoxShape.circle,
-      width: AVATAR_SIZE * 2,
-      height: AVATAR_SIZE * 2,
-    );
+      return ExtendedImage.network(
+        resolveUrl(controller.avatar.value, HOST_URL),
+        fit: BoxFit.cover,
+        shape: BoxShape.circle,
+        width: AVATAR_SIZE * 2,
+        height: AVATAR_SIZE * 2,
+      );
+    });
   }
 }
 
@@ -255,66 +260,68 @@ class ProductPrimaryInfoSection extends GetView<ProductScreenController> {
       decoration: BoxDecoration(
           color: Colors.grey[200]
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 8.0
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    controller.name.value,
-                    style: theme.textTheme.subtitle1,
-                    // overflow: TextOverflow.ellipsis,
+      child: Obx(
+        () => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 8.0
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      controller.name.value,
+                      style: theme.textTheme.subtitle1,
+                      // overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                controller.description.value,
+                style: theme.textTheme.bodyText1,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Ngày đăng',
+                      style: theme.textTheme.bodyText1?.copyWith(
+                        color: Colors.grey[600]
+                      ),
+                    ),
+                    Text(
+                      controller.createdAt.value,
+                      style: theme.textTheme.bodyText1?.copyWith(
+                          color: Colors.grey[600]
+                      ),
+                    )
+                  ],
+                )
               ],
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Text(
-              controller.description.value,
-              style: theme.textTheme.bodyText1,
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    'Ngày đăng',
-                    style: theme.textTheme.bodyText1?.copyWith(
-                      color: Colors.grey[600]
-                    ),
-                  ),
-                  Text(
-                    controller.createdAt.value,
-                    style: theme.textTheme.bodyText1?.copyWith(
-                        color: Colors.grey[600]
-                    ),
-                  )
-                ],
-              )
-            ],
-          ),
-          const SizedBox(height: 16.0),
-          HeadlessTable(
-            striped: false,
-            matchBackground: true,
-            data: {
-              'Cách đây': '${_buildDistance()} km',
-              'Ngày hết hạn': controller.dueDate.value,
-              'Giờ có thể lấy': controller.pickupTime.value,
-            },
-          )
-        ],
+            const SizedBox(height: 16.0),
+            HeadlessTable(
+              striped: false,
+              matchBackground: true,
+              data: {
+                'Cách đây': '${_buildDistance()} km',
+                'Ngày hết hạn': controller.dueDate.value,
+                'Giờ có thể lấy': controller.pickupTime.value,
+              },
+            )
+          ],
+        ),
       ),
     );
   }
@@ -339,26 +346,28 @@ class ImageSlider extends GetView<ProductScreenController> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return CarouselSlider(
-      items: controller.images.map((item) => Container(
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.0),
+    return Obx(
+      () => CarouselSlider(
+        items: controller.images.map((item) => Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: ExtendedImage.network(
+            resolveUrl(item, HOST_URL),
+            // width: size.width,
+            fit: BoxFit.cover,
+          ),
+        )).toList(),
+        carouselController: controller.sliderController,
+        options: CarouselOptions(
+          enlargeCenterPage: true,
+          aspectRatio: 1.0,
+          viewportFraction: 1.0,
+          height: IMAGE_HEIGHT,
+          enableInfiniteScroll: false,
+          onPageChanged: (index, _) => controller.page = index
         ),
-        child: ExtendedImage.network(
-          resolveUrl(item, HOST_URL),
-          // width: size.width,
-          fit: BoxFit.cover,
-        ),
-      )).toList(),
-      carouselController: controller.sliderController,
-      options: CarouselOptions(
-        enlargeCenterPage: true,
-        aspectRatio: 1.0,
-        viewportFraction: 1.0,
-        height: IMAGE_HEIGHT,
-        enableInfiniteScroll: false,
-        onPageChanged: (index, _) => controller.page = index
       ),
     );
   }
@@ -400,7 +409,7 @@ class DotIndicator extends GetView<ProductScreenController> {
   }
 }
 
-class PickupSection extends GetView<ProductScreenController> {
+class PickupSection extends StatelessWidget {
   const PickupSection({Key? key}) : super(key: key);
 
   @override
@@ -432,7 +441,7 @@ class PickupSection extends GetView<ProductScreenController> {
               ],
             ),
           ),
-          PickupLocation(location: controller.wardLocation!)
+          const PickupLocation()
         ],
       ),
     );
@@ -440,12 +449,8 @@ class PickupSection extends GetView<ProductScreenController> {
 }
 
 
-class PickupLocation extends StatelessWidget {
-  final LatLng location;
-  const PickupLocation({
-    Key? key,
-    required this.location,
-  }) : super(key: key);
+class PickupLocation extends GetView<ProductScreenController> {
+  const PickupLocation({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -460,32 +465,44 @@ class PickupLocation extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.0),
       ),
-      child: FlutterMap(
-        options: MapOptions(
-          center: location,
-          zoom: 17.0,
-          maxZoom: 20.0,
-        ),
-        layers: [
-          TileLayerOptions(
-            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            subdomains: ['a', 'b', 'c'],
-          ),
-          MarkerLayerOptions(
-            markers: [
-              Marker(
-                width: 80.0,
-                height: 80.0,
-                point: location,
-                builder: (ctx) => const Icon(
-                  Icons.location_on,
-                  color: Colors.red,
-                  size: 36.0,
-                ),
+      child: Obx(
+        () {
+          if(controller.latitude.value == 0){
+            return const SizedBox();
+          }
+
+          final location = controller.wardLocation!;
+
+          return FlutterMap(
+            mapController: controller.mapController,
+            options: MapOptions(
+              center: location,
+              zoom: MAP_ZOOM_LEVEL,
+              maxZoom: 20.0,
+            ),
+            layers: [
+              TileLayerOptions(
+                urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                subdomains: ['a', 'b', 'c'],
+              ),
+              MarkerLayerOptions(
+                markers: [
+                  Marker(
+                    width: 80.0,
+                    height: 80.0,
+                    point: location,
+                    builder: (ctx) =>
+                    const Icon(
+                      Icons.location_on,
+                      color: Colors.red,
+                      size: 36.0,
+                    ),
+                  ),
+                ],
               ),
             ],
-          ),
-        ],
+          );
+        },
       ),
     );
   }
