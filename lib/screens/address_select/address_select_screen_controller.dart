@@ -1,7 +1,6 @@
 import 'package:forwa_app/datasource/repository/address_repo.dart';
-import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/address/address.dart';
-import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
+import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:get/get.dart';
 
 class AddressSelectScreenBinding extends Bindings {
@@ -11,10 +10,7 @@ class AddressSelectScreenBinding extends Bindings {
   }
 }
 
-class AddressSelectScreenController extends IndividualScreenController {
-
-  @override
-  String get screenName => ROUTE_SELECT_ADDRESS;
+class AddressSelectScreenController extends BaseController {
 
   var _alreadyFetch = false;
 

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
+import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:get/get.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 
 const LOGO_SIZE = 70.0;
 
-abstract class RatingController extends IndividualScreenController {
+abstract class RatingController extends BaseController {
 
   Future onRating(RatingDialogResponse ratingDialogResponse);
 

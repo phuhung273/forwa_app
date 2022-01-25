@@ -5,7 +5,7 @@ import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/address/address.dart';
 import 'package:forwa_app/screens/address_select/address_select_screen_controller.dart';
 import 'package:forwa_app/screens/base_controller/address_controller.dart';
-import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
+import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/profile_address/profile_address_screen_controller.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
@@ -17,10 +17,7 @@ class EditProfileAddressBinding extends Bindings {
   }
 }
 
-class EditProfileAddressController extends IndividualScreenController {
-
-  @override
-  String get screenName => ROUTE_EDIT_PROFILE_ADDRESS;
+class EditProfileAddressController extends BaseController {
 
   final LocalStorage _localStorage = Get.find();
 

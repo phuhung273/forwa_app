@@ -4,7 +4,6 @@ import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/create_order_request.dart';
-import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
 import 'package:forwa_app/screens/my_receivings/my_receivings_screen_controller.dart';
 import 'package:get/get.dart';
 
@@ -20,10 +19,7 @@ class TakeScreenBinding extends Bindings {
   }
 }
 
-class TakeScreenController extends IndividualScreenController {
-
-  @override
-  String get screenName => ROUTE_TAKE;
+class TakeScreenController extends BaseController {
 
   final LocalStorage _localStorage = Get.find();
 

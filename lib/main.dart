@@ -1,11 +1,11 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/screens/splash/splash_screen_controller.dart';
 import 'package:forwa_app/theme/theme.dart';
 import 'package:forwa_app/widgets/dismissible_keyboard.dart';
+import 'package:forwa_app/route/routing_observer.dart';
 import 'package:get/get.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'di/di.dart';
@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
+        routingCallback: RoutingObserver.observer,
       ),
     );
   }

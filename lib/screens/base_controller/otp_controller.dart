@@ -1,11 +1,11 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
+import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/widgets/firebase_otp_screen.dart';
 import 'package:get/get.dart';
 
-abstract class OtpController extends IndividualScreenController {
+class OtpController extends BaseController {
 
   Future verifyOtp({
     required String phone,

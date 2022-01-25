@@ -7,7 +7,7 @@ import 'package:forwa_app/mixins/reportable.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/report/user_report.dart';
 import 'package:forwa_app/schema/review/review.dart';
-import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
+import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/home/home_screen_controller.dart';
 import 'package:get/get.dart';
 
@@ -20,11 +20,8 @@ class PublicProfileScreenBinding extends Bindings {
 
 const userIdParam = 'user_id';
 
-class PublicProfileScreenController extends IndividualScreenController
+class PublicProfileScreenController extends BaseController
     with Reportable {
-
-  @override
-  String get screenName => ROUTE_PUBLIC_PROFILE;
 
   final UserRepo _userRepo = Get.find();
 

@@ -7,7 +7,7 @@ import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
-import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
+import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/take/take_screen_controller.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -29,10 +29,7 @@ enum ShareMethod {
   copyToClipboard
 }
 
-class ProductScreenController extends IndividualScreenController {
-
-  @override
-  String get screenName => ROUTE_PRODUCT;
+class ProductScreenController extends BaseController {
 
   final LocalStorage _localStorage = Get.find();
 

@@ -1,7 +1,6 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
-import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
@@ -16,6 +15,8 @@ import 'choose_receiver_screen_controller.dart';
 class ChooseReceiverScreen extends GetView<ChooseReceiverScreenController> {
 
   const ChooseReceiverScreen({Key? key}) : super(key: key);
+
+
 
   @override
   Widget build(BuildContext context) {

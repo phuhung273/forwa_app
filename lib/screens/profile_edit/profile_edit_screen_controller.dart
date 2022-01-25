@@ -8,7 +8,7 @@ import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/api_response.dart';
 import 'package:forwa_app/schema/user/user.dart';
-import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
+import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:forwa_app/screens/profile/profile_screen_controller.dart';
 import 'package:get/get.dart';
@@ -20,10 +20,7 @@ class ProfileEditScreenBinding extends Bindings {
   }
 }
 
-class ProfileEditScreenController extends IndividualScreenController {
-
-  @override
-  String get screenName => ROUTE_PROFILE_EDIT;
+class ProfileEditScreenController extends BaseController {
 
   final LocalStorage _localStorage = Get.find();
 

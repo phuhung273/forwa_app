@@ -1,6 +1,6 @@
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/route/route.dart';
-import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
+import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:get/get.dart';
 
 class ProfileScreenBinding extends Bindings {
@@ -10,10 +10,7 @@ class ProfileScreenBinding extends Bindings {
   }
 }
 
-class ProfileScreenController extends IndividualScreenController {
-
-  @override
-  String get screenName => ROUTE_PROFILE;
+class ProfileScreenController extends BaseController {
 
   final LocalStorage _localStorage = Get.find();
 

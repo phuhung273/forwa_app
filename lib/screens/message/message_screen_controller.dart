@@ -11,8 +11,8 @@ import 'package:forwa_app/schema/chat/chat_room.dart';
 import 'package:forwa_app/schema/chat/chat_socket_message.dart';
 import 'package:forwa_app/schema/chat/lazy_show_request.dart';
 import 'package:forwa_app/schema/chat/lazy_show_response.dart';
+import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
-import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
 import 'package:forwa_app/screens/chat/chat_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -24,10 +24,7 @@ class MessageScreenBinding extends Bindings {
   }
 }
 
-class MessageScreenController extends IndividualScreenController with WidgetsBindingObserver {
-
-  @override
-  String get screenName => ROUTE_MESSAGE;
+class MessageScreenController extends BaseController with WidgetsBindingObserver {
 
   late ChatScreenController _chatScreenController;
 

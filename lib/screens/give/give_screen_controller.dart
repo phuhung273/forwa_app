@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
+import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
@@ -23,10 +23,7 @@ class GiveScreenBinding extends Bindings {
 
 const DEFAULT_PRODUCT_ADD_QUANTITY = 5;
 
-class GiveScreenController extends IndividualScreenController {
-
-  @override
-  String get screenName => ROUTE_GIVE;
+class GiveScreenController extends BaseController {
 
   final LocalStorage _localStorage = Get.find();
 

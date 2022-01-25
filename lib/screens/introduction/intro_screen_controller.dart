@@ -1,6 +1,7 @@
 import 'package:forwa_app/datasource/local/local_storage.dart';
+import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/route/route.dart';
-import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
+import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/policy/policy_screen.dart';
 import 'package:get/get.dart';
 
@@ -11,10 +12,8 @@ class IntroScreenBinding extends Bindings {
   }
 }
 
-class IntroScreenController extends IndividualScreenController {
-
-  @override
-  String get screenName => ROUTE_INTRODUCTION;
+class IntroScreenController extends BaseController {
+  final AnalyticService _analyticService = Get.find();
 
   final LocalStorage _localStorage = Get.find();
 
@@ -22,11 +21,11 @@ class IntroScreenController extends IndividualScreenController {
   void onReady() {
     super.onReady();
 
-    analyticService.logTutorialBegin();
+    _analyticService.logTutorialBegin();
   }
 
   void done() {
-    analyticService.logTutorialComplete();
+    _analyticService.logTutorialComplete();
     _checkEULA();
   }
 

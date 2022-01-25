@@ -6,7 +6,6 @@ import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
-import 'package:forwa_app/screens/base_controller/individual_screen_controller.dart';
 import 'package:forwa_app/screens/take_success/take_success_screen_controller.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -20,10 +19,7 @@ class OrderScreenBinding extends Bindings {
 
 const productIdParamOrderScreen = 'product_id';
 
-class OrderScreenController extends IndividualScreenController {
-
-  @override
-  String get screenName => ROUTE_ORDER;
+class OrderScreenController extends BaseController {
 
   final OrderRepo _orderRepo = Get.find();
 
