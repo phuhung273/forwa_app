@@ -164,51 +164,56 @@ class OrderScreen extends GetView<OrderScreenController> {
 
   Widget _buildAvatar(){
     final theme = Theme.of(Get.context!);
-    final name = controller.sellerName.value;
-    final List<String> words = name.split(' ');
-    final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
 
-    if(controller.userImageUrl.isEmpty){
-      return CircleAvatar(
-        radius: AVATAR_SIZE,
-        backgroundColor: theme.colorScheme.secondary,
-        child: Text(
-          shortWords[0].isNotEmpty
-            ? shortWords.map((e) => e[0]).join()
-            : '',
-          style: theme.textTheme.bodyText1!.copyWith(
-            color: Colors.white,
+    return Obx((){
+      final name = controller.sellerName.value;
+      final List<String> words = name.split(' ');
+      final List<String> shortWords = words.length > 1 ? [words.first, words.last] : [words.first];
+
+      if(controller.userImageUrl.isEmpty){
+        return CircleAvatar(
+          radius: AVATAR_SIZE,
+          backgroundColor: theme.colorScheme.secondary,
+          child: Text(
+            shortWords[0].isNotEmpty
+              ? shortWords.map((e) => e[0]).join()
+              : '',
+            style: theme.textTheme.bodyText1!.copyWith(
+              color: Colors.white,
+            ),
           ),
-        ),
-      );
-    }
+        );
+      }
 
-    return ExtendedImage.network(
-      resolveUrl(controller.userImageUrl.value, HOST_URL),
-      fit: BoxFit.cover,
-      shape: BoxShape.circle,
-      width: AVATAR_SIZE * 2,
-      height: AVATAR_SIZE * 2,
-    );
+      return ExtendedImage.network(
+        resolveUrl(controller.userImageUrl.value, HOST_URL),
+        fit: BoxFit.cover,
+        shape: BoxShape.circle,
+        width: AVATAR_SIZE * 2,
+        height: AVATAR_SIZE * 2,
+      );
+    });
   }
 
   Widget _buildMainButton(){
-    if(controller.buyerReviewId.value == 0) {
-      return Center(
-        child: SecondaryActionContainer(
-          child: ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              primary: Colors.green,
-            ),
-            icon: const Icon(Icons.done),
-            onPressed: controller.takeSuccess,
-            label: const Text('Đánh giá'),
-          )
-        ),
-      );
-    }
+    return Obx((){
+      if(controller.buyerReviewId.value == 0) {
+        return Center(
+          child: SecondaryActionContainer(
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.green,
+              ),
+              icon: const Icon(Icons.done),
+              onPressed: controller.takeSuccess,
+              label: const Text('Đánh giá'),
+            )
+          ),
+        );
+      }
 
-    return const SizedBox();
+      return const SizedBox();
+    });
   }
 }
 

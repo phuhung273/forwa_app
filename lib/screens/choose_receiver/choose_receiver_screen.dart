@@ -16,8 +16,6 @@ class ChooseReceiverScreen extends GetView<ChooseReceiverScreenController> {
 
   const ChooseReceiverScreen({Key? key}) : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

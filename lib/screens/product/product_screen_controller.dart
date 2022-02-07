@@ -33,7 +33,7 @@ enum ShareMethod {
 
 const MAP_ZOOM_LEVEL = 17.0;
 
-const PARAM_PRODUCT_ID = 'product_id';
+const productIdParamProductScreen = 'product_id';
 
 class ProductScreenController extends NotificationOpenableController {
 
@@ -75,7 +75,7 @@ class ProductScreenController extends NotificationOpenableController {
 
   @override
   void onNotificationReload(Map parameters){
-    id = parameters[PARAM_PRODUCT_ID];
+    id = parameters[productIdParamProductScreen];
     onReady();
   }
 
@@ -137,21 +137,14 @@ class ProductScreenController extends NotificationOpenableController {
   }
 
   static void openOrReloadScreenOnNotificationClick(int productId){
-    if(Get.currentRoute == ROUTE_PRODUCT){
+    if(getEndPoint(Get.currentRoute) == ROUTE_PRODUCT){
       final NavigationController navigationController = Get.find();
       navigationController.resetScreen(ROUTE_PRODUCT, {
-        PARAM_PRODUCT_ID: productId
+        productIdParamProductScreen: productId
       });
     } else {
-      openScreen(productId);
+      Get.toNamed(ROUTE_PRODUCT, arguments: productId);
     }
-  }
-
-  static void openScreenOnNotificationClick(int productId){
-    Get.toNamed(
-      ROUTE_PRODUCT,
-      arguments: productId
-    );
 
     final AnalyticService analyticService = Get.find();
     analyticService.logClickUploadNotification(productId);

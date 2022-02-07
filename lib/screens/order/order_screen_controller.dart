@@ -3,9 +3,11 @@ import 'package:forwa_app/datasource/repository/order_repo.dart';
 import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
+import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
-import 'package:forwa_app/screens/base_controller/base_controller.dart';
+import 'package:forwa_app/screens/base_controller/navigation_controller.dart';
+import 'package:forwa_app/screens/base_controller/notification_openable_controller.dart';
 import 'package:forwa_app/screens/take_success/take_success_screen_controller.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -19,13 +21,15 @@ class OrderScreenBinding extends Bindings {
 
 const productIdParamOrderScreen = 'product_id';
 
-class OrderScreenController extends BaseController {
+class OrderScreenController extends NotificationOpenableController {
+
+  @override
+  String get screenName => ROUTE_ORDER;
 
   final OrderRepo _orderRepo = Get.find();
 
   final LocationService _locationService = Get.find();
 
-  bool isNotificationStart = false;
   int? _productId;
 
   final sellerName = ''.obs;
@@ -44,10 +48,14 @@ class OrderScreenController extends BaseController {
   void onInit() {
     super.onInit();
     _productId = int.tryParse(Get.parameters[productIdParamOrderScreen]!);
-    if(Get.parameters[notificationStartParam] == NOTIFICATION_START_TRUE){
-      isNotificationStart = true;
-    }
     _locationService.here().then((value) => here = value);
+  }
+
+
+  @override
+  onNotificationReload(Map parameters) {
+    _productId = parameters[productIdParamOrderScreen];
+    onReady();
   }
 
   @override
@@ -100,13 +108,20 @@ class OrderScreenController extends BaseController {
     );
   }
 
-  static void openScreenOnNotificationClick(int productId, int orderId){
-    Get.toNamed(
-      ROUTE_ORDER,
-      parameters: {
-        productIdParamOrderScreen: productId.toString(),
-      }
-    );
+  static void openOrReloadScreenOnNotificationClick(int productId, int orderId){
+    if(getEndPoint(Get.currentRoute) == ROUTE_ORDER){
+      final NavigationController navigationController = Get.find();
+      navigationController.resetScreen(ROUTE_ORDER, {
+        productIdParamOrderScreen: productId
+      });
+    } else {
+      Get.toNamed(
+        ROUTE_ORDER,
+        parameters: {
+          productIdParamOrderScreen: productId.toString(),
+        }
+      );
+    }
 
     final AnalyticService analyticService = Get.find();
     analyticService.logClickSelectedNotification(orderId, productId);

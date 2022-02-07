@@ -7,13 +7,15 @@ import 'package:forwa_app/datasource/repository/order_repo.dart' hide errorCodeM
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
+import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/schema/product/product.dart';
-import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
+import 'package:forwa_app/screens/base_controller/navigation_controller.dart';
+import 'package:forwa_app/screens/base_controller/notification_openable_controller.dart';
+import 'package:forwa_app/screens/base_controller/product_success_controller.dart';
 import 'package:forwa_app/screens/give_success/give_success_screen_controller.dart';
-import 'package:forwa_app/screens/my_givings/my_giving_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -27,18 +29,18 @@ class ChooseReceiverScreenBinding extends Bindings {
 const productIdParamChooseReceiver = 'product_id';
 
 
-class ChooseReceiverScreenController extends BaseController
+class ChooseReceiverScreenController extends NotificationOpenableController
     with WidgetsBindingObserver {
 
-  late MyGivingsScreenController _myGivingsScreenController;
+  @override
+  String get screenName => ROUTE_CHOOSE_RECEIVER;
 
   final ProductRepo _productRepo = Get.find();
-
   final OrderRepo _orderRepo = Get.find();
   final PersistentLocalStorage _persistentLocalStorage = Get.find();
   final ChatController _chatController = Get.find();
+  final ProductSuccessController _productSuccessController = Get.find();
 
-  bool isNotificationStart = false;
   int? _productId;
   final finish = true.obs;
 
@@ -49,11 +51,12 @@ class ChooseReceiverScreenController extends BaseController
     super.onInit();
     WidgetsBinding.instance?.addObserver(this);
     _productId = int.tryParse(Get.parameters[productIdParamChooseReceiver]!);
-    if(Get.parameters[notificationStartParam] == NOTIFICATION_START_TRUE){
-      isNotificationStart = true;
-    } else {
-      _myGivingsScreenController = Get.find();
-    }
+  }
+
+  @override
+  onNotificationReload(Map parameters) {
+    _productId = parameters[productIdParamChooseReceiver];
+    onReady();
   }
 
   @override
@@ -211,9 +214,7 @@ class ChooseReceiverScreenController extends BaseController
 
     await showSuccessDialog(message: 'Thành công');
 
-    if(!isNotificationStart){
-      _myGivingsScreenController.changeProductIdToSuccess(response.data!.id!);
-    }
+    _productSuccessController.updateToSuccess(response.data!.id!);
 
     finish.value = true;
   }
@@ -243,13 +244,20 @@ class ChooseReceiverScreenController extends BaseController
     analyticService.logSelectProductItem(productId);
   }
 
-  static void openScreenOnNotificationClick(int productId, int orderId){
-    Get.toNamed(
-      ROUTE_CHOOSE_RECEIVER,
-      parameters: {
-        productIdParamChooseReceiver: productId.toString(),
-      }
-    );
+  static void openOrReloadScreenOnNotificationClick(int productId, int orderId){
+    if(getEndPoint(Get.currentRoute) == ROUTE_CHOOSE_RECEIVER){
+      final NavigationController navigationController = Get.find();
+      navigationController.resetScreen(ROUTE_CHOOSE_RECEIVER, {
+        productIdParamChooseReceiver: productId
+      });
+    } else {
+      Get.toNamed(
+        ROUTE_CHOOSE_RECEIVER,
+        parameters: {
+          productIdParamChooseReceiver: productId.toString(),
+        }
+      );
+    }
 
     final AnalyticService analyticService = Get.find();
     analyticService.logClickProcessingNotification(orderId, productId);

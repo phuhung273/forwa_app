@@ -1,4 +1,5 @@
 import 'package:forwa_app/di/analytics/analytic_service.dart';
+import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:get/get.dart';
 
@@ -18,7 +19,7 @@ class RoutingObserver {
       routing.current != ROUTE_MAIN &&
       routing.current.isNotEmpty
     ) {
-      _analyticService.setCurrentScreen(routing.current);
+      _analyticService.setCurrentScreen(getEndPoint(routing.current));
     }
   }
 }

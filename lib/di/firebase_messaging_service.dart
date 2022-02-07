@@ -139,18 +139,18 @@ class FirebaseMessagingService {
         case APP_NOTIFICATION_TYPE_PROCESSING:
           final notification = AppNotification.fromJson(jsonDecode(data['data']));
           final order = Order.fromJson(jsonDecode(data['order']));
-          ChooseReceiverScreenController.openScreenOnNotificationClick(notification.product.id!, order.id);
+          ChooseReceiverScreenController.openOrReloadScreenOnNotificationClick(notification.product.id!, order.id);
           break;
 
         case APP_NOTIFICATION_TYPE_SELECTED:
           final notification = AppNotification.fromJson(jsonDecode(data['data']));
           final order = Order.fromJson(jsonDecode(data['order']));
-          OrderScreenController.openScreenOnNotificationClick(notification.product.id!, order.id);
+          OrderScreenController.openOrReloadScreenOnNotificationClick(notification.product.id!, order.id);
           break;
 
         case APP_NOTIFICATION_TYPE_UPLOAD:
           final notification = AppNotification.fromJson(jsonDecode(data['data']));
-          ProductScreenController.openScreenOnNotificationClick(notification.product.id!);
+          ProductScreenController.openOrReloadScreenOnNotificationClick(notification.product.id!);
           break;
 
         default:

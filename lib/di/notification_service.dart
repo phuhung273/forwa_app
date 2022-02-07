@@ -2,9 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:forwa_app/constants.dart';
-import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/di/firebase_messaging_service.dart';
-import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
@@ -22,7 +20,6 @@ const notificationStartFromTerminatedParam = 'notification_start_from_terminated
 class NotificationService {
 
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = Get.find();
-  final AnalyticService _analyticService = Get.find();
 
   final _platformChannelSpecifics = const NotificationDetails(
     android: AndroidNotificationDetails(
@@ -105,13 +102,13 @@ class NotificationService {
       case APP_NOTIFICATION_TYPE_PROCESSING:
         final notification = AppNotification.fromJson(jsonDecode(data['data']));
         final order = Order.fromJson(jsonDecode(data['order']));
-        ChooseReceiverScreenController.openScreenOnNotificationClick(notification.product.id!, order.id);
+        ChooseReceiverScreenController.openOrReloadScreenOnNotificationClick(notification.product.id!, order.id);
         break;
 
       case APP_NOTIFICATION_TYPE_SELECTED:
         final notification = AppNotification.fromJson(jsonDecode(data['data']));
         final order = Order.fromJson(jsonDecode(data['order']));
-        OrderScreenController.openScreenOnNotificationClick(notification.product.id!, order.id);
+        OrderScreenController.openOrReloadScreenOnNotificationClick(notification.product.id!, order.id);
         break;
 
       case APP_NOTIFICATION_TYPE_UPLOAD:
