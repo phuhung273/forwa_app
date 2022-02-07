@@ -96,7 +96,7 @@ class NotificationService {
 
     switch(data['type']){
       case NOTIFICATION_TYPE_CHAT:
-        MessageScreenController.openScreenOnNotificationClick(data['room']);
+        MessageScreenController.openOrReloadScreenOnNotificationClick(data['room']);
         break;
 
       case APP_NOTIFICATION_TYPE_PROCESSING:

@@ -5,8 +5,8 @@ import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/mixins/lazy_load.dart';
 import 'package:forwa_app/schema/product/lazy_giving_request.dart';
 import 'package:forwa_app/schema/product/product.dart';
-import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/base_controller/main_tab_controller.dart';
+import 'package:forwa_app/screens/base_controller/order_controller.dart';
 import 'package:forwa_app/screens/base_controller/product_success_controller.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:get/get.dart';
@@ -18,7 +18,7 @@ class MyGivingsScreenController extends MainTabController
 
   final LocalStorage _localStorage = Get.find();
 
-  final AppNotificationController _appNotificationController = Get.find();
+  final OrderController _orderController = Get.find();
   final ProductSuccessController _productSuccessController = Get.find();
 
   final products = List<Product>.empty().obs;
@@ -36,7 +36,7 @@ class MyGivingsScreenController extends MainTabController
   void onInit(){
     super.onInit();
 
-    _appNotificationController.processingOrderStream.listen((event) {
+    _orderController.processingOrderStream.listen((event) {
       if(loggedIn){
         increaseOrderOfProductId(event.productId);
       }

@@ -31,6 +31,7 @@ import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/screens/base_controller/navigation_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
+import 'package:forwa_app/screens/base_controller/order_controller.dart';
 import 'package:forwa_app/screens/base_controller/product_success_controller.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -75,6 +76,7 @@ Future configureDependenciesBeforeFirebase() async {
   Get.put(ChatController());
   Get.put(NavigationController());
   Get.put(ProductSuccessController());
+  Get.put(OrderController());
 
   Get.put(GoogleSignIn());
   Get.put(LocationService());

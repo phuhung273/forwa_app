@@ -8,13 +8,15 @@ import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/di/chat_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
+import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/chat/chat_room.dart';
 import 'package:forwa_app/schema/chat/chat_socket_message.dart';
 import 'package:forwa_app/schema/chat/lazy_show_request.dart';
 import 'package:forwa_app/schema/chat/lazy_show_response.dart';
-import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
+import 'package:forwa_app/screens/base_controller/navigation_controller.dart';
+import 'package:forwa_app/screens/base_controller/notification_openable_controller.dart';
 import 'package:forwa_app/screens/chat/chat_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -26,7 +28,12 @@ class MessageScreenBinding extends Bindings {
   }
 }
 
-class MessageScreenController extends BaseController with WidgetsBindingObserver {
+const roomIdParamMessageScreen = 'room_id';
+
+class MessageScreenController extends NotificationOpenableController with WidgetsBindingObserver {
+
+  @override
+  String get screenName => ROUTE_MESSAGE;
 
   late ChatScreenController _chatScreenController;
 
@@ -36,14 +43,13 @@ class MessageScreenController extends BaseController with WidgetsBindingObserver
 
   final LocalStorage _localStorage = Get.find();
 
-  final destinationID = Get.arguments as String;
+  late String destinationID;
 
   final messages = List<ChatSocketMessage>.empty().obs;
 
   final roomName = ''.obs;
 
   int? _userId;
-  bool isNotificationStart = false;
   bool isNotificationStartFromTerminated = false;
   bool _stopLazyLoad = false;
 
@@ -57,6 +63,8 @@ class MessageScreenController extends BaseController with WidgetsBindingObserver
     WidgetsBinding.instance?.addObserver(this);
     _userId = _localStorage.getUserID();
 
+    destinationID = Get.arguments as String;
+
     if(Get.parameters[notificationStartParam] == NOTIFICATION_START_TRUE){
       isNotificationStart = true;
       _setupNotificationStart();
@@ -67,6 +75,12 @@ class MessageScreenController extends BaseController with WidgetsBindingObserver
     } else {
       _setupNormal();
     }
+  }
+
+  @override
+  onNotificationReload(Map parameters) {
+    destinationID = parameters[roomIdParamMessageScreen];
+    _setupNotificationStart();
   }
 
   @override
@@ -198,14 +212,21 @@ class MessageScreenController extends BaseController with WidgetsBindingObserver
     );
   }
 
-  static void openScreenOnNotificationClick(String roomId){
-    Get.toNamed(
-      ROUTE_MESSAGE,
-      arguments: roomId,
-      parameters: {
-        notificationStartParam: NOTIFICATION_START_TRUE
-      }
-    );
+  static void openOrReloadScreenOnNotificationClick(String roomId){
+    if(getEndPoint(Get.currentRoute) == ROUTE_MESSAGE){
+      final NavigationController navigationController = Get.find();
+      navigationController.resetScreen(ROUTE_MESSAGE, {
+        roomIdParamMessageScreen: roomId
+      });
+    } else {
+      Get.toNamed(
+        ROUTE_MESSAGE,
+        arguments: roomId,
+        parameters: {
+          notificationStartParam: NOTIFICATION_START_TRUE
+        }
+      );
+    }
 
     final AnalyticService analyticService = Get.find();
     analyticService.logClickChatNotification(roomId);

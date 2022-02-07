@@ -1,8 +1,7 @@
-import 'dart:convert';
+import 'dart:async';
 
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
-import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/order_repo.dart' hide errorCodeMap;
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/di/analytics/analytic_service.dart';
@@ -14,6 +13,7 @@ import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/base_controller/navigation_controller.dart';
 import 'package:forwa_app/screens/base_controller/notification_openable_controller.dart';
+import 'package:forwa_app/screens/base_controller/order_controller.dart';
 import 'package:forwa_app/screens/base_controller/product_success_controller.dart';
 import 'package:forwa_app/screens/give_success/give_success_screen_controller.dart';
 import 'package:get/get.dart';
@@ -29,28 +29,34 @@ class ChooseReceiverScreenBinding extends Bindings {
 const productIdParamChooseReceiver = 'product_id';
 
 
-class ChooseReceiverScreenController extends NotificationOpenableController
-    with WidgetsBindingObserver {
+class ChooseReceiverScreenController extends NotificationOpenableController{
 
   @override
   String get screenName => ROUTE_CHOOSE_RECEIVER;
 
   final ProductRepo _productRepo = Get.find();
   final OrderRepo _orderRepo = Get.find();
-  final PersistentLocalStorage _persistentLocalStorage = Get.find();
   final ChatController _chatController = Get.find();
   final ProductSuccessController _productSuccessController = Get.find();
+  final OrderController _orderController = Get.find();
 
   int? _productId;
   final finish = true.obs;
 
   final orders = List<Order>.empty().obs;
 
+  StreamSubscription? _processingOrderStreamSubscription;
+
   @override
   void onInit() {
     super.onInit();
-    WidgetsBinding.instance?.addObserver(this);
     _productId = int.tryParse(Get.parameters[productIdParamChooseReceiver]!);
+
+    _processingOrderStreamSubscription = _orderController.processingOrderStream.listen((event) {
+      if(event.productId == _productId){
+        orders.add(event);
+      }
+    });
   }
 
   @override
@@ -73,28 +79,6 @@ class ChooseReceiverScreenController extends NotificationOpenableController
 
     orders.assignAll(response.data?.orders ?? []);
     finish.value = response.data?.product.status == ProductStatus.finish;
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-
-    if(state == AppLifecycleState.paused){
-      // print('Im dead');
-    }
-
-    final lastState = WidgetsBinding.instance?.lifecycleState;
-    if(lastState == AppLifecycleState.resumed){
-      // print('Im alive');
-      final backgroundNotificationList = await _persistentLocalStorage.getBackgroundProcessingOrderList();
-      if(backgroundNotificationList != null && backgroundNotificationList.isNotEmpty){
-        for (final element in backgroundNotificationList) {
-          final order = Order.fromJson(jsonDecode(element));
-          orders.add(order);
-        }
-        _persistentLocalStorage.eraseBackgroundProcessingOrderList();
-      }
-    }
   }
 
   Future pickReceiver(int orderId) async {
@@ -278,7 +262,7 @@ class ChooseReceiverScreenController extends NotificationOpenableController
 
   @override
   void onClose(){
-    WidgetsBinding.instance?.removeObserver(this);
+    _processingOrderStreamSubscription?.cancel();
     super.onClose();
   }
 }

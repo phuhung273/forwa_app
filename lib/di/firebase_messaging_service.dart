@@ -6,15 +6,14 @@ import 'package:flutter/foundation.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/di/notification_service.dart';
-import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:forwa_app/schema/chat/chat_room.dart';
 import 'package:forwa_app/schema/order/order.dart';
 import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
+import 'package:forwa_app/screens/base_controller/order_controller.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
 import 'package:forwa_app/screens/message/message_screen_controller.dart';
-import 'package:forwa_app/screens/my_givings/my_giving_screen_controller.dart';
 import 'package:forwa_app/screens/my_receivings/my_receivings_screen_controller.dart';
 import 'package:forwa_app/screens/order/order_screen_controller.dart';
 import 'package:forwa_app/screens/product/product_screen_controller.dart';
@@ -27,9 +26,9 @@ class FirebaseMessagingService {
 
   final NotificationService _notificationService = Get.find();
   final ChatController _chatController = Get.find();
+  final OrderController _orderController = Get.find();
   final AppNotificationController _appNotificationController = Get.find();
   final MyReceivingsScreenController _myReceivingsScreenController = Get.find();
-  final MyGivingsScreenController _myGivingsScreenController = Get.find();
   final LocalStorage _localStorage = Get.find();
 
   void init() {
@@ -84,7 +83,8 @@ class FirebaseMessagingService {
   _handleForegroundProcessingOrderNotification(Map<String, dynamic> data){
     final notification = AppNotification.fromJson(jsonDecode(data['data']));
     _appNotificationController.increaseMyGiving(notification);
-    _myGivingsScreenController.increaseOrderOfProductId(notification.product.id!);
+    final order = Order.fromJson(jsonDecode(data['order']));
+    _orderController.receiveProcessingOrder(order);
   }
 
   _handleForegroundSelectedOrderNotification(Map<String, dynamic> data){
@@ -133,7 +133,7 @@ class FirebaseMessagingService {
       final data = message.data;
       switch(data['type']){
         case NOTIFICATION_TYPE_CHAT:
-          MessageScreenController.openScreenOnNotificationClick(data['room']);
+          MessageScreenController.openOrReloadScreenOnNotificationClick(data['room']);
           break;
 
         case APP_NOTIFICATION_TYPE_PROCESSING:

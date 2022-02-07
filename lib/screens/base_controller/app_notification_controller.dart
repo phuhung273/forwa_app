@@ -7,6 +7,7 @@ import 'package:forwa_app/datasource/local/persistent_local_storage.dart';
 import 'package:forwa_app/datasource/repository/app_notification_repo.dart';
 import 'package:forwa_app/schema/app_notification/app_notification.dart';
 import 'package:forwa_app/schema/order/order.dart';
+import 'package:forwa_app/screens/base_controller/order_controller.dart';
 import 'package:get/get.dart';
 
 class AppNotificationController extends GetxController
@@ -18,18 +19,14 @@ class AppNotificationController extends GetxController
 
   final PersistentLocalStorage _persistentLocalStorage = Get.find();
 
+  final OrderController _orderController = Get.find();
+
   final notifications = List<AppNotification>.empty().obs;
   int? _userId;
 
   final myGivingCount = 0.obs;
   final myReceivingCount = 0.obs;
   final notificationCount = 0.obs;
-
-  final _processingOrderStreamController = StreamController<Order>.broadcast();
-  final _selectedOrderStreamController = StreamController<Order>.broadcast();
-
-  Stream<Order> get processingOrderStream => _processingOrderStreamController.stream.cast<Order>();
-  Stream<Order> get selectedOrderStream => _selectedOrderStreamController.stream.cast<Order>();
 
   @override
   void onInit() {
@@ -129,7 +126,7 @@ class AppNotificationController extends GetxController
     ){
       for (final element in backgroundNotificationList) {
         final order = Order.fromJson(jsonDecode(element));
-        _processingOrderStreamController.sink.add(order);
+        _orderController.receiveProcessingOrder(order);
       }
     }
     _persistentLocalStorage.eraseBackgroundProcessingOrderList();
@@ -143,7 +140,7 @@ class AppNotificationController extends GetxController
     ){
       for (final element in backgroundNotificationList) {
         final order = Order.fromJson(jsonDecode(element));
-        _selectedOrderStreamController.sink.add(order);
+        _orderController.receiveSelectedOrder(order);
       }
     }
     _persistentLocalStorage.eraseBackgroundProcessingOrderList();
