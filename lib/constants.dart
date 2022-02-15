@@ -38,10 +38,10 @@ const CHAT_HOST_URL = 'http://159.223.58.233';
 const CHAT_PUBLIC_URL = 'http://159.223.58.233/chat_public';
 const CHAT_API_URL = 'http://159.223.58.233/chat';
 
-// const HOST_URL = 'http://192.168.1.11:8000';
-// const CHAT_HOST_URL = 'http://192.168.1.11:3000';
-// const CHAT_PUBLIC_URL = 'http://192.168.1.11:3000/public';
-// const CHAT_API_URL = 'http://192.168.1.11:3000';
+// const HOST_URL = 'http://192.168.1.9:8000';
+// const CHAT_HOST_URL = 'http://192.168.1.9:3000';
+// const CHAT_PUBLIC_URL = 'http://192.168.1.9:3000/public';
+// const CHAT_API_URL = 'http://192.168.1.9:3000';
 
 // // Apple Signin for Android
 // const APPLE_LOGIN_HOST = 'fringe-earthy-earwig.glitch.me';
