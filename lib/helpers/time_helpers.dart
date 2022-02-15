@@ -1,5 +1,6 @@
 
 
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 int dayDifferenceFromNow(DateTime to){
@@ -13,4 +14,9 @@ String getDateNow(){
 
 DateTime string2DateTime(String str){
   return DateFormat('yyyy-MM-dd').parse(str);
+}
+
+String timeOfDayToString(TimeOfDay time){
+  String minute = time.minute < 10 ? '0${time.minute}' : time.minute.toString();
+  return '${time.hourOfPeriod} : $minute ${time.period.name}';
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:forwa_app/helpers/time_helpers.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,9 @@ class GiveScreenBinding extends Bindings {
     Get.put(AddressSelectScreenController());
   }
 }
+
+const initialFrom = TimeOfDay(hour: 8, minute: 0);
+const initialTo = TimeOfDay(hour: 16, minute: 0);
 
 const DEFAULT_PRODUCT_ADD_QUANTITY = 5;
 
@@ -56,8 +60,8 @@ class GiveScreenController extends BaseController {
   void onInit() {
     super.onInit();
     _userId = _localStorage.getUserID();
-    _from = '8:00 AM';
-    _to = '4:00 PM';
+    _from = timeOfDayToString(initialFrom);
+    _to = timeOfDayToString(initialTo);
   }
 
 
