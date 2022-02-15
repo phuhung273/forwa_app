@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forwa_app/helpers/time_helpers.dart';
 
 import 'text_field_container.dart';
 
@@ -52,7 +53,7 @@ class _TimePickerInputFieldState extends State<TimePickerInputField> {
         );
 
         if(result != null){
-          final time = '${result.hourOfPeriod}: ${result.minute} ${result.period.name}';
+          final time = timeOfDayToString(result);
           controller.text = time;
           widget.onChange(time);
         }

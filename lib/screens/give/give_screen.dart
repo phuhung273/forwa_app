@@ -1,6 +1,7 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:form_validator/form_validator.dart';
+import 'package:forwa_app/helpers/time_helpers.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/screens/address_select/address_select_screen_controller.dart';
 import 'package:forwa_app/widgets/app_level_action_container.dart';
@@ -90,8 +91,9 @@ class GiveScreen extends GetView<GiveScreenController> {
                 ),
                 AppLevelActionContainer(
                   child: TimePickerInputField(
-                    hintText: 'Từ',
+                    hintText: timeOfDayToString(initialFrom),
                     onChange: (time) => controller.from = time,
+                    initialTime: initialFrom,
                   ),
                 ),
                 AppLevelActionContainer(
@@ -107,8 +109,9 @@ class GiveScreen extends GetView<GiveScreenController> {
                 ),
                 AppLevelActionContainer(
                   child: TimePickerInputField(
-                    hintText: 'Tới',
+                    hintText: timeOfDayToString(initialTo),
                     onChange: (time) => controller.from = time,
+                    initialTime: initialTo,
                   ),
                 ),
                 const Divider(),
