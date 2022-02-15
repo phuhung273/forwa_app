@@ -48,7 +48,7 @@ dependencies:
   carousel_slider: ^4.0.0
   flutter_rating_bar: ^4.0.0
   flutter_map: ^0.14.0
-  geolocator: ^8.0.3
+  geolocator: ^8.2.0
   badges: ^2.0.2
   image_cropper: ^1.4.1
   google_sign_in: ^5.1.1
