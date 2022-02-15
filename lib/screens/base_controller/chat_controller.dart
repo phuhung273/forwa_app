@@ -108,7 +108,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     });
   }
 
-  void fetchUnread(){
+  Future fetchUnread() async {
     _chatRepo.getUnread().then((response){
       if(!response.isSuccess || response.data == null){
         return;
