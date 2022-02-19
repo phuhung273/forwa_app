@@ -1,6 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/screens/splash/splash_screen_controller.dart';
 import 'package:forwa_app/theme/theme.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'di/di.dart';
 
 void main() async {
+  await dotenv.load();
   await configureDependenciesBeforeFirebase();
   await Firebase.initializeApp();
   await FirebaseAnalytics.instance.logAppOpen();

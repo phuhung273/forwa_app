@@ -5,7 +5,6 @@ import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/auth_repo.dart';
 import 'package:forwa_app/di/analytics/analytic_service.dart';
 import 'package:forwa_app/helpers/email_helper.dart';
-import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/api_response.dart';
 import 'package:forwa_app/schema/auth/apple_login_request.dart';
 import 'package:forwa_app/schema/auth/facebook_login_request.dart';
@@ -22,7 +21,6 @@ import 'package:forwa_app/screens/main/main_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:uuid/uuid.dart';
 
 class LoginScreenBinding extends Bindings {
   @override
@@ -45,8 +43,6 @@ class LoginScreenController extends BaseController {
 
   final GoogleSignIn _googleSignIn = Get.find();
   final AnalyticService _analyticService = Get.find();
-
-  final uuid = const Uuid();
 
   var result = ''.obs;
 
@@ -271,5 +267,12 @@ class LoginScreenController extends BaseController {
     final deviceName = _localStorage.getDeviceName()!;
 
     return FirebaseToken(value: firebaseTokenValue, deviceName: deviceName);
+  }
+
+  @override
+  void onClose(){
+    usernameController.dispose();
+    passwordController.dispose();
+    super.onClose();
   }
 }

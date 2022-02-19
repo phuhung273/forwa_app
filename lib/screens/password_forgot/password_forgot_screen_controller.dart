@@ -27,9 +27,6 @@ enum ForgotPasswordMethod{
 
 class PasswordForgotScreenController extends OtpController {
 
-  @override
-  String get screenName => ROUTE_PASSWORD_FORGOT;
-
   final PasswordRepo _passwordRepo = Get.find();
 
   var result = ''.obs;
@@ -107,5 +104,11 @@ class PasswordForgotScreenController extends OtpController {
     await showSuccessDialog(message: message);
 
     Get.back();
+  }
+
+  @override
+  void onClose(){
+    usernameController.dispose();
+    super.onClose();
   }
 }

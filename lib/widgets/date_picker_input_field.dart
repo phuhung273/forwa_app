@@ -79,4 +79,10 @@ class _DatePickerInputFieldState extends State<DatePickerInputField> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 }

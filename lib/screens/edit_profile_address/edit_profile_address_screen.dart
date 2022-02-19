@@ -40,75 +40,103 @@ class EditProfileAddressScreen extends GetView<EditProfileAddressController> {
               child: Obx(
                 () => Column(
                   children: [
-                    TextFieldContainer(
-                      child: DropdownButtonFormField(
-                        hint: const Text('Thành phố/Tỉnh'),
-                        isExpanded: true,
-                        items: controller.cities.map((value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          _districtKey.currentState?.reset();
-                          controller.districtController.clear();
-                          _wardKey.currentState?.reset();
-                          controller.wardController.clear();
-                          controller.city = value;
-                        }
-                      ),
+                    // TextFieldContainer(
+                    //   child: DropdownButtonFormField(
+                    //     hint: const Text('Thành phố/Tỉnh'),
+                    //     isExpanded: true,
+                    //     items: controller.cities.map((value) {
+                    //       return DropdownMenuItem(
+                    //         value: value,
+                    //         child: Text(value),
+                    //       );
+                    //     }).toList(),
+                    //     onChanged: (value) {
+                    //       _districtKey.currentState?.reset();
+                    //       controller.districtController.clear();
+                    //       _wardKey.currentState?.reset();
+                    //       controller.wardController.clear();
+                    //       controller.city = value;
+                    //     }
+                    //   ),
+                    // ),
+                    // TextFieldContainer(
+                    //   child: DropdownButtonFormField(
+                    //     key: _districtKey,
+                    //     hint: const Text('Quận/Huyện'),
+                    //     isExpanded: true,
+                    //     items: controller.districts.map((value) {
+                    //       return DropdownMenuItem(
+                    //         value: value,
+                    //         child: Text(value),
+                    //       );
+                    //     }).toList(),
+                    //     onChanged: (value) {
+                    //       _wardKey.currentState?.reset();
+                    //       controller.wardController.clear();
+                    //       controller.district = value;
+                    //     }
+                    //   ),
+                    // ),
+                    // TextFieldContainer(
+                    //   child: DropdownButtonFormField(
+                    //     key: _wardKey,
+                    //     hint: const Text('Phường/Xã'),
+                    //     isExpanded: true,
+                    //     items: controller.wards.map((value) {
+                    //       return DropdownMenuItem(
+                    //         value: value,
+                    //         child: FittedBox(
+                    //           child: Text(value)
+                    //         ),
+                    //       );
+                    //     }).toList(),
+                    //     onChanged: (value) => controller.ward = value
+                    //   ),
+                    // ),
+                    // InputField(
+                    //   hintText: 'Đường',
+                    //   autofillHints: const [AutofillHints.streetAddressLevel1],
+                    //   controller: controller.streetController,
+                    //   textCapitalization: TextCapitalization.words,
+                    //   validator: ValidationBuilder(requiredMessage: 'Ví dụ: 1 Lê Duẩn')
+                    //       .build(),
+                    // ),
+                    InputField(
+                      hintText: 'Địa chỉ',
+                      controller: controller.addressController,
                     ),
-                    TextFieldContainer(
-                      child: DropdownButtonFormField(
-                        key: _districtKey,
-                        hint: const Text('Quận/Huyện'),
-                        isExpanded: true,
-                        items: controller.districts.map((value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          _wardKey.currentState?.reset();
-                          controller.wardController.clear();
-                          controller.district = value;
-                        }
-                      ),
-                    ),
-                    TextFieldContainer(
-                      child: DropdownButtonFormField(
-                        key: _wardKey,
-                        hint: const Text('Phường/Xã'),
-                        isExpanded: true,
-                        items: controller.wards.map((value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: FittedBox(
-                              child: Text(value)
+                    if(controller.suggestions.isNotEmpty)
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: controller.suggestions.length,
+                        itemBuilder: (context, index){
+                          final suggestion = controller.suggestions[index];
+
+                          return ListTile(
+                            leading: const CircleAvatar(
+                              child: Icon(
+                                Icons.pin_drop,
+                                color: Colors.white,
+                              ),
                             ),
+                            title: Text(
+                              suggestion.description!,
+                              style: theme.textTheme.bodyText1,
+                            ),
+                            onTap: () => controller.selectSuggestions(suggestion),
                           );
-                        }).toList(),
-                        onChanged: (value) => controller.ward = value
+                        },
+                        separatorBuilder: (context, index) => const Divider(),
                       ),
-                    ),
-                    InputField(
-                      hintText: 'Đường',
-                      autofillHints: const [AutofillHints.streetAddressLevel1],
-                      controller: controller.streetController,
-                      textCapitalization: TextCapitalization.words,
-                      validator: ValidationBuilder(requiredMessage: 'Ví dụ: 1 Lê Duẩn')
-                          .build(),
-                    ),
-                    InputField(
-                      hintText: 'Điện thoại',
-                      autofillHints: const [AutofillHints.telephoneNumber],
-                      controller: controller.phoneController,
-                      validator: ValidationBuilder(requiredMessage: 'Vui lòng nhập điện thoại')
-                          .phone('Số điện thoại không hợp lệ')
-                          .build(),
-                    ),
+                    // InputField(
+                    //   hintText: 'Điện thoại',
+                    //   autofillHints: const [AutofillHints.telephoneNumber],
+                    //   controller: controller.phoneController,
+                    //   validator: ValidationBuilder(requiredMessage: 'Vui lòng nhập điện thoại')
+                    //       .phone('Số điện thoại không hợp lệ')
+                    //       .build(),
+                    // ),
                     AppLevelActionContainer(
                       child: Row(
                         children: [

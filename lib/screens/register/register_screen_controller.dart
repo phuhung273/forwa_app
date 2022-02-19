@@ -24,9 +24,6 @@ enum RegisterMethod{
 
 class RegisterScreenController extends OtpController {
 
-  @override
-  String get screenName => ROUTE_REGISTER;
-
   final AuthRepo _authRepo = Get.find();
 
   final AnalyticService _analyticService = Get.find();
@@ -114,5 +111,14 @@ class RegisterScreenController extends OtpController {
     await showSuccessDialog(message: message);
 
     Get.back();
+  }
+
+  @override
+  void onClose(){
+    nameController.dispose();
+    methodController.dispose();
+    pwdController.dispose();
+    pwdConfirmController.dispose();
+    super.onClose();
   }
 }

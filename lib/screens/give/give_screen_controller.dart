@@ -114,4 +114,11 @@ class GiveScreenController extends BaseController {
     _homeController.products.insertAll(0, response.data?.items as Iterable<Product>);
     Get.back();
   }
+
+  @override
+  void onClose(){
+    nameController.dispose();
+    descriptionController.dispose();
+    super.onClose();
+  }
 }

@@ -77,4 +77,10 @@ class _TimePickerInputFieldState extends State<TimePickerInputField> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 }

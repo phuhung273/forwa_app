@@ -226,7 +226,7 @@ class _FirebaseOtpScreenState extends State<FirebaseOtpScreen> {
   @override
   void dispose() {
     errorController.close();
-
+    textEditingController.dispose();
     super.dispose();
   }
 }
