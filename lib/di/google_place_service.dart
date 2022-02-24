@@ -2,7 +2,6 @@
 import 'package:async/async.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:get/get.dart';
 import 'package:google_place/google_place.dart';
 import 'package:uuid/uuid.dart';
 
@@ -10,7 +9,7 @@ const GOOGLE_PLACE_TIMEOUT = 1; //In minutes
 
 class GooglePlaceService {
 
-  final _googlePlace = Get.put(GooglePlace(dotenv.env['PLACES_API_KEY']!));
+  final _googlePlace = GooglePlace(dotenv.env['PLACES_API_KEY']!);
 
   String? _sessionToken;
 
@@ -28,7 +27,8 @@ class GooglePlaceService {
     final results = await _googlePlace.autocomplete.get(
       address,
       sessionToken: _getOrCreateToken(),
-      language: dotenv.env['PLACES_API_PREFERRED_LANGUAGE']
+      language: dotenv.env['PLACES_API_PREFERRED_LANGUAGE'],
+      components: [Component('country', 'vn')],
     );
 
     if(_timer == null){
@@ -78,7 +78,7 @@ class GooglePlaceService {
     final details = await _googlePlace.details.get(
       _placeId!,
       sessionToken: _getOrCreateToken(),
-      fields: 'name,geometry',
+      fields: 'formatted_address,adr_address,name,geometry',
       language: dotenv.env['PLACES_API_PREFERRED_LANGUAGE'],
     );
     debugPrint('*** Google Place Service ***: Call Details API for placeId: $_placeId');

@@ -9,7 +9,6 @@ import 'package:forwa_app/di/firebase_messaging_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/auth/logout_request.dart';
-import 'package:forwa_app/screens/base_controller/address_controller.dart';
 import 'package:forwa_app/screens/base_controller/app_notification_controller.dart';
 import 'package:forwa_app/screens/base_controller/navigation_controller.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
@@ -25,7 +24,6 @@ class MainScreenBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => MainScreenController());
-    Get.put(AddressController());
     Get.lazyPut(() => AppNotificationController());
     Get.lazyPut(() => FirebaseMessagingService());
     Get.put(MyGivingsScreenController());

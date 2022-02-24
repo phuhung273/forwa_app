@@ -211,7 +211,7 @@ class AddressDropdown extends GetView<AddressSelectScreenController> {
 
         final address = controller.addresses.firstWhere((element) => element.id == controller.id.value);
 
-        final header = '${address.street} ${address.ward} ${address.district} ${address.city}';
+        final header = address.text;
         final subtitle = '${address.name} ${address.phone}';
 
         return ListTile(

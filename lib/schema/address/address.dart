@@ -10,17 +10,8 @@ class Address {
   @JsonKey(name: 'id')
   int? id;
 
-  @JsonKey(name: 'street')
-  String? street;
-
-  @JsonKey(name: 'ward')
-  String? ward;
-
-  @JsonKey(name: 'district')
-  String? district;
-
-  @JsonKey(name: 'city')
-  String? city;
+  @JsonKey(name: 'text')
+  String text;
 
   @JsonKey(name: 'name')
   String name;
@@ -37,25 +28,14 @@ class Address {
   @JsonKey(name: 'longitude')
   String longitude;
 
-  @JsonKey(name: 'ward_latitude')
-  String wardLatitude;
-
-  @JsonKey(name: 'ward_longitude')
-  String wardLongitude;
-
   Address({
     this.id,
-    this.street,
-    this.ward,
-    this.district,
-    this.city,
+    required this.text,
     required this.name,
     this.phone,
     this.isDefault,
     required this.latitude,
     required this.longitude,
-    required this.wardLatitude,
-    required this.wardLongitude,
   });
 
   factory Address.fromJson(Map<String, dynamic> json) =>
@@ -65,9 +45,5 @@ class Address {
 
   LatLng get location {
     return LatLng(double.tryParse(latitude)!, double.tryParse(longitude)!);
-  }
-
-  LatLng get wardLocation {
-    return LatLng(double.tryParse(wardLatitude)!, double.tryParse(wardLongitude)!);
   }
 }

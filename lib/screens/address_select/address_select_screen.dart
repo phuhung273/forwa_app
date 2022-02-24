@@ -50,7 +50,7 @@ class _AddressSelectScreenState extends State<AddressSelectScreen> {
                   itemBuilder: (context, index) {
                     final address = _controller.addresses[index];
 
-                    final header = '${address.street} ${address.ward} ${address.district} ${address.city}';
+                    final header = address.text;
                     final subtitle = '${address.name} ${address.phone}';
 
                     return CheckboxListTile(

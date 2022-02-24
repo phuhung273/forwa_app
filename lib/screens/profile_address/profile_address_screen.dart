@@ -89,7 +89,7 @@ class AddressCard extends StatelessWidget {
             )
           ),
           collapsed: Text(
-            '${address.street} ${address.ward} ${address.district} ${address.city}',
+            address.text,
             softWrap: true,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -101,16 +101,7 @@ class AddressCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: defaultPadding),
                 child: Text(
-                  '${address.street} ${address.ward} ${address.district} ${address.city}',
-                  softWrap: true,
-                  overflow: TextOverflow.fade,
-                  style: theme.textTheme.bodyText1,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: defaultPadding),
-                child: Text(
-                  address.city!,
+                  address.text,
                   softWrap: true,
                   overflow: TextOverflow.fade,
                   style: theme.textTheme.bodyText1,
