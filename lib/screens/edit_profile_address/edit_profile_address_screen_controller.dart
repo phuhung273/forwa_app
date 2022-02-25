@@ -89,11 +89,21 @@ class EditProfileAddressController extends BaseController {
     _callAutocomplete = true;
   }
 
+  clearAddress(){
+    _detailsResult = null;
+    addressController.clear();
+  }
+
   Future save() async {
-    if(_name == null || _previousRoute == null || _detailsResult == null){
-      // TODO: add error text
+    if(_name == null || _previousRoute == null){
       return;
     }
+
+    if(_detailsResult == null || addressController.text.isEmpty){
+      showErrorDialog(message: 'Vui lòng nhập và chọn địa chỉ');
+      return;
+    }
+
     showLoadingDialog();
 
     final location = _detailsResult!.geometry!.location;

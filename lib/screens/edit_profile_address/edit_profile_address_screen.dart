@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/widgets/app_level_action_container.dart';
+import 'package:forwa_app/widgets/clearable_input_field.dart';
 import 'package:forwa_app/widgets/input_field.dart';
 import 'package:forwa_app/widgets/keyboard_friendly_body.dart';
 import 'package:get/get.dart';
@@ -37,9 +38,11 @@ class EditProfileAddressScreen extends GetView<EditProfileAddressController> {
               child: Obx(
                 () => Column(
                   children: [
-                    InputField(
-                      hintText: 'Địa chỉ',
+                    ClearableInputField(
+                      icon: Icons.location_on,
+                      hintText: 'Nhập địa chỉ',
                       controller: controller.addressController,
+                      onClear: controller.clearAddress,
                     ),
                     if(controller.suggestions.isNotEmpty)
                       ListView.separated(
@@ -66,6 +69,7 @@ class EditProfileAddressScreen extends GetView<EditProfileAddressController> {
                         separatorBuilder: (context, index) => const Divider(),
                       ),
                     InputField(
+                      icon: Icons.phone,
                       hintText: 'Điện thoại',
                       autofillHints: const [AutofillHints.telephoneNumber],
                       controller: controller.phoneController,
