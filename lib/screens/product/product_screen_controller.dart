@@ -109,7 +109,7 @@ class ProductScreenController extends NotificationOpenableController {
     userId = product.user?.id;
     avatar.value = product.user?.imageUrl ?? '';
     page = 0;
-    latitude.value = double.tryParse(product.address!.latitude) ?? 0.0;
+    latitude.value = double.tryParse(product.address!.latitude!) ?? 0.0;
     mapController.move(wardLocation!, MAP_ZOOM_LEVEL);
   }
 

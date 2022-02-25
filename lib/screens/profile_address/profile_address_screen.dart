@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/address/address.dart';
+import 'package:forwa_app/screens/edit_profile_address/edit_profile_address_screen_controller.dart';
 import 'package:forwa_app/widgets/app_container.dart';
 import 'package:forwa_app/widgets/app_level_action_container.dart';
 import 'package:get/get.dart';
@@ -41,7 +42,7 @@ class ProfileAddressScreen extends GetView<ProfileAddressScreenController> {
               AppLevelActionContainer(
                 child: ElevatedButton(
                   onPressed: () => Get.toNamed(
-                    ROUTE_EDIT_PROFILE_ADDRESS,
+                    ROUTE_CREATE_PROFILE_ADDRESS,
                     parameters: {
                       previousRouteParam: Get.currentRoute
                     }
@@ -89,7 +90,7 @@ class AddressCard extends StatelessWidget {
             )
           ),
           collapsed: Text(
-            address.text,
+            address.text!,
             softWrap: true,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -101,7 +102,7 @@ class AddressCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: defaultPadding),
                 child: Text(
-                  address.text,
+                  address.text!,
                   softWrap: true,
                   overflow: TextOverflow.fade,
                   style: theme.textTheme.bodyText1,
@@ -110,7 +111,7 @@ class AddressCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: defaultPadding),
                 child: Text(
-                  address.name,
+                  address.name!,
                   softWrap: true,
                   overflow: TextOverflow.fade,
                   style: theme.textTheme.bodyText1,
@@ -125,6 +126,33 @@ class AddressCard extends StatelessWidget {
                   style: theme.textTheme.bodyText1,
                 ),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: TextButton.icon(
+                      onPressed: () => Get.toNamed(
+                        ROUTE_EDIT_PROFILE_ADDRESS,
+                        parameters: {
+                          EditProfileAddressScreenController.idParam: address.id!.toString(),
+                          EditProfileAddressScreenController.textParam: address.text!,
+                          EditProfileAddressScreenController.phoneParam: address.phone!,
+                        }
+                      ),
+                      icon: const Icon(Icons.edit),
+                      label: const Text('Sửa'),
+                    ),
+                  ),
+                  Flexible(
+                    child: TextButton.icon(
+                      onPressed: () {
+                      },
+                      icon: const Icon(Icons.cancel),
+                      label: const Text('Xóa'),
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
           builder: (_, collapsed, expanded) {
@@ -144,6 +172,5 @@ class AddressCard extends StatelessWidget {
         ),
       ),
     );
-
   }
 }

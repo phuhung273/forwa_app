@@ -1,10 +1,12 @@
 
 import 'package:forwa_app/screens/address_select/address_select_screen.dart';
+import 'package:forwa_app/screens/edit_profile_address/edit_profile_address_screen.dart';
+import 'package:forwa_app/screens/edit_profile_address/edit_profile_address_screen_controller.dart';
 import 'package:forwa_app/screens/message/message_screen.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen.dart';
 import 'package:forwa_app/screens/choose_receiver/choose_receiver_screen_controller.dart';
-import 'package:forwa_app/screens/edit_profile_address/edit_profile_address_screen.dart';
-import 'package:forwa_app/screens/edit_profile_address/edit_profile_address_screen_controller.dart';
+import 'package:forwa_app/screens/create_profile_address/create_profile_address_screen.dart';
+import 'package:forwa_app/screens/create_profile_address/create_profile_address_screen_controller.dart';
 import 'package:forwa_app/screens/give/give_screen.dart';
 import 'package:forwa_app/screens/give/give_screen_controller.dart';
 import 'package:forwa_app/screens/give_success/give_success_screen.dart';
@@ -53,6 +55,7 @@ const ROUTE_PROFILE = '/profile';
 const ROUTE_PUBLIC_PROFILE = '/public_profile';
 const ROUTE_PROFILE_ADDRESS = '/profile_address';
 const ROUTE_PROFILE_EDIT = '/profile_edit';
+const ROUTE_CREATE_PROFILE_ADDRESS = '/create_profile_address';
 const ROUTE_EDIT_PROFILE_ADDRESS = '/edit_profile_address';
 const ROUTE_SELECT_ADDRESS = '/select_address';
 const ROUTE_MAIN = '/main';
@@ -93,7 +96,8 @@ var appRoute = [
   GetPage(name: ROUTE_PROFILE_EDIT, page: () => const ProfileEditScreen(), binding: ProfileEditScreenBinding()),
   GetPage(name: ROUTE_PUBLIC_PROFILE, page: () => const PublicProfileScreen(), binding: PublicProfileScreenBinding()),
   GetPage(name: ROUTE_PROFILE_ADDRESS, page: () => const ProfileAddressScreen(), binding: ProfileAddressBinding()),
-  GetPage(name: ROUTE_EDIT_PROFILE_ADDRESS, page: () => EditProfileAddressScreen(), binding: EditProfileAddressBinding()),
+  GetPage(name: ROUTE_CREATE_PROFILE_ADDRESS, page: () => CreateProfileAddressScreen(), binding: CreateProfileAddressBinding()),
+  GetPage(name: ROUTE_EDIT_PROFILE_ADDRESS, page: () => EditProfileAddressScreen(), binding: EditProfileAddressScreenBinding()),
   GetPage(name: ROUTE_CHOOSE_RECEIVER, page: () => const ChooseReceiverScreen(), binding: ChooseReceiverScreenBinding()),
   GetPage(name: ROUTE_GIVE_SUCCESS, page: () => const GiveSuccessScreen(), binding: GiveSuccessBinding()),
   GetPage(name: ROUTE_TAKE_SUCCESS, page: () => const TakeSuccessScreen(), binding: TakeSuccessScreenBinding()),

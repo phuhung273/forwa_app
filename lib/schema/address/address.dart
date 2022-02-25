@@ -11,10 +11,10 @@ class Address {
   int? id;
 
   @JsonKey(name: 'text')
-  String text;
+  String? text;
 
   @JsonKey(name: 'name')
-  String name;
+  String? name;
 
   @JsonKey(name: 'phone')
   String? phone;
@@ -23,19 +23,19 @@ class Address {
   bool? isDefault;
 
   @JsonKey(name: 'latitude')
-  String latitude;
+  String? latitude;
 
   @JsonKey(name: 'longitude')
-  String longitude;
+  String? longitude;
 
   Address({
     this.id,
-    required this.text,
-    required this.name,
+    this.text,
+    this.name,
     this.phone,
     this.isDefault,
-    required this.latitude,
-    required this.longitude,
+    this.latitude,
+    this.longitude,
   });
 
   factory Address.fromJson(Map<String, dynamic> json) =>
@@ -44,6 +44,6 @@ class Address {
   Map<String, dynamic> toJson() => _$AddressToJson(this);
 
   LatLng get location {
-    return LatLng(double.tryParse(latitude)!, double.tryParse(longitude)!);
+    return LatLng(double.tryParse(latitude!)!, double.tryParse(longitude!)!);
   }
 }

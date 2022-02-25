@@ -10,6 +10,7 @@ class InputField extends StatelessWidget {
   final Iterable<String>? autofillHints;
   final TextCapitalization textCapitalization;
   final String? Function(String?)? validator;
+  final TextInputType? keyboardType;
 
   const InputField({
     Key? key,
@@ -20,6 +21,7 @@ class InputField extends StatelessWidget {
     this.autofillHints,
     this.textCapitalization = TextCapitalization.sentences,
     this.validator,
+    this.keyboardType,
   }) : super(key: key);
 
   @override
@@ -49,6 +51,7 @@ class InputField extends StatelessWidget {
           maxLines: maxLines,
           validator: validator,
           style: theme.textTheme.bodyText1,
+          keyboardType: keyboardType,
         ),
       ),
     );

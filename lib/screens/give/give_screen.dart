@@ -200,7 +200,7 @@ class AddressDropdown extends GetView<AddressSelectScreenController> {
               label: const Text('Vui lòng thêm địa chỉ'),
               onPressed: () =>
                   Get.toNamed(
-                      ROUTE_EDIT_PROFILE_ADDRESS,
+                      ROUTE_CREATE_PROFILE_ADDRESS,
                       parameters: {
                         previousRouteParam: Get.currentRoute,
                       }
@@ -211,7 +211,6 @@ class AddressDropdown extends GetView<AddressSelectScreenController> {
 
         final address = controller.addresses.firstWhere((element) => element.id == controller.id.value);
 
-        final header = address.text;
         final subtitle = '${address.name} ${address.phone}';
 
         return ListTile(
@@ -220,7 +219,7 @@ class AddressDropdown extends GetView<AddressSelectScreenController> {
           title: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              header,
+                address.text!,
               style: theme.textTheme.bodyText1
             ),
           ),
