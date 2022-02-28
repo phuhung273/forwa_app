@@ -1,8 +1,11 @@
 
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/mixins/lazy_load.dart';
+import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/lazy_giving_request.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/base_controller/main_tab_controller.dart';
@@ -13,6 +16,9 @@ import 'package:get/get.dart';
 
 class MyGivingsScreenController extends MainTabController
     with LazyLoad  {
+
+  static const actionUpdate = 'update';
+  static const actionDelete = 'delete';
 
   final ProductRepo _productRepo = Get.find();
 
@@ -129,6 +135,38 @@ class MyGivingsScreenController extends MainTabController
       if(item.id! < _lowId){
         _lowId = item.id!;
       }
+    }
+  }
+
+  Future showActionModal(int id) async {
+    final context = Get.context;
+    if(context == null) return;
+
+    final result = await showModalActionSheet<String>(
+      context: context,
+      style: AdaptiveStyle.material,
+      actions: [
+        const SheetAction(
+          icon: Icons.edit,
+          label: 'Chỉnh sửa món đồ',
+          key: actionUpdate,
+        ),
+        const SheetAction(
+          icon: Icons.cancel,
+          label: 'Xóa món đồ',
+          key: actionDelete,
+        ),
+      ],
+    );
+
+    switch(result){
+      case actionUpdate:
+        Get.toNamed(ROUTE_PRODUCT_EDIT, arguments: id);
+        break;
+      case actionDelete:
+        break;
+      default:
+        break;
     }
   }
 

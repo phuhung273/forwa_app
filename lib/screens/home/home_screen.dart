@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/helpers/url_helper.dart';
 import 'package:forwa_app/mixins/reportable.dart';
-import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/components/appbar_chat_action.dart';
 import 'package:forwa_app/screens/main/main_screen_controller.dart';
@@ -39,7 +38,6 @@ class _HomeScreenState extends State<HomeScreen>
     super.build(context);
 
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
 
     return CustomScrollView(
       slivers: [
@@ -288,9 +286,9 @@ class ProductCard extends GetView<HomeScreenController> {
                                     _buildTime(product),
                                     textAlign: TextAlign.end,
                                     style: theme.textTheme.bodyText1?.copyWith(
-                                      // color: theme.colorScheme.secondaryVariant
-                                        fontStyle: FontStyle.italic,
-                                        color: Colors.grey[600]
+                                      // color: theme.colorScheme.secondaryContainer,
+                                      fontStyle: FontStyle.italic,
+                                      color: Colors.grey[600],
                                     ),
                                   ),
                                 ),

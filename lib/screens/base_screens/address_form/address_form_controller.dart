@@ -4,7 +4,7 @@ import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:get/get.dart';
 import 'package:google_place/google_place.dart';
 
-abstract class EditAddressScreenController extends BaseController {
+abstract class AddressFormScreenController extends BaseController {
 
   final GooglePlaceService _googlePlaceService = Get.find();
 

@@ -21,9 +21,6 @@ abstract class ProductService {
   @POST('/products_lazy')
   Future<ApiResponse<List<Product>>> lazyLoadProducts(@Body() LazyProductRequest request);
 
-  // @POST('/products')
-  // Future<Product> addProduct(@Body() AddProductRequest request);
-
   @GET('/products/{id}')
   Future<ApiResponse<Product>> getProduct(@Path('id') int id);
 

@@ -24,8 +24,6 @@ mixin Reportable{
     final context = Get.context;
     if(context == null) return;
 
-    final theme = Theme.of(context);
-
     final result = await showModalActionSheet<String>(
       context: context,
       style: AdaptiveStyle.material,

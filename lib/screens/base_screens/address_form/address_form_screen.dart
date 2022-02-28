@@ -7,11 +7,11 @@ import '../../../widgets/app_level_action_container.dart';
 import '../../../widgets/clearable_input_field.dart';
 import '../../../widgets/input_field.dart';
 import '../../../widgets/keyboard_friendly_body.dart';
-import 'edit_address_controller.dart';
+import 'address_form_controller.dart';
 
-class EditAddressScreen<T extends EditAddressScreenController> extends GetView<T> {
+class AddressFormScreen<T extends AddressFormScreenController> extends GetView<T> {
 
-  EditAddressScreen({Key? key}) : super(key: key);
+  AddressFormScreen({Key? key}) : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
 

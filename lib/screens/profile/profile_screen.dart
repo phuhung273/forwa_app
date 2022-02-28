@@ -91,7 +91,7 @@ class ProfileAction extends StatelessWidget {
       child: ListTile(
         leading: Icon(
           icon,
-          color: theme.colorScheme.secondaryVariant,
+          color: theme.colorScheme.secondaryContainer,
         ),
         title: Text(
           text,

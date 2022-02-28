@@ -1,18 +1,17 @@
-import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/address_repo.dart';
-import 'package:forwa_app/screens/base_screens/edit_address/edit_address_controller.dart';
 import 'package:get/get.dart';
 
 import '../../schema/address/address.dart';
+import '../base_screens/address_form/address_form_controller.dart';
 
-class EditProfileAddressScreenBinding extends Bindings {
+class ProfileAddressEditScreenBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => EditProfileAddressScreenController());
+    Get.lazyPut(() => ProfileAddressEditScreenController());
   }
 }
 
-class EditProfileAddressScreenController extends EditAddressScreenController {
+class ProfileAddressEditScreenController extends AddressFormScreenController {
 
   final AddressRepo _addressRepo = Get.find();
 

@@ -23,6 +23,14 @@ class TimePickerInputField extends StatefulWidget {
 class _TimePickerInputFieldState extends State<TimePickerInputField> {
   final controller = TextEditingController();
 
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller.text = widget.initialTime != null ? timeOfDayToString(widget.initialTime!) : '';
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -36,7 +44,7 @@ class _TimePickerInputFieldState extends State<TimePickerInputField> {
             return Theme(
               data: theme.copyWith(
                   colorScheme: theme.colorScheme.copyWith(
-                    primary: theme.colorScheme.secondaryVariant,
+                    primary: theme.colorScheme.secondaryContainer,
                     onPrimary: theme.colorScheme.onSecondary,
                   )
               ),
@@ -59,21 +67,21 @@ class _TimePickerInputFieldState extends State<TimePickerInputField> {
         }
       },
       child: TextFieldContainer(
-          child: TextFormField(
-            controller: controller,
-            decoration: InputDecoration(
-              icon: widget.icon != null ? Icon(
-                widget.icon,
-              ) : null,
-              hintText: widget.hintText,
-              hintStyle: TextStyle(
-                fontSize: theme.textTheme.bodyText1!.fontSize!
-              ),
+        child: TextFormField(
+          controller: controller,
+          decoration: InputDecoration(
+            icon: widget.icon != null ? Icon(
+              widget.icon,
+            ) : null,
+            hintText: widget.hintText,
+            hintStyle: TextStyle(
+              fontSize: theme.textTheme.bodyText1!.fontSize!
             ),
-            readOnly: true,
-            enabled: false,
-            style: theme.textTheme.bodyText1,
-          )
+          ),
+          readOnly: true,
+          enabled: false,
+          style: theme.textTheme.bodyText1,
+        )
       ),
     );
   }

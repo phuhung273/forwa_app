@@ -18,5 +18,10 @@ DateTime string2DateTime(String str){
 
 String timeOfDayToString(TimeOfDay time){
   String minute = time.minute < 10 ? '0${time.minute}' : time.minute.toString();
-  return '${time.hourOfPeriod} : $minute ${time.period.name}';
+  return '${time.hourOfPeriod}:$minute ${time.period.name.toUpperCase()}';
+}
+
+TimeOfDay stringToTimeOfDay(String time){
+  final format = DateFormat('h:mm a'); //"6:00 AM"
+  return TimeOfDay.fromDateTime(format.parse(time));
 }

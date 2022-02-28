@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:forwa_app/constants.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/address/address.dart';
-import 'package:forwa_app/screens/edit_profile_address/edit_profile_address_screen_controller.dart';
+import 'package:forwa_app/screens/profile_address_edit/profile_address_edit_screen_controller.dart';
 import 'package:forwa_app/widgets/app_container.dart';
 import 'package:forwa_app/widgets/app_level_action_container.dart';
 import 'package:get/get.dart';
@@ -134,9 +134,9 @@ class AddressCard extends StatelessWidget {
                       onPressed: () => Get.toNamed(
                         ROUTE_EDIT_PROFILE_ADDRESS,
                         parameters: {
-                          EditProfileAddressScreenController.idParam: address.id!.toString(),
-                          EditProfileAddressScreenController.textParam: address.text!,
-                          EditProfileAddressScreenController.phoneParam: address.phone!,
+                          ProfileAddressEditScreenController.idParam: address.id!.toString(),
+                          ProfileAddressEditScreenController.textParam: address.text!,
+                          ProfileAddressEditScreenController.phoneParam: address.phone!,
                         }
                       ),
                       icon: const Icon(Icons.edit),

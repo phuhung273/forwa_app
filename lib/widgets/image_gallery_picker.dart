@@ -10,11 +10,15 @@ const METHOD_CAMERA = 'camera';
 
 class ImageGalleryPicker extends StatefulWidget {
   final Function(File)? onPick;
-  final Function(int)? onDelete;
+  final Function(int)? onDeleteFile;
+  final Function(int)? onDeleteUrl;
+  final List<String>? initialImageUrlList;
   const ImageGalleryPicker({
     Key? key,
     this.onPick,
-    this.onDelete,
+    this.onDeleteFile,
+    this.onDeleteUrl,
+    this.initialImageUrlList,
   }) : super(key: key);
 
   @override
@@ -26,21 +30,33 @@ class _ImageGalleryPickerState extends State<ImageGalleryPicker> with ImagePick 
 
   @override
   Widget build(BuildContext context) {
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
           _buildAddMoreBtn(),
           for(var i = 0; i < _files.length; i++)
-            ImageBox(
+            FileImageBox(
               file: _files[i],
               onDelete: () {
                 setState(() {
                   _files.removeAt(i);
-                  widget.onDelete?.call(i);
+                  widget.onDeleteFile?.call(i);
                 });
               },
             ),
+          if(widget.initialImageUrlList != null)
+            for(var i = 0; i < widget.initialImageUrlList!.length; i++)
+              UrlImageBox(
+                url: widget.initialImageUrlList![i],
+                onDelete: () {
+                  setState(() {
+                    widget.initialImageUrlList!.removeAt(i);
+                    widget.onDeleteUrl?.call(i);
+                  });
+                },
+              ),
         ],
       ),
     );
@@ -93,11 +109,11 @@ class ItemBox extends StatelessWidget {
 }
 
 class ImageBox extends StatelessWidget {
-  final File file;
+  final Widget child;
   final VoidCallback onDelete;
   const ImageBox({
     Key? key,
-    required this.file,
+    required this.child,
     required this.onDelete,
   }) : super(key: key);
 
@@ -117,11 +133,52 @@ class ImageBox extends StatelessWidget {
           ),
         ),
         child: ItemBox(
-          child: ExtendedImage.file(
-            file,
-            fit: BoxFit.fill,
-          )
+          child: child
         ),
+      ),
+    );
+  }
+}
+
+class FileImageBox extends StatelessWidget {
+  final File file;
+  final VoidCallback onDelete;
+
+  const FileImageBox({
+    Key? key,
+    required this.file,
+    required this.onDelete,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ImageBox(
+      onDelete: onDelete,
+      child: ExtendedImage.file(
+        file,
+        fit: BoxFit.fill,
+      ),
+    );
+  }
+}
+
+class UrlImageBox extends StatelessWidget {
+  final String url;
+  final VoidCallback onDelete;
+
+  const UrlImageBox({
+    Key? key,
+    required this.url,
+    required this.onDelete,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ImageBox(
+      onDelete: onDelete,
+      child: ExtendedImage.network(
+        url,
+        fit: BoxFit.fill,
       ),
     );
   }

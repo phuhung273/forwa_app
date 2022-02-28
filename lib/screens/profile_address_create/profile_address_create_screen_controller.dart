@@ -3,18 +3,19 @@ import 'package:forwa_app/datasource/repository/address_repo.dart';
 import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/address/address.dart';
 import 'package:forwa_app/screens/address_select/address_select_screen_controller.dart';
-import 'package:forwa_app/screens/base_screens/edit_address/edit_address_controller.dart';
 import 'package:forwa_app/screens/profile_address/profile_address_screen_controller.dart';
 import 'package:get/get.dart';
 
-class CreateProfileAddressBinding extends Bindings {
+import '../base_screens/address_form/address_form_controller.dart';
+
+class ProfileAddressCreateBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => CreateProfileAddressController());
+    Get.lazyPut(() => ProfileAddressCreateController());
   }
 }
 
-class CreateProfileAddressController extends EditAddressScreenController {
+class ProfileAddressCreateController extends AddressFormScreenController {
 
   final LocalStorage _localStorage = Get.find();
 

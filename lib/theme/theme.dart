@@ -13,7 +13,7 @@ final appTheme = _base.copyWith(
     // primaryVariant: primaryColorLight,
     onPrimary: Colors.black,
     secondary: secondaryColor, // affect FloatingActionButton
-    secondaryVariant: secondaryColorLight,
+    secondaryContainer: secondaryColorLight,
     onSecondary: Colors.white,
     surface: surfaceColor,
     onSurface: onSurfaceColor,
