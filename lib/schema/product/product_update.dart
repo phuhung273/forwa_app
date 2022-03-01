@@ -6,7 +6,7 @@ class ProductUpdate {
   String pickupTime;
   String? dueDate;
   List<File>? imageFiles;
-  List<String>? imageUrls;
+  List<int>? imageIds;
   int addressId;
 
   ProductUpdate({
@@ -15,7 +15,7 @@ class ProductUpdate {
     required this.pickupTime,
     this.dueDate,
     this.imageFiles,
-    this.imageUrls,
+    this.imageIds,
     required this.addressId,
   });
 }

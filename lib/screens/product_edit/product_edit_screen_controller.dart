@@ -5,8 +5,7 @@ import 'package:forwa_app/screens/address_select/address_select_screen_controlle
 import 'package:forwa_app/screens/base_screens/product_form/product_form_controller.dart';
 import 'package:get/get.dart';
 
-import '../../constants.dart';
-import '../../helpers/url_helper.dart';
+import '../../schema/image/image.dart';
 
 class ProductEditScreenBinding extends Bindings {
   @override
@@ -22,10 +21,10 @@ class ProductEditScreenController extends ProductFormScreenController {
 
   final int _id = Get.arguments;
 
-  final urls = List<String>.empty().obs;
+  final urlImages = List<Image>.empty().obs;
 
   deleteUrlImage(int index) {
-    urls.removeAt(index);
+    urlImages.removeAt(index);
   }
 
   @override
@@ -41,7 +40,7 @@ class ProductEditScreenController extends ProductFormScreenController {
     }
     final product = response.data!;
 
-    urls.assignAll(product.images!.map((e) => resolveUrl(e.url, HOST_URL)));
+    urlImages.assignAll(product.images ?? []);
     nameController.text = product.name;
     descriptionController.text = product.description!;
     dueDate.value = product.dueDate?.toIso8601String() ?? '';
@@ -55,7 +54,7 @@ class ProductEditScreenController extends ProductFormScreenController {
 
   @override
   Future submit() async {
-    if(imageFiles.isEmpty && urls.isEmpty){
+    if(imageFiles.isEmpty && urlImages.isEmpty){
       showErrorDialog(message: errorCodeMap['PRODUCT_001']!);
       return;
     }
@@ -71,8 +70,8 @@ class ProductEditScreenController extends ProductFormScreenController {
       productUpdate.imageFiles = imageFiles;
     }
 
-    if(urls.isNotEmpty){
-      productUpdate.imageUrls = urls;
+    if(urlImages.isNotEmpty){
+      productUpdate.imageIds = urlImages.map((element) => element.id).toList();
     }
 
     showLoadingDialog();

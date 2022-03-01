@@ -194,11 +194,11 @@ class ProductRepo extends BaseRepo {
       });
     }
 
-    if(product.imageUrls != null){
-      final urls = product.imageUrls!;
+    if(product.imageIds != null){
+      final urls = product.imageIds!;
       for(var i = 0; i < urls.length; i++){
         imageUploadRequest.fields.addAll({
-          'urls[$i]': urls[i]
+          'image_ids[$i]': urls[i].toString()
         });
       }
     }
@@ -209,7 +209,7 @@ class ProductRepo extends BaseRepo {
         final mimeTypeData = lookupMimeType(image.path, headerBytes: [0xFF, 0xD8])!.split('/');
 
         // Attach the file in the request
-        final file = await http.MultipartFile.fromPath('files[$i]', image.path,
+        final file = await http.MultipartFile.fromPath('image_files[$i]', image.path,
             contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
         imageUploadRequest.files.add(file);
       }
