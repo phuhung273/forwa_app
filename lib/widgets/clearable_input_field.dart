@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'text_field_container.dart';
 
-class InputField extends StatelessWidget {
+class ClearableInputField extends StatefulWidget {
   final String hintText;
   final IconData? icon;
   final int maxLines;
@@ -10,9 +10,9 @@ class InputField extends StatelessWidget {
   final Iterable<String>? autofillHints;
   final TextCapitalization textCapitalization;
   final String? Function(String?)? validator;
-  final TextInputType? keyboardType;
+  final VoidCallback onClear;
 
-  const InputField({
+  const ClearableInputField({
     Key? key,
     required this.hintText,
     this.icon,
@@ -21,8 +21,29 @@ class InputField extends StatelessWidget {
     this.autofillHints,
     this.textCapitalization = TextCapitalization.sentences,
     this.validator,
-    this.keyboardType,
+    required this.onClear
   }) : super(key: key);
+
+  @override
+  State<ClearableInputField> createState() => _ClearableInputFieldState();
+}
+
+class _ClearableInputFieldState extends State<ClearableInputField> {
+
+  bool _showClearIcon = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(() {
+      final text = widget.controller.text;
+      if(text.isNotEmpty){
+        setState(() {
+          _showClearIcon = true;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,22 +57,27 @@ class InputField extends StatelessWidget {
       ),
       child: TextFieldContainer(
         child: TextFormField(
-          controller: controller,
-          autofillHints: autofillHints,
-          textCapitalization: textCapitalization,
+          controller: widget.controller,
+          autofillHints: widget.autofillHints,
+          textCapitalization: widget.textCapitalization,
           decoration: InputDecoration(
-            icon: icon != null ? Icon(
-              icon,
+            icon: widget.icon != null ? Icon(
+              widget.icon,
             ) : null,
-            hintText: hintText,
+            hintText: widget.hintText,
             hintStyle: TextStyle(
               fontSize: theme.textTheme.bodyText1!.fontSize!
             ),
+            suffixIcon: _showClearIcon ? IconButton(
+              onPressed: widget.onClear,
+              icon: const Icon(
+                Icons.cancel,
+              )
+            ) : null
           ),
-          maxLines: maxLines,
-          validator: validator,
+          maxLines: widget.maxLines,
+          validator: widget.validator,
           style: theme.textTheme.bodyText1,
-          keyboardType: keyboardType,
         ),
       ),
     );

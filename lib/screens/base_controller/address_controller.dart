@@ -1,24 +1,14 @@
-import 'dart:convert';
+import 'dart:async';
 
-import 'package:flutter/services.dart';
+import 'package:forwa_app/schema/address/address.dart';
 import 'package:get/get.dart';
 
 class AddressController extends GetxController {
-  var cities = List<String>.empty();
-  var districtMap = {};
-  var wardMap = {};
+  final _editAddressController = StreamController<Address>.broadcast();
 
-  @override
-  void onReady() async {
-    super.onReady();
+  Stream<Address> get editAddressStream => _editAddressController.stream.cast<Address>();
 
-    final String cityString = await rootBundle.loadString('assets/jsons/city.json');
-    cities = List<String>.from(jsonDecode(cityString));
-
-    final String districtString = await rootBundle.loadString('assets/jsons/district.json');
-    districtMap = jsonDecode(districtString);
-
-    final String wardString = await rootBundle.loadString('assets/jsons/ward.json');
-    wardMap = jsonDecode(wardString);
+  emitEditAddressEvent(Address address){
+    _editAddressController.sink.add(address);
   }
 }

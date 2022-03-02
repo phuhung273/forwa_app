@@ -27,12 +27,13 @@ import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/datasource/repository/review_repo.dart';
 import 'package:forwa_app/datasource/repository/user_report_repo.dart';
 import 'package:forwa_app/di/analytics/analytic_service.dart';
+import 'package:forwa_app/di/google_place_service.dart';
 import 'package:forwa_app/di/location_service.dart';
 import 'package:forwa_app/di/notification_service.dart';
 import 'package:forwa_app/screens/base_controller/navigation_controller.dart';
 import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/base_controller/order_controller.dart';
-import 'package:forwa_app/screens/base_controller/product_success_controller.dart';
+import 'package:forwa_app/screens/base_controller/product_controller.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -75,13 +76,14 @@ Future configureDependenciesBeforeFirebase() async {
 
   Get.put(ChatController());
   Get.put(NavigationController());
-  Get.put(ProductSuccessController());
+  Get.put(ProductController());
   Get.put(OrderController());
 
   Get.put(GoogleSignIn());
   Get.put(LocationService());
   Get.put(const Distance());
   Get.put(FlutterLocalNotificationsPlugin());
+  Get.put(GooglePlaceService());
 
 }
 

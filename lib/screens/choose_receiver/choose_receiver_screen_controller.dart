@@ -14,7 +14,7 @@ import 'package:forwa_app/screens/base_controller/chat_controller.dart';
 import 'package:forwa_app/screens/base_controller/navigation_controller.dart';
 import 'package:forwa_app/screens/base_controller/notification_openable_controller.dart';
 import 'package:forwa_app/screens/base_controller/order_controller.dart';
-import 'package:forwa_app/screens/base_controller/product_success_controller.dart';
+import 'package:forwa_app/screens/base_controller/product_controller.dart';
 import 'package:forwa_app/screens/give_success/give_success_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -37,7 +37,7 @@ class ChooseReceiverScreenController extends NotificationOpenableController{
   final ProductRepo _productRepo = Get.find();
   final OrderRepo _orderRepo = Get.find();
   final ChatController _chatController = Get.find();
-  final ProductSuccessController _productSuccessController = Get.find();
+  final ProductController _productController = Get.find();
   final OrderController _orderController = Get.find();
 
   int? _productId;
@@ -198,7 +198,7 @@ class ChooseReceiverScreenController extends NotificationOpenableController{
 
     await showSuccessDialog(message: 'Thành công');
 
-    _productSuccessController.updateToSuccess(response.data!.id!);
+    _productController.updateToSuccess(response.data!.id!);
 
     finish.value = true;
   }

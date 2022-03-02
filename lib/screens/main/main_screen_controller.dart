@@ -25,11 +25,11 @@ class MainScreenBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => MainScreenController());
-    Get.put(AddressController());
     Get.lazyPut(() => AppNotificationController());
     Get.lazyPut(() => FirebaseMessagingService());
     Get.put(MyGivingsScreenController());
     Get.put(MyReceivingsScreenController());
+    Get.put(AddressController());
   }
 }
 

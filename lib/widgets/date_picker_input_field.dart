@@ -7,12 +7,14 @@ class DatePickerInputField extends StatefulWidget {
   final String hintText;
   final IconData? icon;
   final Function(DateTime? date) onChange;
+  final DateTime? initialDate;
 
   const DatePickerInputField({
     Key? key,
     this.hintText = 'Ngày',
     this.icon,
     required this.onChange,
+    this.initialDate,
   }) : super(key: key);
 
   @override
@@ -25,7 +27,8 @@ class _DatePickerInputFieldState extends State<DatePickerInputField> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final start = DateTime.now();
+    final init = widget.initialDate ?? DateTime.now();
+    final start = DateTime.utc(2000);
     final end = DateTime.utc(2030);
 
     return InkWell(
@@ -37,14 +40,14 @@ class _DatePickerInputFieldState extends State<DatePickerInputField> {
             return Theme(
               data: theme.copyWith(
                 colorScheme: theme.colorScheme.copyWith(
-                  primary: theme.colorScheme.secondaryVariant,
+                  primary: theme.colorScheme.secondaryContainer,
                   onPrimary: theme.colorScheme.onSecondary,
                 )
               ),
               child: child!,
             );
           },
-          initialDate: start,
+          initialDate: init,
           firstDate: start,
           lastDate: end,
           helpText: 'Chọn ngày',
@@ -78,5 +81,11 @@ class _DatePickerInputFieldState extends State<DatePickerInputField> {
         )
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }

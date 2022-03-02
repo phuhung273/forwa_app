@@ -3,18 +3,12 @@ import 'package:forwa_app/schema/address/address.dart';
 import 'package:forwa_app/screens/base_controller/base_controller.dart';
 import 'package:get/get.dart';
 
-class AddressSelectScreenBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPut(() => AddressSelectScreenController());
-  }
-}
-
 class AddressSelectScreenController extends BaseController {
 
   var _alreadyFetch = false;
 
   final id = 0.obs;
+  int? _prefetchId;
 
   final AddressRepo _addressRepo = Get.find();
 
@@ -53,14 +47,25 @@ class AddressSelectScreenController extends BaseController {
       return true;
     }
 
-    try{
-      final defaultAddress = addresses.firstWhere((element) => element.isDefault == true);
-      id.value = defaultAddress.id ?? 0;
-    } on StateError {
-      id.value = addresses.first.id ?? 0;
+    if(_prefetchId != null){
+      id.value = _prefetchId!;
+      _prefetchId = null;
+    } else {
+      try{
+        final defaultAddress = addresses.firstWhere((element) => element.isDefault == true);
+        id.value = defaultAddress.id ?? 0;
+      } on StateError {
+        id.value = addresses.first.id ?? 0;
+      }
     }
 
     _alreadyFetch = true;
     return true;
   }
+
+  set prefetchId(int value) {
+    _prefetchId = value;
+    id.value = value;
+  }
+
 }

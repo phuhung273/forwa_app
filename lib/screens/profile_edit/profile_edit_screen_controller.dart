@@ -91,4 +91,10 @@ class ProfileEditScreenController extends BaseController {
     avatar = image;
     useFileAvatar.trigger(true);
   }
+
+  @override
+  void onClose(){
+    nameController.dispose();
+    super.onClose();
+  }
 }

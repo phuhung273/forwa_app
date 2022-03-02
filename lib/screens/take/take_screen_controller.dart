@@ -78,4 +78,10 @@ class TakeScreenController extends BaseController {
     }
 
   }
+
+  @override
+  void onClose(){
+    messageController.dispose();
+    super.onClose();
+  }
 }

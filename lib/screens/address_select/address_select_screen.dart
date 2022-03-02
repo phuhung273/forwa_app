@@ -50,14 +50,13 @@ class _AddressSelectScreenState extends State<AddressSelectScreen> {
                   itemBuilder: (context, index) {
                     final address = _controller.addresses[index];
 
-                    final header = '${address.street} ${address.ward} ${address.district} ${address.city}';
                     final subtitle = '${address.name} ${address.phone}';
 
                     return CheckboxListTile(
                       title: Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Text(
-                          header
+                          address.text!
                         ),
                       ),
                       subtitle: Text(
@@ -78,7 +77,7 @@ class _AddressSelectScreenState extends State<AddressSelectScreen> {
               AppLevelActionContainer(
                 child: ElevatedButton(
                   onPressed: () => Get.toNamed(
-                    ROUTE_EDIT_PROFILE_ADDRESS,
+                    ROUTE_CREATE_PROFILE_ADDRESS,
                     parameters: {
                       previousRouteParam: Get.currentRoute
                     }

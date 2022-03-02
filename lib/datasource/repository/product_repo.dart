@@ -13,6 +13,7 @@ import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/schema/product/product_add.dart';
 import 'package:forwa_app/schema/product/product_list_request.dart';
 import 'package:forwa_app/schema/product/product_list_response.dart';
+import 'package:forwa_app/schema/product/product_update.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get_connect/http/src/status/http_status.dart';
@@ -142,7 +143,7 @@ class ProductRepo extends BaseRepo {
     });
 
     try {
-      final streamedResponse = await imageUploadRequest.send();
+      final streamedResponse = await imageUploadRequest.send().timeout(const Duration(seconds: 10));;
       final response = await http.Response.fromStream(streamedResponse);
       // debugPrint('Response: ${response.body}');
       return ApiResponse<ProductListResponse>.fromJson(
@@ -171,6 +172,67 @@ class ProductRepo extends BaseRepo {
     //       );
     //     }
     // );
+  }
+
+  Future<ApiResponse<Product>> updateProduct(int id, ProductUpdate product) async {
+    final uri = Uri.parse('$HOST_URL/api/products/$id');
+
+    // Intilize the multipart request
+    final imageUploadRequest = http.MultipartRequest('POST', uri);
+
+    imageUploadRequest.fields.addAll({
+      'name' : product.name,
+      'description' : product.description,
+      'pickup_time' : product.pickupTime,
+      'address_id' : product.addressId.toString(),
+      '_method': 'PUT',
+    });
+
+    if(product.dueDate != null){
+      imageUploadRequest.fields.addAll({
+        'due_date' : product.dueDate!,
+      });
+    }
+
+    if(product.imageIds != null){
+      final urls = product.imageIds!;
+      for(var i = 0; i < urls.length; i++){
+        imageUploadRequest.fields.addAll({
+          'image_ids[$i]': urls[i].toString()
+        });
+      }
+    }
+
+    if(product.imageFiles != null){
+      for(var i = 0; i < product.imageFiles!.length; i++){
+        final image = product.imageFiles![i];
+        final mimeTypeData = lookupMimeType(image.path, headerBytes: [0xFF, 0xD8])!.split('/');
+
+        // Attach the file in the request
+        final file = await http.MultipartFile.fromPath('image_files[$i]', image.path,
+            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+        imageUploadRequest.files.add(file);
+      }
+    }
+
+    // add headers if needed
+    imageUploadRequest.headers.addAll({
+      'Authorization': 'Bearer ${_localStorage.getAccessToken() ?? ''}',
+      'Accept': 'application/json',
+    });
+
+    try {
+      final streamedResponse = await imageUploadRequest.send().timeout(const Duration(seconds: 10));
+      final response = await http.Response.fromStream(streamedResponse);
+      // debugPrint('Response: ${response.body}');
+      return ApiResponse<Product>.fromJson(
+          jsonDecode(response.body),
+              (json) => Product.fromJson(json as dynamic)
+      );
+    } catch (error) {
+      debugPrint(error.toString());
+      return ApiResponse<Product>.fromError(error: error.toString());
+    }
   }
 
   Future<ApiResponse<Product>> finishProduct(int id) async {

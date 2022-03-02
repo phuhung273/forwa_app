@@ -5,10 +5,14 @@ part 'image.g.dart';
 @JsonSerializable()
 class Image {
 
+  @JsonKey(name: 'id')
+  int id;
+
   @JsonKey(name: 'url')
   String url;
 
   Image({
+    required this.id,
     required this.url,
   });
 

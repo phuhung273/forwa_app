@@ -1,25 +1,31 @@
 
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:flutter/material.dart';
 import 'package:forwa_app/datasource/local/local_storage.dart';
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/mixins/lazy_load.dart';
+import 'package:forwa_app/route/route.dart';
 import 'package:forwa_app/schema/product/lazy_giving_request.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/base_controller/main_tab_controller.dart';
 import 'package:forwa_app/screens/base_controller/order_controller.dart';
-import 'package:forwa_app/screens/base_controller/product_success_controller.dart';
+import 'package:forwa_app/screens/base_controller/product_controller.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:get/get.dart';
 
 class MyGivingsScreenController extends MainTabController
     with LazyLoad  {
 
+  static const actionUpdate = 'update';
+  static const actionDelete = 'delete';
+
   final ProductRepo _productRepo = Get.find();
 
   final LocalStorage _localStorage = Get.find();
 
   final OrderController _orderController = Get.find();
-  final ProductSuccessController _productSuccessController = Get.find();
+  final ProductController _productController = Get.find();
 
   final products = List<Product>.empty().obs;
   int? _userId;
@@ -36,17 +42,9 @@ class MyGivingsScreenController extends MainTabController
   void onInit(){
     super.onInit();
 
-    _orderController.processingOrderStream.listen((event) {
-      if(loggedIn){
-        increaseOrderOfProductId(event.productId);
-      }
-    });
-
-    _productSuccessController.productSuccessStream.listen((event) {
-      if(loggedIn){
-        changeProductIdToSuccess(event);
-      }
-    });
+    _orderController.processingOrderStream.listen((event) => increaseOrderOfProductId(event.productId));
+    _productController.productSuccessStream.listen(_changeProductIdToSuccess);
+    _productController.editProductStream.listen(_updateProduct);
   }
 
   @override
@@ -91,11 +89,22 @@ class MyGivingsScreenController extends MainTabController
     }
   }
 
-  void changeProductIdToSuccess(int productId){
+  void _changeProductIdToSuccess(int productId){
     if(loggedIn){
       final index = products.indexWhere((element) => element.id == productId);
       if(index > -1) {
         products[index].statusString = EnumToString.convertToString(ProductStatus.finish);
+        products.refresh();
+      }
+    }
+  }
+
+  void _updateProduct(Product product) {
+    if(loggedIn){
+      final index = products.indexWhere((element) => element.id == product.id);
+      if(index > -1) {
+        products[index].name = product.name;
+        products[index].images = product.images;
         products.refresh();
       }
     }
@@ -129,6 +138,38 @@ class MyGivingsScreenController extends MainTabController
       if(item.id! < _lowId){
         _lowId = item.id!;
       }
+    }
+  }
+
+  Future showActionModal(int id) async {
+    final context = Get.context;
+    if(context == null) return;
+
+    final result = await showModalActionSheet<String>(
+      context: context,
+      style: AdaptiveStyle.material,
+      actions: [
+        const SheetAction(
+          icon: Icons.edit,
+          label: 'Chỉnh sửa món đồ',
+          key: actionUpdate,
+        ),
+        const SheetAction(
+          icon: Icons.cancel,
+          label: 'Xóa món đồ',
+          key: actionDelete,
+        ),
+      ],
+    );
+
+    switch(result){
+      case actionUpdate:
+        Get.toNamed(ROUTE_PRODUCT_EDIT, arguments: id);
+        break;
+      case actionDelete:
+        break;
+      default:
+        break;
     }
   }
 

@@ -102,14 +102,14 @@ class ProductScreenController extends NotificationOpenableController {
     createdAt.value = DateFormat('dd-MM-yyyy').format(product.createdAt!);
     enabled.value = product.enabled!;
     location = product.address?.location;
-    wardLocation = product.address?.wardLocation;
+    wardLocation = product.address?.location;
     dueDate.value = product.dueDate != null
         ? DateFormat('dd-MM-yyyy').format(product.dueDate!)
         : '';
     userId = product.user?.id;
     avatar.value = product.user?.imageUrl ?? '';
     page = 0;
-    latitude.value = double.tryParse(product.address!.wardLatitude) ?? 0.0;
+    latitude.value = double.tryParse(product.address!.latitude!) ?? 0.0;
     mapController.move(wardLocation!, MAP_ZOOM_LEVEL);
   }
 

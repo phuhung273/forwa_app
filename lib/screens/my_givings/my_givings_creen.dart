@@ -144,7 +144,7 @@ class _MyGivingsScreenState extends State<MyGivingsScreen>
 
 const IMAGE_WIDTH = 140.0;
 
-class GivingItem extends StatelessWidget {
+class GivingItem extends GetView<MyGivingsScreenController> {
   final Product product;
   const GivingItem({
     Key? key,
@@ -185,55 +185,75 @@ class GivingItem extends StatelessWidget {
             Expanded(
               child: Container(
                 padding: const EdgeInsets.only(
-                    top: 0.0,
-                    bottom: 4.0,
-                    right: 4.0,
-                    left: 12.0
+                  top: 0.0,
+                  bottom: 4.0,
+                  right: 4.0,
+                  left: 12.0
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: Text(
-                        product.name,
-                        style: theme.textTheme.bodyText1?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        InkWell(
+                          child: const Icon(Icons.more_horiz),
+                          onTap: () => controller.showActionModal(product.id!),
+                        )
+                      ],
                     ),
-                    if(product.haveOrders)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: RichText(
-                          text: TextSpan(
-                            text: '${product.orderCount} người',
-                            style: theme.textTheme.bodyText1?.copyWith(
-                              color: theme.colorScheme.secondaryVariant,
-                              fontWeight: FontWeight.w500,
-                            ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              TextSpan(
-                                text: ' đang xin',
-                                style: theme.textTheme.bodyText1,
-                              )
-                            ]
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 12.0),
+                                child: Text(
+                                  product.name,
+                                  style: theme.textTheme.bodyText1?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              if(product.haveOrders)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: RichText(
+                                    text: TextSpan(
+                                        text: '${product.orderCount} người',
+                                        style: theme.textTheme.bodyText1?.copyWith(
+                                          color: theme.colorScheme.secondaryContainer,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        children: [
+                                          TextSpan(
+                                            text: ' đang xin',
+                                            style: theme.textTheme.bodyText1,
+                                          )
+                                        ]
+                                    ),
+                                  ),
+                                ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: StatusChip(status: product.status!),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: StatusChip(status: product.status!),
+                        if(product.haveOrders)
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Icon(Icons.arrow_forward_ios),
+                          ),
+                      ],
                     ),
                   ],
                 ),
               ),
             ),
-            if(product.haveOrders)
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: Icon(Icons.arrow_forward_ios),
-              ),
           ],
         ),
       ),

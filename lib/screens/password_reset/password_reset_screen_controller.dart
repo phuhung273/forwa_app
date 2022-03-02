@@ -63,4 +63,11 @@ class PasswordResetScreenController extends BaseController {
 
     Get.until((route) => route.settings.name == ROUTE_LOGIN);
   }
+
+  @override
+  void onClose(){
+    pwdController.dispose();
+    pwdConfirmController.dispose();
+    super.onClose();
+  }
 }
