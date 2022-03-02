@@ -95,7 +95,7 @@ class HomeScreenController extends RefreshableController
   @override
   Future onReady() async {
     super.onReady();
-    _locationService.here().then((value) => here = value);
+    // _locationService.here().then((value) => here = value);
     _analyticService.setCurrentScreen(ROUTE_HOME);
 
     // await _getHiddenProductIds();
