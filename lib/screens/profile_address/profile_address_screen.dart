@@ -137,6 +137,7 @@ class AddressCard extends StatelessWidget {
                           ProfileAddressEditScreenController.idParam: address.id!.toString(),
                           ProfileAddressEditScreenController.textParam: address.text!,
                           ProfileAddressEditScreenController.phoneParam: address.phone!,
+                          ProfileAddressEditScreenController.defaultParam: address.isDefault.toString(),
                         }
                       ),
                       icon: const Icon(Icons.edit),

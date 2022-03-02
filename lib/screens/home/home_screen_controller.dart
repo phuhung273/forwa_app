@@ -16,6 +16,7 @@ import 'package:forwa_app/schema/product/product_list_request.dart';
 import 'package:forwa_app/schema/report/product_report.dart';
 import 'package:forwa_app/schema/report/user_report.dart';
 import 'package:forwa_app/screens/base_controller/navigation_controller.dart';
+import 'package:forwa_app/screens/base_controller/product_controller.dart';
 import 'package:forwa_app/screens/base_controller/refreshable_controller.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:geolocator/geolocator.dart';
@@ -34,6 +35,7 @@ class HomeScreenController extends RefreshableController
   final LocalStorage _localStorage = Get.find();
   final NavigationController _navigationController = Get.find();
   final AnalyticService _analyticService = Get.find();
+  final ProductController _productController = Get.find();
 
   final products = List<Product>.empty().obs;
 
@@ -68,6 +70,8 @@ class HomeScreenController extends RefreshableController
         _analyticService.setCurrentScreen(ROUTE_HOME);
       }
     });
+
+    _productController.editProductStream.listen(_updateProduct);
   }
 
   @override
@@ -260,6 +264,15 @@ class HomeScreenController extends RefreshableController
     _uniqueDeviceId = null;
     _deviceName = null;
     _firebaseToken = null;
+  }
+
+  void _updateProduct(Product product) {
+    final index = products.indexWhere((element) => element.id == product.id);
+    if(index > -1) {
+      products[index].name = product.name;
+      products[index].images = product.images;
+      products.refresh();
+    }
   }
 
   @override

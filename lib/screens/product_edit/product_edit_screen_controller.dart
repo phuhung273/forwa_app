@@ -2,6 +2,7 @@
 import 'package:forwa_app/datasource/repository/product_repo.dart';
 import 'package:forwa_app/schema/product/product_update.dart';
 import 'package:forwa_app/screens/address_select/address_select_screen_controller.dart';
+import 'package:forwa_app/screens/base_controller/product_controller.dart';
 import 'package:forwa_app/screens/base_screens/product_form/product_form_controller.dart';
 import 'package:get/get.dart';
 
@@ -18,6 +19,8 @@ class ProductEditScreenBinding extends Bindings {
 class ProductEditScreenController extends ProductFormScreenController {
 
   final AddressSelectScreenController _addressSelectController = Get.find();
+
+  final ProductController _productController = Get.find();
 
   final int _id = Get.arguments;
 
@@ -49,7 +52,7 @@ class ProductEditScreenController extends ProductFormScreenController {
     from.value = fromToStringList[0];
     to.value = fromToStringList[1];
 
-    _addressSelectController.id.value = product.address!.id!;
+    _addressSelectController.prefetchId = product.address!.id!;
   }
 
   @override
@@ -83,6 +86,8 @@ class ProductEditScreenController extends ProductFormScreenController {
       return;
     }
 
+    _productController.emitEditProductEvent(response.data!);
     await showSuccessDialog(message: 'Chỉnh sửa thành công');
+    Get.back();
   }
 }

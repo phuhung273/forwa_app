@@ -1,4 +1,5 @@
 import 'package:forwa_app/datasource/repository/address_repo.dart';
+import 'package:forwa_app/screens/base_controller/address_controller.dart';
 import 'package:get/get.dart';
 
 import '../../schema/address/address.dart';
@@ -14,10 +15,12 @@ class ProfileAddressEditScreenBinding extends Bindings {
 class ProfileAddressEditScreenController extends AddressFormScreenController {
 
   final AddressRepo _addressRepo = Get.find();
+  final AddressController _addressController = Get.find();
 
   static const idParam = 'id';
   static const textParam = 'text';
   static const phoneParam = 'phone';
+  static const defaultParam = 'default';
 
   late int _id;
 
@@ -28,6 +31,7 @@ class ProfileAddressEditScreenController extends AddressFormScreenController {
     _id = int.tryParse(Get.parameters[idParam]!)!;
     phoneController.text = Get.parameters[phoneParam]!;
     addressController.text = Get.parameters[textParam]!;
+    isDefault.value = Get.parameters[defaultParam]?.toLowerCase() == 'true';
   }
 
   @override
@@ -35,7 +39,8 @@ class ProfileAddressEditScreenController extends AddressFormScreenController {
     showLoadingDialog();
 
     final addressRequest = Address(
-      phone: phoneController.text
+      phone: phoneController.text,
+      isDefault: isDefault.value
     );
 
     if(detailsResult != null){
@@ -53,8 +58,8 @@ class ProfileAddressEditScreenController extends AddressFormScreenController {
       return;
     }
 
+    _addressController.emitEditAddressEvent(response.data!);
     await showSuccessDialog(message: 'Chỉnh sửa thành công');
-
-    final address = response.data!;
+    Get.back();
   }
 }

@@ -10,7 +10,7 @@ import 'package:forwa_app/schema/product/lazy_giving_request.dart';
 import 'package:forwa_app/schema/product/product.dart';
 import 'package:forwa_app/screens/base_controller/main_tab_controller.dart';
 import 'package:forwa_app/screens/base_controller/order_controller.dart';
-import 'package:forwa_app/screens/base_controller/product_success_controller.dart';
+import 'package:forwa_app/screens/base_controller/product_controller.dart';
 import 'package:forwa_app/screens/main/main_screen.dart';
 import 'package:get/get.dart';
 
@@ -25,7 +25,7 @@ class MyGivingsScreenController extends MainTabController
   final LocalStorage _localStorage = Get.find();
 
   final OrderController _orderController = Get.find();
-  final ProductSuccessController _productSuccessController = Get.find();
+  final ProductController _productController = Get.find();
 
   final products = List<Product>.empty().obs;
   int? _userId;
@@ -42,17 +42,9 @@ class MyGivingsScreenController extends MainTabController
   void onInit(){
     super.onInit();
 
-    _orderController.processingOrderStream.listen((event) {
-      if(loggedIn){
-        increaseOrderOfProductId(event.productId);
-      }
-    });
-
-    _productSuccessController.productSuccessStream.listen((event) {
-      if(loggedIn){
-        changeProductIdToSuccess(event);
-      }
-    });
+    _orderController.processingOrderStream.listen((event) => increaseOrderOfProductId(event.productId));
+    _productController.productSuccessStream.listen(_changeProductIdToSuccess);
+    _productController.editProductStream.listen(_updateProduct);
   }
 
   @override
@@ -97,11 +89,22 @@ class MyGivingsScreenController extends MainTabController
     }
   }
 
-  void changeProductIdToSuccess(int productId){
+  void _changeProductIdToSuccess(int productId){
     if(loggedIn){
       final index = products.indexWhere((element) => element.id == productId);
       if(index > -1) {
         products[index].statusString = EnumToString.convertToString(ProductStatus.finish);
+        products.refresh();
+      }
+    }
+  }
+
+  void _updateProduct(Product product) {
+    if(loggedIn){
+      final index = products.indexWhere((element) => element.id == product.id);
+      if(index > -1) {
+        products[index].name = product.name;
+        products[index].images = product.images;
         products.refresh();
       }
     }

@@ -46,11 +46,7 @@ class MyReceivingsScreenController extends MainTabController
   void onInit(){
     super.onInit();
 
-    _orderController.selectedOrderStream.listen((event) {
-      if(loggedIn){
-        changeOrderToSelected(event);
-      }
-    });
+    _orderController.selectedOrderStream.listen(changeOrderToSelected);
   }
 
   @override

@@ -206,6 +206,7 @@ class GivingItem extends GetView<MyGivingsScreenController> {
                       children: [
                         Expanded(
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 12.0),
