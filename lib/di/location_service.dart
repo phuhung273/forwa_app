@@ -7,10 +7,10 @@ const LOCATION_WARNING_DESCRIPTION = 'Forwa không thể tìm các sản phẩm 
 class LocationService {
 
   Future<Position?> here() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return null;
-    }
+    // bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    // if (!serviceEnabled) {
+    //   return null;
+    // }
 
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
