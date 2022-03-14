@@ -47,7 +47,7 @@ class ProfileAddressEditScreenController extends AddressFormScreenController {
       final location = detailsResult!.geometry!.location!;
       addressRequest.text = detailsResult!.formattedAddress;
       addressRequest.latitude = location.lat.toString();
-      addressRequest.latitude = location.lng.toString();
+      addressRequest.longitude = location.lng.toString();
     }
 
     final response = await _addressRepo.updateAddress(_id, addressRequest);
