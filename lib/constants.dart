@@ -33,10 +33,10 @@ final thinRoundedRectangleShape = RoundedRectangleBorder(
   borderRadius: thinRoundedRectangleBorderRadius,
 );
 
-const HOST_URL = 'http://159.223.58.233';
-const CHAT_HOST_URL = 'http://159.223.58.233';
-const CHAT_PUBLIC_URL = 'http://159.223.58.233/chat_public';
-const CHAT_API_URL = 'http://159.223.58.233/chat';
+const HOST_URL = 'http://167.172.86.132';
+const CHAT_HOST_URL = 'http://167.172.86.132';
+const CHAT_PUBLIC_URL = 'http://167.172.86.132/chat_public';
+const CHAT_API_URL = 'http://167.172.86.132/chat';
 
 // const HOST_URL = 'http://192.168.1.9:8000';
 // const CHAT_HOST_URL = 'http://192.168.1.9:3000';
